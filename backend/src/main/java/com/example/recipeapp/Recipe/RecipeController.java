@@ -51,6 +51,6 @@ public class RecipeController {
         recipe = recipeService.updateRecipe(recipeId, name);
         recipe = recipeService.updateRecipe(recipeId, ingredients);
         recipe = recipeService.updateRecipe(recipeId, stepsOfPreparation);
-        return new ResponseEntity<Recipe>(recipe,HttpStatus.OK);
+        return new ResponseEntity<Recipe>(recipe, HttpStatus.OK);
     }
 }

@@ -22,6 +22,7 @@ export class AppComponent implements OnInit {
     this.recipeService.getRecipes().subscribe(
       (response: Recipe[]) => {
         this.recipes = response;
+        console.log(this.recipes)
       },
       (error: HttpErrorResponse) => {
         alert(error.message);

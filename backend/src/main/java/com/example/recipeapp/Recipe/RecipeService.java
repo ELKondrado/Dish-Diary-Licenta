@@ -1,6 +1,6 @@
 package com.example.recipeapp.Recipe;
 
-import com.example.recipeapp.Exception.UserNotFoundException;
+import com.example.recipeapp.Exception.RecipeNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +25,7 @@ public class RecipeService {
     }
 
     public Recipe findRecipeById(Long id) {
-        return recipeRepository.findRecipeById(id).orElseThrow(() -> new UserNotFoundException("User by id" + id + " was not found"));
+        return recipeRepository.findRecipeById(id).orElseThrow(() -> new RecipeNotFoundException("Recipe by id " + id + " was not found"));
     }
 
     public Recipe addNewRecipe(Recipe recipe) {
