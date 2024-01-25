@@ -48,9 +48,9 @@ public class RecipeController {
                                                @RequestParam(required = false) String ingredients,
                                                @RequestParam(required = false) String stepsOfPreparation){
         Recipe recipe;
-        recipe = recipeService.updateRecipe(recipeId, name);
-        recipe = recipeService.updateRecipe(recipeId, ingredients);
-        recipe = recipeService.updateRecipe(recipeId, stepsOfPreparation);
-        return new ResponseEntity<Recipe>(recipe, HttpStatus.OK);
+        recipe = recipeService.updateRecipeName(recipeId, name);
+        recipe = recipeService.updateRecipeIngredients(recipeId, ingredients);
+        recipe = recipeService.updateRecipeStepsOfPreparation(recipeId, stepsOfPreparation);
+        return new ResponseEntity<>(recipe, HttpStatus.OK);
     }
 }
