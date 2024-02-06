@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Recipe } from './recipe';
-import { RecipeService } from './recipe.service';
+import { Recipe } from './Recipe/recipe';
+import { RecipeService } from './Recipe/recipe.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { NgForm } from '@angular/forms';
+import { UserService } from './User/user.service';
 
 @Component({
   selector: 'app-root',
@@ -12,10 +14,11 @@ export class AppComponent implements OnInit {
   public title = "RecipeApp";
   public recipes: Recipe[] = [];
 
-  constructor(private recipeService: RecipeService) {}
+  constructor(private recipeService: RecipeService,
+              private userService: UserService) {}
 
   ngOnInit(): void {
-    this.getRecipes();
+    //this.getRecipes();
   }
 
   public getRecipes(): void {
@@ -29,4 +32,5 @@ export class AppComponent implements OnInit {
       }
     );
   }
+
 }
