@@ -1,0 +1,11 @@
+<div class="loginBox"> <img class="user" src="https://i.ibb.co/yVGxFPR/2.png" height="100px" width="100px">
+    <h3>Register here</h3>
+    <form #registerForm="ngForm" (ngSubmit)="onRegisterUser(registerForm)">
+        <div class="inputBox"> 
+            <input id="uname" ngModel type="text" name="userName" placeholder="Username" required>
+            <input id="pass" ngModel type="password" name="userPassword" placeholder="Password" required> 
+            <input id="email" ngModel type="email" name="userEmail" placeholder="Email" required> 
+        </div> 
+        <button [disabled]="registerForm.invalid" type="submit" name="">Register</button>
+    </form> 
+</div>
