@@ -1,7 +1,6 @@
 package com.example.recipeapp.Recipe;
 
 import com.example.recipeapp.Exception.RecipeNotFoundException;
-import com.example.recipeapp.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +30,15 @@ public class RecipeService {
 
     public Recipe addNewRecipe(Recipe recipe) {
         Optional<Recipe> recipeOptional = recipeRepository.findRecipeByName(recipe.getName());
+        if(recipe.getName().length() == 0 || recipe.getName() == null) {
+            throw new IllegalStateException("Name does not exist!");
+        }
+        if(recipe.getIngredients().length() == 0 || recipe.getIngredients() == null) {
+            throw new IllegalStateException("Ingredients do not exist!");
+        }
+        if(recipe.getStepsOfPreparation().length() == 0 || recipe.getStepsOfPreparation() == null) {
+            throw new IllegalStateException("Steps of preparation do not exist!");
+        }
         if(recipeOptional.isPresent()){
             throw new IllegalStateException("Name taken");
         }
@@ -47,7 +55,7 @@ public class RecipeService {
 
     @Transactional
     public Recipe updateRecipeName(long recipeId, String name) {
-        Recipe recipe = getRecipe(recipeId);
+        Recipe recipe = getRecipeById(recipeId);
         if(name != null && name.length() > 0 && !Objects.equals(recipe.getName(), name)){
             recipe.setName(name);
         }
@@ -56,7 +64,7 @@ public class RecipeService {
 
     @Transactional
     public Recipe updateRecipeIngredients(long recipeId, String ingredients) {
-        Recipe recipe = getRecipe(recipeId);
+        Recipe recipe = getRecipeById(recipeId);
         if(ingredients != null && ingredients.length() > 0 && !Objects.equals(recipe.getIngredients(), ingredients)){
             recipe.setIngredients(ingredients);
         }
@@ -65,14 +73,14 @@ public class RecipeService {
 
     @Transactional
     public Recipe updateRecipeStepsOfPreparation(long recipeId, String stepsOfPreparation) {
-        Recipe recipe = getRecipe(recipeId);
+        Recipe recipe = getRecipeById(recipeId);
         if(stepsOfPreparation != null && stepsOfPreparation.length() > 0 && !Objects.equals(recipe.getStepsOfPreparation(), stepsOfPreparation)){
             recipe.setStepsOfPreparation(stepsOfPreparation);
         }
         return recipe;
     }
 
-    private Recipe getRecipe(long recipeId) {
+    private Recipe getRecipeById(long recipeId) {
         return recipeRepository.findById(recipeId)
                 .orElseThrow(() -> new RecipeNotFoundException("Recipe with id: " + recipeId + " does not exist"));
     }
