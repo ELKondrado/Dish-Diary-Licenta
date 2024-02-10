@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User } from './user';
+import { AuthService } from '../../Security/auth.Service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,8 @@ import { User } from './user';
 export class UserService {
   private apiServerUrl = 'http://localhost:8080'
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+              private authService: AuthService) { }
 
   public login(user: User): Observable<User>{
     return this.http.post<User>(`${this.apiServerUrl}/auth/login`, user);
@@ -30,7 +32,7 @@ export class UserService {
   public updateUser(user: User): Observable<User>{
       return this.http.put<User>(`${this.apiServerUrl}/users/update`, user);
   }
-//to update
+ //to update
   public deleteUser(userId: number): Observable<void>{
       return this.http.delete<void>(`${this.apiServerUrl}/users/delete/${userId}`);
   }
