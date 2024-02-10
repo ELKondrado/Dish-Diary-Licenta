@@ -1,9 +1,9 @@
 package com.example.recipeapp.Security;
 
-import com.example.recipeapp.Exception.UserNotFoundException;
-import com.example.recipeapp.User.Role;
-import com.example.recipeapp.User.User;
-import com.example.recipeapp.User.UserRepository;
+import com.example.recipeapp.Exceptions.UserNotFoundException;
+import com.example.recipeapp.Model.Role;
+import com.example.recipeapp.Model.User;
+import com.example.recipeapp.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

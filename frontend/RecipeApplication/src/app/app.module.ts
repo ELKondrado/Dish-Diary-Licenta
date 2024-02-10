@@ -8,12 +8,15 @@ import { RegisterFormComponent } from './Components/register-form/register-form.
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes, RouterOutlet } from '@angular/router';
 import { MainPageComponent } from './Components/main-page/main-page.component';
+import { UserService } from './Models/User/user.service';
+import { AuthGuard } from './Security/auth.guard';
+import { AuthService } from './Security/auth.Service';
 
 const routes: Routes = [
   {path: '', redirectTo: '/login', pathMatch: 'full'},
   {path: 'login', component: LoginFormComponent},
   {path: 'register', component: RegisterFormComponent},
-  {path: 'main', component: MainPageComponent}
+  {path: 'main', component: MainPageComponent, canActivate: [AuthGuard]}
 ];
 
 @NgModule({
@@ -29,7 +32,7 @@ const routes: Routes = [
     FormsModule,
     RouterModule.forRoot(routes)
   ],
-  providers: [RecipeService],
+  providers: [RecipeService, UserService, AuthService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
