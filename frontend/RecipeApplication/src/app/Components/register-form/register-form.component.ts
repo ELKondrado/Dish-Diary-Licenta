@@ -3,6 +3,8 @@ import { User } from '../../Models/User/user';
 import { UserService } from '../../Models/User/user.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NgForm } from '@angular/forms';
+import { AuthService } from '../../Security/auth.service';
+import { Route, Router } from '@angular/router';
 
 @Component({
   selector: 'app-register-form',
@@ -11,7 +13,10 @@ import { NgForm } from '@angular/forms';
 })
 export class RegisterFormComponent implements OnInit {
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService,
+              private authService: AuthService,
+              private router: Router
+              ) {}
 
   ngOnInit(): void {
 
@@ -21,6 +26,12 @@ export class RegisterFormComponent implements OnInit {
     this.userService.register(registerForm.value).subscribe(
       (response: any) => {
         console.log(response);
+        this.userService.login(registerForm.value).subscribe(
+          (response: any) => {
+            this.authService.setAccessToken(response.token);
+            this.router.navigate(['/main']);
+          }
+        )
       },
       (error: HttpErrorResponse) => {
         console.error(error.message);

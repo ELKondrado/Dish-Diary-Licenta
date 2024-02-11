@@ -3,7 +3,7 @@ import { UserService } from '../../Models/User/user.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../Security/auth.Service';
+import { AuthService } from '../../Security/auth.service';
 
 @Component({
   selector: 'app-login-form',
@@ -28,10 +28,10 @@ export class LoginFormComponent implements OnInit {
         console.log(response);
         this.authService.setAccessToken(response.token);
         this.router.navigate(['/main']);
+        localStorage.setItem('access_token', response.token);
       },
       (error: HttpErrorResponse) => {
         console.error(error.error.error);
-        // Handle authentication error
       }
     );
   }

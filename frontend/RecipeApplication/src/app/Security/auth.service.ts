@@ -5,23 +5,30 @@ import { Injectable } from '@angular/core';
 })
 export class AuthService {
   private accessToken: string | null = null;
+  private accessTokenKey = 'access_token';
 
   setAccessToken(token: string) {
     this.accessToken = token;
   }
 
   getAccessToken(): string | null {
-    // Retrieve the access token
     return this.accessToken;
   }
 
   isLoggedIn(): boolean {
-    // Check if the user is logged in (access token is available)
     return !!this.accessToken;
   }
 
   logout(): void {
-    // Clear the stored access token (e.g., on logout)
     this.accessToken = null;
+    localStorage.removeItem(this.accessTokenKey);
+  }
+
+  initializeAuthentication(): void {
+    const storedToken = localStorage.getItem(this.accessTokenKey);
+    console.log(storedToken)
+    if (storedToken) {
+      this.setAccessToken(storedToken);
+    }
   }
 }
