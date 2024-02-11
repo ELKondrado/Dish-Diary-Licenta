@@ -2,5 +2,9 @@
     <div>
         <h3>Welcome to main-page</h3>
         <button (click)="getRecipes()">Get Recipes</button>
+        <button (click)="openRecipeForm()">Add Recipe</button>
+        <button routerLink="../login" (click)="logout()">Logout</button>
     </div>
+
+    <ng-container #recipeFormContainer></ng-container>
 </body>

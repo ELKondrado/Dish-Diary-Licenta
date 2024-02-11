@@ -1,0 +1,30 @@
+<!-- recipe-form.component.html -->
+<div class="recipe-form">
+    <h2>Create Recipe</h2>
+
+    <div *ngIf="currentStep === 1">
+      <label for="name">Name:</label>
+      <input id="name" [(ngModel)]="recipe.name" />
+      <button (click)="nextStep()">Next</button>
+      <button (click)="closeFormPopup()">Cancel</button>
+    </div>
+
+    <div *ngIf="currentStep === 2">
+      <label for="ingredients">Ingredients:</label>
+      <textarea id="ingredients" [(ngModel)]="recipe.ingredients"></textarea>
+      <button (click)="nextStep()">Next</button>
+      <button (click)="backStep()">Back</button>
+      <button (click)="closeFormPopup()">Cancel</button>
+    </div>
+
+    <div *ngIf="currentStep === 3">
+        <label for="stepsOfPreparation">Steps Of Preparation:</label>
+        <textarea id="stepsOfPreparation" [(ngModel)]="recipe.stepsOfPreparation"></textarea>
+        <button (click)="createRecipe()">Create Recipe</button>
+        <button (click)="backStep()">Back</button>
+        <button (click)="closeFormPopup()">Cancel</button>
+    </div>
+
+    <ng-container #recipeFormContainer></ng-container>
+</div>
+  
