@@ -34,7 +34,6 @@ public class RecipeService {
     }
 
     public Recipe addNewRecipe(Recipe recipe) {
-        Optional<Recipe> recipeOptional = recipeRepository.findRecipeByName(recipe.getName());
         if(recipe.getName().length() == 0 || recipe.getName() == null) {
             throw new IllegalStateException("Name does not exist!");
         }
@@ -43,9 +42,6 @@ public class RecipeService {
         }
         if(recipe.getStepsOfPreparation().length() == 0 || recipe.getStepsOfPreparation() == null) {
             throw new IllegalStateException("Steps of preparation do not exist!");
-        }
-        if(recipeOptional.isPresent()){
-            throw new IllegalStateException("Name taken");
         }
         return recipeRepository.save(recipe);
     }
