@@ -26,8 +26,11 @@ export class LoginFormComponent implements OnInit {
     this.userService.login(loginForm.value).subscribe(
       (response: any) => {
         console.log(response);
+
+        const username = loginForm.value.username
         this.authService.setAccessToken(response.token);
-        this.router.navigate(['/main']);
+        this.router.navigate([`/${username}/main`]);
+        
         localStorage.setItem('access_token', response.token);
       },
       (error: HttpErrorResponse) => {
