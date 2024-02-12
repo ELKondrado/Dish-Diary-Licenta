@@ -1,5 +1,6 @@
 package com.example.recipeapp.Model;
 
+import com.sun.istack.NotNull;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -19,7 +20,10 @@ public class Recipe {
             generator = "recipe_sequence"
     )
     private long id;
+    @NotNull
     private String name;
+    @NotNull
     private String ingredients;
+    @NotNull
     private String stepsOfPreparation;
 }
