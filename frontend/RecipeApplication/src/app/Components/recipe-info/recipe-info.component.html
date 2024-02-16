@@ -1,0 +1,37 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a routerLink="../../main" class="navbar-brand" style="color:white; font-weight: 800; font-size:x-large">Dish Diary</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarColor02">
+      <ul class="navbar-nav mr-auto">
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+         <button id="logout-button" (click)="logout()">Logout</button>
+      </form>
+   </div>
+</nav>
+
+<body class="main-body">
+   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+   <div class="container" id="main-container">
+      <div class="row">
+         <div class="col-md-6 col-xl-3 card-unit">
+               <div class="card m-b-30">
+                  <div class="card-body row">
+                     <h5 class="card-recipe-name">{{recipe?.name}}</h5>
+                  </div>
+                  <ul class="list-group list-group-flush">
+                     <li class="list-group-item">ING: {{recipe?.ingredients}}</li>
+                     <li class="list-group-item">SOP: {{recipe?.stepsOfPreparation}}</li>
+                  </ul>
+
+                  <div class="card-body card-list">
+
+                  </div>
+               </div>
+         </div>
+      </div>
+    </div>
+
+</body>

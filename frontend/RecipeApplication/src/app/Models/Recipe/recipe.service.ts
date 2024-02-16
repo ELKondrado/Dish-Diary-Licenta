@@ -29,12 +29,25 @@ export class RecipeService {
     return this.http.get<Recipe[]>(`${this.apiServerUrl}/recipe/all`, { headers });
   }
 
-  //adding recipes through recipe-form
-  public addUserRecipe(recipe: Recipe, username: string): Observable<Recipe> {
+  public getRecipeById(recipeId: number): Observable<Recipe>{
+    const headers = this.getHeaders();
+
+    return this.http.get<Recipe>(`${this.apiServerUrl}/recipe/find/${recipeId}`, { headers });
+  }
+
+  //adding new recipes through recipe-form
+  public addUserNewRecipe(recipe: Recipe, username: string): Observable<Recipe> {
     const headers = this.getHeaders();
     const requestedBody = { ...recipe };
   
-    return this.http.post<Recipe>(`${this.apiServerUrl}/recipe/addUserRecipe?username=${username}`, requestedBody, { headers });
+    return this.http.post<Recipe>(`${this.apiServerUrl}/recipe/addUserNewRecipe?username=${username}`, requestedBody, { headers });
+  }
+
+  //connecting recipes to users
+  public addUserRecipe(recipeId: number, username: string): Observable<Recipe> {
+    const headers = this.getHeaders();
+  
+    return this.http.post<Recipe>(`${this.apiServerUrl}/recipe/addUserRecipe?username=${username}&recipeId=${recipeId}`, { headers });
   }
 
   //getting all the recipes that a user has added

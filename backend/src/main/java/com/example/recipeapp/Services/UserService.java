@@ -28,4 +28,8 @@ public class UserService {
     public void deleteUserRecipe(long userId, long recipeId) {
         userRepository.deleteUserRecipe(userId, recipeId);
     }
+
+    public boolean doesUserHaveRecipe(User user, Recipe recipe) {
+        return user.getRecipes().contains(recipe);
+    }
 }

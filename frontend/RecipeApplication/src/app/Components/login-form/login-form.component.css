@@ -7,101 +7,99 @@ body {
     background-repeat: no-repeat;
     background-position: center;
     overflow: hidden;
-  }
-  
-  @media screen and (max-width: 600px) {
-    body {
-      background-size: cover;
-    }
-  }
-  
-  #particles-js {
-    height: 100%;
-  }
-  
-  .loginBox {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 80%; /* Adjusted width for responsiveness */
-    max-width: 350px; /* Added max-width to limit the width on larger screens */
-    min-height: 200px;
-    background: #000000;
-    border-radius: 10px;
-    padding: 40px;
-    box-sizing: border-box;
-  }
-  
-  .user {
-    margin: 0 auto;
-    display: block;
-    margin-bottom: 20px;
-  }
-  
-  h3 {
-    margin: 0;
-    padding: 0 0 20px;
-    color: #59238F;
-    text-align: center;
-  }
-  
-  .inputBox {
-    position: relative;
-  }
-  
-  .inputBox input {
-    width: 100%;
-    /* Adjusted input width to fill the container */
-    border: none;
-    border-bottom: 2px solid #262626;
-    outline: none;
-    height: 40px;
-    color: #fff;
-    background: transparent;
-    font-size: 16px;
-    box-sizing: border-box;
-  }
-  
-  .inputBox input:hover {
-    color: #42F3FA;
-    border: 1px solid #42F3FA;
-    box-shadow: 0 0 5px rgba(0, 255, 0, 0.3), 0 0 10px rgba(0, 255, 0, 0.2),
-      0 0 15px rgba(0, 255, 0, 0.1), 0 2px 0 black;
-  }
-  
-  .inputBox input:focus {
-    border-bottom: 2px solid #42F3FA;
-  }
-  
-  .loginBox button {
-    width: 100%;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    border: none;
-    outline: none;
-    height: 40px;
-    font-size: 16px;
-    background: #59238F;
-    color: #fff;
-    border-radius: 20px;
-    cursor: pointer;
-  }
-  
-  .loginBox a {
-    color: #262626;
-    font-size: 14px;
-    font-weight: bold;
-    text-decoration: none;
-    text-align: center;
-    display: block;
-  }
-  
-  a:hover {
-    color: #00ffff;
-  }
-  
-  p {
-    color: #0000ff;
-  }
-  
+}
+
+@media screen and (max-width: 600px) {
+	body {
+		background-size: cover;
+	}
+}
+
+#particles-js {
+	height: 100%;
+}
+
+.loginBox {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 80%; /* Adjusted width for responsiveness */
+	max-width: 350px; /* Added max-width to limit the width on larger screens */
+	min-height: 200px;
+	background: #000000;
+	border-radius: 10px;
+	padding: 40px;
+	box-sizing: border-box;
+}
+
+.user {
+	margin: 0 auto;
+	display: block;
+	margin-bottom: 20px;
+}
+
+h3 {
+	margin: 0;
+	padding: 0 0 20px;
+	color: #59238F;
+	text-align: center;
+}
+
+.inputBox {
+	position: relative;
+}
+
+.inputBox input {
+	width: 100%;
+	border: none;
+	border-bottom: 2px solid #262626;
+	outline: none;
+	height: 40px;
+	color: #fff;
+	background: transparent;
+	font-size: 16px;
+	box-sizing: border-box;
+}
+
+.inputBox input:hover {
+	color: #42F3FA;
+	border: 1px solid #42F3FA;
+	box-shadow: 0 0 5px rgba(0, 255, 0, 0.3), 0 0 10px rgba(0, 255, 0, 0.2),
+				0 0 15px rgba(0, 255, 0, 0.1), 0 2px 0 black;
+}
+
+.inputBox input:focus {
+	border-bottom: 2px solid #42F3FA;
+}
+
+.loginBox button {
+	width: 100%;
+	margin-top: 1rem;
+	margin-bottom: 1rem;
+	border: none;
+	outline: none;
+	height: 40px;
+	font-size: 16px;
+	background: #59238F;
+	color: #fff;
+	border-radius: 20px;
+	cursor: pointer;
+}
+
+.loginBox a {
+	color: #262626;
+	font-size: 14px;
+	font-weight: bold;
+	text-decoration: none;
+	text-align: center;
+	display: block;
+}
+
+a:hover {
+	color: #00ffff;
+}
+
+p {
+	color: #0000ff;
+}
