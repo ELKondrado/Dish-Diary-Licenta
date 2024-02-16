@@ -1,152 +1,155 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" style="color:white;">Dish Diary</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarColor02">
-       <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-             <a class="nav-link" (click)="onOpenModal(undefined, 'add')">Add Recipe <span class="sr-only">(current)</span></a>
-          </li>
+   <a class="navbar-brand" style="color: white; font-weight: 800; font-size: x-large">Dish Diary</a>
+   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+       <span class="navbar-toggler-icon"></span>
+   </button>
+
+   <div class="collapse navbar-collapse" id="navbarColor02">
+       <ul class="navbar-nav mr-auto justify-content-start">
+           <li class="nav-item">
+               <a class="nav-link" (click)="onOpenModal(undefined, 'add')">Add Recipe <span class="sr-only">(current)</span></a>
+           </li>
+           <li class="nav-item">
+               <a class="nav-link" (click)="discoverRecipes()">Discover Recipes <span class="sr-only">(current)</span></a>
+           </li>
        </ul>
        <form class="form-inline my-2 my-lg-0">
-          <input type="search" #key="ngModel" ngModel
-           name="key" id="searchName" class="form-control mr-sm-2" placeholder="Search recipes..." required>
+           <input (ngModelChange)="searchRecipe(key.value)" #key="ngModel" ngModel type="search" name="key" id="searchRecipe" class="form-control mr-sm-2" placeholder="Search recipes..." required>
+           <button id="logout-button" (click)="logout()">Logout</button>
        </form>
-    </div>
+   </div>
 </nav>
 
 <body class="main-body">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-    <div>
-        <h3>Welcome to main-page {{username}}</h3>
-        <button (click)="getUserRecipes()">Get Recipes</button>
-        <button (click)="openRecipeForm()">Add Recipe</button>
-        <button (click)="logout()">Logout</button>
-    </div>
-    <div class="container" id="main-container">
-        <div class="row">
-            <div *ngFor="let recipe of recipes" class="col-md-6 col-xl-3">
-                <div class="card m-b-30">
-                    <div class="card-body row">
-                        <div class="col-6">
-                            <a href=""><img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="" class="img-fluid rounded-circle w-60"></a>
-                        </div>
-                        <div class="col-6 card-title align-self-center mb-0">
-                            <h5>{{recipe?.name}}</h5>
-                        </div>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><i class="fa fa-phone float-right"></i>{{recipe?.ingredients}}</li>
-                    </ul>
-                    <div class="card-body">
+   
+   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+   
+   <div>
+
+      <div>
+         <h3>Welcome to Dish-Diary {{username}}</h3>
+      </div>
+
+      <div class="container" id="main-container">
+         <div class="row">
+            <div *ngFor="let recipe of recipes" class="col-md-6 col-xl-3 card-unit">
+                  <div class="card m-b-30">
+                     <div class="card-body row">
+                        <a (click)="onOpenRecipe(recipe)"><h5 class="card-recipe-name">{{recipe?.name}}</h5></a>
+                     </div>
+                     <ul class="list-group list-group-flush">
+                        <li class="list-group-item">ING: {{recipe?.ingredients}}</li>
+                        <li class="list-group-item">SOP: {{recipe?.stepsOfPreparation}}</li>
+                     </ul>
+                     <div class="card-body card-list">
                         <div class="float-right btn-group btn-group-sm">
-                            <a (click)="onOpenModal(recipe, 'edit')" class="btn btn-primary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
-                            <a (click)="onOpenModal(recipe, 'delete')" class="btn btn-secondary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Delete"><i class="fa fa-times"></i></a>
+                              <a (click)="onOpenModal(recipe, 'edit')" class="btn btn-primary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
+                              <a (click)="onOpenModal(recipe, 'delete')" class="btn btn-secondary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Delete"><i class="fa fa-times"></i></a>
                         </div>
-                    </div>
-                </div>
+                     </div>
+                  </div>
             </div>
-        </div>
-    </div>
-
-    <!-- Add Recipe Modal -->
-    <div class="modal fade" id="addRecipeModal" tabindex="-1" role="dialog" aria-labelledby="addRecipeModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-             <div class="modal-header">
-                <h5 class="modal-title" id="addRecipeModalLabel">Add Recipe</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-             </div>
-             <div class="modal-body">
-                <form #addForm="ngForm" (ngSubmit)="onAddRecipe(addForm)">
-                <div class="form-group">
-                   <label for="name">Name</label>
-                   <input type="text" ngModel name="name" class="form-control" id="name" placeholder="Name" required>
-                </div>
-                <div class="form-group">
-                   <label for="ingredients">Ingredients</label>
-                   <input type="text" ngModel name="ingredients" class="form-control" id="ingredients" placeholder="Ingredients" required>
-                </div>
-                <div class="form-group">
-                   <label for="stepsOfPreparation">Steps Of Preparation</label>
-                   <input type="text" ngModel name="stepsOfPreparation" class="form-control" id="stepsOfPreparation" placeholder="Steps Of Preparation" required>
-                </div>
-                <div class="modal-footer">
-                   <button type="button" id="add-recipe-form" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                   <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary" >Save changes</button>
-                </div>
-                </form>
-             </div>
-          </div>
-        </div>
-        </div>
-      
-      <!-- Edit Recipe Modal -->
-      <div class="modal fade" id="updateRecipeModal" tabindex="-1" role="dialog" aria-labelledby="recipeEditModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-           <div class="modal-content">
-              <div class="modal-header">
-                 <h5 class="modal-title" id="updateRecipeModalLabel">Edit Recipe {{editRecipe?.name}}</h5>
-                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                 <span aria-hidden="true">&times;</span>
-                 </button>
-              </div>
-              <div class="modal-body">
-                 <form #editForm="ngForm">
-                    <div class="form-group">
-                       <label for="name">Name</label>
-                       <input type="text" ngModel="{{editRecipe?.name}}" name="name" class="form-control" id="name" aria-describedby="emailHelp" placeholder="Name">
-                    </div>
-                    
-                    <div class="form-group">
-                       <label for="ingredients">Ingredients</label>
-                       <input type="text" ngModel="{{editRecipe?.ingredients}}" name="ingredients" class="form-control" id="ingredients" name="ingredients" placeholder="Ingredients">
-                    </div>
-                    <div class="form-group">
-                       <label for="stepsOfPreparation">Steps Of Preparation</label>
-                       <input type="text" ngModel="{{editRecipe?.stepsOfPreparation}}" name="stepsOfPreparation" class="form-control" id="stepsOfPreparation" placeholder="Steps Of Preparation">
-                    </div>
-                    <div class="modal-footer">
-                       <button type="button" id="" data-dismiss="modal" class="btn btn-secondary">Close</button>
-                       <button (click)="onUpdateRecipe(editForm.value)" data-dismiss="modal" class="btn btn-primary" >Save changes</button>
-                    </div>
-                 </form>
-              </div>
-           </div>
-        </div>
-      </div>
-      
-      <!-- Delete Recipe Modal -->
-      <div class="modal fade" id="deleteRecipeModal" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-           <div class="modal-content">
-              <div class="modal-header">
-                 <h5 class="modal-title" id="deleteModelLabel">Delete Recipe</h5>
-                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                 <span aria-hidden="true">&times;</span>
-                 </button>
-              </div>
-              <div class="modal-body">
-                 <p>Are you sure you want to delete recipe {{deletedRecipe?.name}}?</p>
-                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                    <button *ngIf="deletedRecipe" (click)="onDeleteRecipe(deletedRecipe.id)" class="btn btn-danger" data-dismiss="modal">Yes</button>
-                </div>
-              </div>
-           </div>
-        </div>
+         </div>
       </div>
 
-      <!-- Notification for no recipes -->
-      <div *ngIf="recipes?.length == 0" class="col-lg-12 col-md-12 col-xl-12">
+   </div>
+
+   <!-- Add Recipe Modal -->
+   <div class="modal fade" id="addRecipeModal" tabindex="-1" role="dialog" aria-labelledby="addRecipeModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title" id="addRecipeModalLabel">Add Recipe</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+               </button>
+            </div>
+            <div class="modal-body">
+               <form #addForm="ngForm" (ngSubmit)="onAddRecipe(addForm)">
+               <div class="form-group">
+                  <label for="name">Name</label>
+                  <input type="text" ngModel name="name" class="form-control" id="name" placeholder="Name" required>
+               </div>
+               <div class="form-group">
+                  <label for="ingredients">Ingredients</label>
+                  <input type="text" ngModel name="ingredients" class="form-control" id="ingredients" placeholder="Ingredients" required>
+               </div>
+               <div class="form-group">
+                  <label for="stepsOfPreparation">Steps Of Preparation</label>
+                  <input type="text" ngModel name="stepsOfPreparation" class="form-control" id="stepsOfPreparation" placeholder="Steps Of Preparation" required>
+               </div>
+               <div class="modal-footer">
+                  <button type="button" id="add-recipe-form" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary" >Save changes</button>
+               </div>
+               </form>
+            </div>
+         </div>
+      </div>
+   </div>
+      
+   <!-- Edit Recipe Modal -->
+   <div class="modal fade" id="updateRecipeModal" tabindex="-1" role="dialog" aria-labelledby="recipeEditModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title" id="updateRecipeModalLabel">Edit Recipe {{editRecipe?.name}}</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+               </button>
+            </div>
+            <div class="modal-body">
+               <form #editForm="ngForm">
+                  <div class="form-group">
+                     <label for="name">Name</label>
+                     <input type="text" ngModel="{{editRecipe?.name}}" name="name" class="form-control" id="name" aria-describedby="emailHelp" placeholder="Name">
+                  </div>
+                  
+                  <div class="form-group">
+                     <label for="ingredients">Ingredients</label>
+                     <input type="text" ngModel="{{editRecipe?.ingredients}}" name="ingredients" class="form-control" id="ingredients" name="ingredients" placeholder="Ingredients">
+                  </div>
+                  <div class="form-group">
+                     <label for="stepsOfPreparation">Steps Of Preparation</label>
+                     <input type="text" ngModel="{{editRecipe?.stepsOfPreparation}}" name="stepsOfPreparation" class="form-control" id="stepsOfPreparation" placeholder="Steps Of Preparation">
+                  </div>
+                  <div class="modal-footer">
+                     <button type="button" id="" data-dismiss="modal" class="btn btn-secondary">Close</button>
+                     <button (click)="onUpdateRecipe(editForm.value)" data-dismiss="modal" class="btn btn-primary" >Save changes</button>
+                  </div>
+               </form>
+            </div>
+         </div>
+      </div>
+   </div>
+      
+   <!-- Delete Recipe Modal -->
+   <div class="modal fade" id="deleteRecipeModal" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title" id="deleteModelLabel">Delete Recipe</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+               </button>
+            </div>
+            <div class="modal-body">
+               <p>Are you sure you want to delete the recipe: {{deletedRecipe?.name}}?</p>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                  <button *ngIf="deletedRecipe" (click)="onDeleteRecipe(deletedRecipe.id)" class="btn btn-danger" data-dismiss="modal">Yes</button>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- Notification for no recipes -->
+   <div *ngIf="recipes?.length == 0" class="col-lg-12 col-md-12 col-xl-12">
       <div class="alert alert-info" role="alert">
-        <h4 class="alert-heading">NO RECIPES!</h4>
-        <p>No Recipes were found.</p>
+         <h4 class="alert-heading">NO RECIPES!</h4>
+         <p>No Recipes were found.</p>
       </div>
-      </div>
+   </div>
 
-    <ng-container #recipeFormContainer></ng-container>
 </body>

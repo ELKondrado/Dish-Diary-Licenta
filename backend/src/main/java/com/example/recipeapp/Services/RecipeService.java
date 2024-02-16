@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
@@ -19,20 +21,23 @@ import java.util.Optional;
 @Service
 public class RecipeService {
     private final RecipeRepository recipeRepository;
-
+    private final UserService userService;
+    @PersistenceContext
+    private EntityManager em;
     @Autowired
-    public RecipeService(RecipeRepository recipeRepository) {
+    public RecipeService(RecipeRepository recipeRepository, UserService userService) {
         this.recipeRepository = recipeRepository;
+        this.userService = userService;
     }
 
     private void checkRecipeAttributes(Recipe recipe) {
-        if(recipe.getName().length() == 0) {
+        if(recipe.getName() == null) {
             throw new IllegalStateException("Name does not exist!");
         }
-        if(recipe.getIngredients().length() == 0) {
+        if(recipe.getIngredients() == null) {
             throw new IllegalStateException("Ingredients do not exist!");
         }
-        if(recipe.getStepsOfPreparation().length() == 0) {
+        if(recipe.getStepsOfPreparation() == null) {
             throw new IllegalStateException("Steps of preparation do not exist!");
         }
     }
@@ -56,6 +61,17 @@ public class RecipeService {
         user.getRecipes().add(recipe);
         recipe.getUsers().add(user);
         return recipeRepository.save(recipe);
+    }
+
+    @Transactional
+    public boolean addUserRecipe(Recipe recipe, User user) {
+        checkRecipeAttributes(recipe);
+        if(!userService.doesUserHaveRecipe(user, recipe)) {
+            user.getRecipes().add(em.merge(recipe));
+            recipe.getUsers().add(user);
+            return true;
+        }
+        return false;
     }
 
     public void deleteRecipe(Long recipeId) {

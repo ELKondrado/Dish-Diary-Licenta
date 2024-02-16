@@ -1,5 +1,6 @@
 package com.example.recipeapp.Controllers;
 
+import com.example.recipeapp.Exceptions.RecipeNotFoundException;
 import com.example.recipeapp.Model.Recipe;
 import com.example.recipeapp.Model.User;
 import com.example.recipeapp.Services.RecipeService;
@@ -72,7 +73,7 @@ public class RecipeController {
         return new ResponseEntity<>(recipe, HttpStatus.OK);
     }
 
-    @PostMapping("/addUserRecipe")
+    @PostMapping("/addUserNewRecipe")
     public ResponseEntity<Recipe> registerNewRecipe(@RequestBody Recipe recipe,
                                                     @RequestParam("username") String username) {
         Optional<User> optionalUser = userService.findUserByUserName(username);
@@ -81,6 +82,28 @@ public class RecipeController {
             Recipe newRecipe = recipeService.addNewRecipe(recipe, user);
 
             return new ResponseEntity<>(newRecipe, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/addUserRecipe")
+    public ResponseEntity<Recipe> addUserRecipe(@RequestParam("username") String username,
+                                                @RequestParam("recipeId") long recipeId) {
+        Optional<User> optionalUser = userService.findUserByUserName(username);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            Recipe recipe = recipeService.findRecipeById(recipeId);
+            if(recipe != null)
+            {
+                if(recipeService.addUserRecipe(recipe, user)) {
+                    return new ResponseEntity<>(recipe, HttpStatus.CREATED);
+                }
+                else{
+                    return new ResponseEntity<>(null, HttpStatus.OK);
+                }
+            }
+            throw new RecipeNotFoundException("Recipe not found in adding it to user recipes!");
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
