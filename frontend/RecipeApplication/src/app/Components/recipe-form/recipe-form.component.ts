@@ -17,7 +17,7 @@ export class RecipeFormComponent {
               private authService: AuthService) {}
   
   currentStep = 1;
-  recipe: Recipe = { name: '', ingredients: '' , stepsOfPreparation: ''};
+  recipe: Recipe = {id: -1, name: '', ingredients: '' , stepsOfPreparation: ''};
 
   nextStep(): void {
     this.currentStep++;
@@ -29,16 +29,16 @@ export class RecipeFormComponent {
 
   createRecipe(): void {
     const accessToken = this.authService.getAccessToken();
-    console.log(accessToken)
-
-    this.recipeService.addRecipe(this.recipe).subscribe(
-    (response: any) => {
-      console.log(response);
-      this.recipeCreated.emit(this.recipe);
-    },
-    (error: HttpErrorResponse) => {
-      console.error(error.message);
-    }
+    const username = this.authService.getUsernameFromToken();
+  
+    this.recipeService.addUserRecipe(this.recipe, username).subscribe(
+      (response: Recipe) => {
+        console.log(response);
+        this.recipeCreated.emit(response);
+      },
+      (error: HttpErrorResponse) => {
+        console.error(error.message);
+      }
     );
   }
 

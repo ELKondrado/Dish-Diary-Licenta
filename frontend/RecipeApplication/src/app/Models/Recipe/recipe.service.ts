@@ -29,14 +29,40 @@ export class RecipeService {
     return this.http.get<Recipe[]>(`${this.apiServerUrl}/recipe/all`, { headers });
   }
 
+  //adding recipes through recipe-form
+  public addUserRecipe(recipe: Recipe, username: string): Observable<Recipe> {
+    const headers = this.getHeaders();
+    const requestedBody = { ...recipe };
+  
+    return this.http.post<Recipe>(`${this.apiServerUrl}/recipe/addUserRecipe?username=${username}`, requestedBody, { headers });
+  }
+
+  //getting all the recipes that a user has added
+  public getUserRecipes(userId: number): Observable<Recipe[]> {
+    const headers = this.getHeaders();
+    return this.http.get<Recipe[]>(`${this.apiServerUrl}/recipe/user/${userId}/recipes`, { headers });
+  }
+
   public addRecipe(recipe: Recipe): Observable<Recipe> {
     const headers = this.getHeaders();
     return this.http.post<Recipe>(`${this.apiServerUrl}/recipe/add`, recipe, { headers });
   }
 
-  public updateRecipe(recipe: Recipe): Observable<Recipe> {
+  public updateRecipe(recipeId: number, name?: string, ingredients?: string, stepsOfPreparation?: string): Observable<Recipe> {
     const headers = this.getHeaders();
-    return this.http.put<Recipe>(`${this.apiServerUrl}/recipe/update`, recipe, { headers });
+  
+    const requestBody: any = {};
+    if (name !== undefined) {
+      requestBody.name = name;
+    }
+    if (ingredients !== undefined) {
+      requestBody.ingredients = ingredients;
+    }
+    if (stepsOfPreparation !== undefined) {
+      requestBody.stepsOfPreparation = stepsOfPreparation;
+    }
+  
+    return this.http.put<Recipe>(`${this.apiServerUrl}/recipe/update/${recipeId}`, requestBody, { headers });
   }
 
   public deleteRecipe(recipeId: number): Observable<void> {

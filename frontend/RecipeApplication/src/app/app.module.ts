@@ -26,7 +26,6 @@ const routes: Routes = [
     LoginFormComponent,
     RegisterFormComponent,
     MainPageComponent,
-    RecipeFormComponent,
     RecipeFormComponent
   ],
   imports: [
@@ -35,7 +34,11 @@ const routes: Routes = [
     FormsModule,
     RouterModule.forRoot(routes)
   ],
-  providers: [RecipeService, UserService, AuthService],
+  providers: [
+    AuthService,
+    RecipeService,
+    UserService,
+  ],  
   bootstrap: [AppComponent],
 })
 export class AppModule {}

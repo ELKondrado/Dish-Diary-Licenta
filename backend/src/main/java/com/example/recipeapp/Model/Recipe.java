@@ -1,9 +1,10 @@
 package com.example.recipeapp.Model;
 
-import com.sun.istack.NotNull;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Table
 @Entity
@@ -20,10 +21,10 @@ public class Recipe {
             generator = "recipe_sequence"
     )
     private long id;
-    @NotNull
     private String name;
-    @NotNull
     private String ingredients;
-    @NotNull
     private String stepsOfPreparation;
+
+    @ManyToMany(mappedBy = "recipes", fetch = FetchType.LAZY)
+    private List<User> users = new ArrayList<>();
 }
