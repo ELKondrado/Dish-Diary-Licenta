@@ -1,26 +1,137 @@
 body {
     height: 100%;
     overflow-y: scroll;
+    box-sizing: border-box;
 }
-
+  
 .main-body {
     height: 100vh;
     min-height: 100%;
     box-sizing: border-box;
-    background: #f5f5f5;
     padding-bottom: 10rem;
 }
 
+.navbar #searchRecipe {
+	background: transparent;
+	border: none;
+	flex-grow: 1;
+	border: 2px solid white;
+	border-radius: 4px;
+	color: white;
+	margin-right: 10px;
+	padding-right: 10px;
+}
+
+.navbar #searchRecipe::placeholder {
+	color: rgba(255, 255, 255, 0.7);
+}
+
+.navbar #searchRecipe:focus {
+	outline: none;
+	border-color: white;
+}
+
 .navbar {
-    padding-left: 14rem;
+	background-color: rgba(1, 4, 9, 255);
+	padding-left: 1rem;
+}
+
+.navbar a {
+	cursor: pointer;	
 }
 
 .navbar a:hover {
-    color: red;
+	color: red;
 }
 
+.dropdown {
+    min-width: 7rem;
+    position: relative;
+    margin: 1em;
+}
+
+.dropdown * {
+    box-sizing: border-box;
+}
+
+.select {
+    background: rgba(1, 4, 9, 255);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 0.15em white solid;
+    border-radius: 0.3em;
+    padding: 0.2em;
+    cursor: pointer;
+    transition: 0.4s;
+}
+
+.select:hover {
+    background: royalblue;
+}
+
+.caret {
+    width: 0;
+    height: 0;
+    margin: 0.3em;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid white;
+    transition: 0.3s;
+}
+
+.caret-rotate {
+    transform: rotate(180deg);
+}
+
+.menu {
+    list-style: none;
+    padding: 0.2em 0.5em;
+    background: rgba(1, 4, 9, 255);
+    border: 1px white solid;
+    box-shadow: 0 0.5em 1em rgba(0, 0, 0, 0.3);
+    border-radius: 0.5em;
+    color: white;
+    position: absolute;
+    top: 3em;
+    left: 50%;
+    width: 100%;
+    transform: translateX(-50%);
+    opacity: 0;
+    display: none;
+    transition: 0.2s;
+    z-index: 1;
+}
+
+.menu li {
+    padding: 0.7em 0.5em;
+    margin: 0.3em 0;
+    border-radius: 0.5em;
+    cursor: pointer;
+}
+
+.menu li:hover {
+    background: #262626;
+}
+
+.menu-open {
+    display: block;
+    opacity: 1;
+}
+  
+#main-container {
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+}
+  
 .card {
-    margin-bottom: 1rem;
+    border-color: white;
+    color: white;
+    margin: 1rem;
+    width: 16rem;
+    height: 15rem;
+    background-color: #262626;
 }
 
 .card-body h5 {
@@ -32,14 +143,17 @@ body {
 }
 
 .list-group-item {
+    border-color: white;
+    color: white;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    background-color: #262626;
 }
 
 .li a {
     -webkit-border-radius: 50%;
-    background-color: rgba(89, 206, 181, .85);
+    background-color: rgba(89, 206, 181, 0.85);
     border-radius: 50%;
     color: #fff;
     display: inline-block;
@@ -49,72 +163,90 @@ body {
     width: 30px;
     font-size: 12px;
 }
-
+  
 a {
-    color: #707070;
+	color: #707070;
+}
+
+.modal-body input {
+	font-size: 1rem;
+	font-weight: 400;
+}
+
+.modal-body label {
+	font-size: large;
+	font-weight: 600;
 }
 
 #searchRecipe {
-    font-size: medium;
-    font-weight: 500;
+	font-size: medium;
+	font-weight: 500;
+}
+
+#logout-button {
+	border-radius: 10%;
+	height: 35px;
+	background-color: red;
+	color: white;
+	border: none;
+	padding: 5px 10px;
+	margin-left: 10px;
+}
+
+#logout-button[disabled] {
+	background-color: lightgray;
+	color: gray;
 }
 
 .button_plus {
-    position: absolute;
-    width: 35px;
-    height: 35px;
-    background: #fff;
-    cursor: pointer;
-    border: 2px solid #095776;
-  
-    /* Mittig */
-    top: 50%;
-    left: 50%;
-  }
-  
-  .button_plus:after {
-    content: '';
-    position: absolute;
-    transform: translate(-50%, -50%);
-    height: 4px;
-    width: 50%;
-    background: #095776;
-    top: 50%;
-    left: 50%;
-  }
-  
-  .button_plus:before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #095776;
-    height: 50%;
-    width: 4px;
-  }
-  
-  .button_plus:hover:before,
-  .button_plus:hover:after {
-    background: #fff;
-    transition: 0.2s;
-  }
-  
-  .button_plus:hover {
-    background-color: #095776;
-    transition: 0.2s;
-  }
+	width: 2rem;
+	height: 2rem;
+	background: #010409;
+	cursor: pointer;
+	border: 2px solid white;
+	top: 70%;
+	left: 70%;
+}
 
-#logout-button {
-    border-radius: 10%;
-    height: 35px;
-    background-color: red;
-    color: white;
-    border: none;
-    padding: 5px 10px;
+.button_plus:after {
+	content: '';
+	position: absolute;
+	transform: translate(-50%, -50%);
+	height: 4px;
+	width: 50%;
+	background: white;
+	top: 50%;
+	left: 50%;
+}
+
+.button_plus:before {
+	content: '';	
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background: white;
+	height: 50%;
+	width: 4px;
+}
+
+.button_plus:hover:before,
+.button_plus:hover:after {
+	background: #fff;
+	transition: 0.2s;
+}
+
+.button_plus:hover {
+	background-color: royalblue;
+	transition: 0.2s;
 }
   
-#logout-button[disabled] {
-    background-color: lightgray;
-    color: gray;
+@media (max-width: 768px) {
+	.navbar {
+		padding-left: 0.5rem;
+	}
+
+	#logout-button {
+		margin-left: 0;
+	}
 }

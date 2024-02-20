@@ -1,18 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { RecipeService } from '../../Models/Recipe/recipe.service';
-import { AuthService } from '../../Security/auth.service';
-import { Recipe } from '../../Models/Recipe/recipe';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpErrorResponse } from '@angular/common/http';
+import { AuthService } from '../../Security/auth.service';
 import { UserService } from '../../Models/User/user.service';
+import { RecipeService } from '../../Models/Recipe/recipe.service';
 import { UserDto } from '../../Models/User/userDto';
+import { Recipe } from '../../Models/Recipe/recipe';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'app-recipe-info',
-  templateUrl: './recipe-info.component.html',
-  styleUrl: './recipe-info.component.css'
+  selector: 'app-user-profile',
+  templateUrl: './user-profile.component.html',
+  styleUrl: './user-profile.component.css'
 })
-export class RecipeInfoComponent implements OnInit {
+export class UserProfileComponent implements OnInit{
   constructor(
     private route: ActivatedRoute,
     private authService: AuthService,
@@ -34,7 +34,6 @@ export class RecipeInfoComponent implements OnInit {
     this.authService.initializeApp().then(() => {
       this.user = this.authService.getUser();
       this.username = this.userService.getUsername();
-      this.fetchRecipe();
     });
   }
 
@@ -47,31 +46,12 @@ export class RecipeInfoComponent implements OnInit {
     });
   }
 
-  public fetchRecipe(): void{
-    this.route.params.subscribe((params) => {
-      const recipeId = params['recipeId'];
-      this.recipeService.getRecipeById(recipeId).subscribe(
-        (recipe: Recipe) => {
-          console.log(recipe)
-          this.recipe = recipe;
-        },
-        (error: HttpErrorResponse) => {
-          console.error(error);
-        }
-      );
-    });
-  }
-
   public mainPage(): void {
     this.router.navigate([`/${this.userService.getUsername()}/main`]);
   }
 
   public discoverRecipes(): void {
     this.router.navigate([`/${this.userService.getUsername()}/recipes`]);
-  }
-
-  public userProfile(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/profile`]);
   }
 
   public logout(): void{   

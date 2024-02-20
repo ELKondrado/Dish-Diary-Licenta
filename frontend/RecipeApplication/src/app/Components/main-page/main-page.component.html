@@ -1,55 +1,64 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-   <a class="navbar-brand" style="color: white; font-weight: 800; font-size: x-large">Dish Diary</a>
+<nav class="navbar navbar-expand-lg navbar-dark">
+   <a id="mainPage" class="navbar-brand UnderlineNav-item" style="color: white; font-weight: 800; font-size: x-large">DishDiary</a>
    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
-       <span class="navbar-toggler-icon"></span>
+      <span class="navbar-toggler-icon"></span>
    </button>
 
    <div class="collapse navbar-collapse" id="navbarColor02">
-       <ul class="navbar-nav mr-auto justify-content-start">
-           <li class="nav-item">
-               <a class="nav-link" (click)="onOpenModal(undefined, 'add')">Add Recipe <span class="sr-only">(current)</span></a>
-           </li>
-           <li class="nav-item">
-               <a class="nav-link" (click)="discoverRecipes()">Discover Recipes <span class="sr-only">(current)</span></a>
-           </li>
-       </ul>
-       <form class="form-inline my-2 my-lg-0">
-           <input (ngModelChange)="searchRecipe(key.value)" #key="ngModel" ngModel type="search" name="key" id="searchRecipe" class="form-control mr-sm-2" placeholder="Search recipes..." required>
-           <button id="logout-button" (click)="logout()">Logout</button>
-       </form>
+      <ul class="navbar-nav mr-auto justify-content-start">
+        <li class="nav-item">
+          <a class="nav-link UnderlineNav-item" (click)="onOpenModal(undefined, 'add')">Add Recipe <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+         <a class="nav-link UnderlineNav-item" style="color: red;">Repository <span class="sr-only">(current)</span></a>
+       </li>
+        <li class="nav-item">
+          <a class="nav-link UnderlineNav-item" (click)="discoverRecipes()">Discover Recipes <span class="sr-only">(current)</span></a>
+        </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+        <div class="search-bar">
+          <input (ngModelChange)="searchRecipe(key.value)" #key="ngModel" ngModel type="search" name="key" id="searchRecipe" class="form-control mr-sm-2" placeholder="Search recipes..." required>
+        </div>
+        <div class="dropdown">
+            <div class="select">
+               <span class="selected">{{this.user?.userName}}</span>
+               <div class="caret"></div>
+            </div>
+            <ul class="menu">
+               <li (click)="userProfile()">Profile</li>
+               <li (click)="logout()">Logout</li>
+            </ul>
+        </div>
+      </form>
    </div>
 </nav>
 
 <body class="main-body">
-   
    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
    
    <div>
-
-      <div>
-         <h3>Welcome to Dish-Diary {{username}}</h3>
-      </div>
-
       <div class="container" id="main-container">
          <div class="row">
             <div *ngFor="let recipe of recipes" class="col-md-6 col-xl-3 card-unit">
-                  <div class="card m-b-30">
-                     <div class="card-body row">
-                        <a (click)="onOpenRecipe(recipe)"><h5 class="card-recipe-name">{{recipe?.name}}</h5></a>
-                     </div>
-                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item">ING: {{recipe?.ingredients}}</li>
-                        <li class="list-group-item">SOP: {{recipe?.stepsOfPreparation}}</li>
-                     </ul>
-                     <div class="card-body card-list">
-                        <div class="float-right btn-group btn-group-sm">
-                              <a (click)="onOpenModal(recipe, 'edit')" class="btn btn-primary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
-                              <a (click)="onOpenModal(recipe, 'delete')" class="btn btn-secondary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Delete"><i class="fa fa-times"></i></a>
-                        </div>
+               <div class="card m-b-30">
+                  <div class="card-body row">
+                     <a (click)="onOpenRecipe(recipe)"><h5 class="card-recipe-name">{{recipe?.name}}</h5></a>
+                  </div>
+                  <ul class="list-group list-group-flush">
+                     <li class="list-group-item">ING: {{recipe?.ingredients}}</li>
+                     <li class="list-group-item">SOP: {{recipe?.stepsOfPreparation}}</li>
+                  </ul>
+                  <div class="card-body card-list">
+                     <div class="float-right btn-group btn-group-sm">
+                        <a (click)="onOpenModal(recipe, 'edit')" class="btn btn-primary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Edit" style="background-color: royalblue;"><i class="fa fa-pencil"></i></a>
+                        <a (click)="onOpenModal(recipe, 'delete')" class="btn btn-secondary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Delete"><i class="fa fa-times"></i></a>
                      </div>
                   </div>
+               </div>
             </div>
          </div>
+         
       </div>
 
    </div>
@@ -80,7 +89,7 @@
                </div>
                <div class="modal-footer">
                   <button type="button" id="add-recipe-form" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary" >Save changes</button>
+                  <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary" style="background-color: royalblue;" >Save changes</button>
                </div>
                </form>
             </div>
@@ -115,7 +124,7 @@
                   </div>
                   <div class="modal-footer">
                      <button type="button" id="" data-dismiss="modal" class="btn btn-secondary">Close</button>
-                     <button (click)="onUpdateRecipe(editForm.value)" data-dismiss="modal" class="btn btn-primary" >Save changes</button>
+                     <button (click)="onUpdateRecipe(editForm.value)" data-dismiss="modal" class="btn btn-primary" style="background-color: royalblue;">Save changes</button>
                   </div>
                </form>
             </div>
