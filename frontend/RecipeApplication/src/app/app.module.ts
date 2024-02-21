@@ -13,6 +13,7 @@ import { AuthGuard } from './Security/auth.guard';
 import { AuthService } from './Security/auth.service';
 import { DiscoverRecipesComponent } from './Components/discover-recipes/discover-recipes.component';
 import { RecipeInfoComponent } from './Components/recipe-info/recipe-info.component';
+import { UserProfileComponent } from './Components/user-profile/user-profile.component';
 
 const routes: Routes = [
   {path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -20,7 +21,8 @@ const routes: Routes = [
   {path: 'register', component: RegisterFormComponent},
   {path: ':username/main', component: MainPageComponent, canActivate: [AuthGuard]},
   {path: ':username/recipes', component: DiscoverRecipesComponent, canActivate: [AuthGuard]},
-  {path: ':username/recipe/:recipeId', component: RecipeInfoComponent, canActivate: [AuthGuard]}
+  {path: ':username/recipe/:recipeId', component: RecipeInfoComponent, canActivate: [AuthGuard]},
+  {path: ':username/profile', component: UserProfileComponent, canActivate: [AuthGuard]}
 ];
 
 @NgModule({
@@ -30,7 +32,8 @@ const routes: Routes = [
     RegisterFormComponent,
     MainPageComponent,
     DiscoverRecipesComponent,
-    RecipeInfoComponent
+    RecipeInfoComponent,
+    UserProfileComponent
   ],
   imports: [
     BrowserModule,

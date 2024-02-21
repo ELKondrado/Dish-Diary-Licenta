@@ -127,65 +127,6 @@ body {
     opacity: 1;
 }
 
-
-#main-container {
-    margin-top: 3rem;
-    margin-bottom: 3rem;
-}
-
-.card {
-    border-color: white;
-    color: white;
-    margin: 1rem;
-    width: 16rem;
-    height: 15rem;
-    background-color: #262626;
-}
-
-.card-body h5 {
-    margin: 0 0 10px;
-    font-weight: 600;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.list-group-item {
-    border-color: white;
-    color: white;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    background-color: #262626;
-}
-
-.li a {
-    -webkit-border-radius: 50%;
-    background-color: rgba(89, 206, 181, 0.85);
-    border-radius: 50%;
-    color: #fff;
-    display: inline-block;
-    height: 30px;
-    line-height: 30px;
-    text-align: center;
-    width: 30px;
-    font-size: 12px;
-}
-
-a {
-    color: #707070;
-}
-
-.modal-body input {
-    font-size: 1rem;
-    font-weight: 400;
-}
-
-.modal-body label {
-    font-size: large;
-    font-weight: 600;
-}
-
 #searchRecipe {
     font-size: medium;
     font-weight: 500;

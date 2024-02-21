@@ -87,9 +87,9 @@ public class RecipeController {
         }
     }
 
-    @PostMapping("/addUserRecipe")
-    public ResponseEntity<Recipe> addUserRecipe(@RequestParam("username") String username,
-                                                @RequestParam("recipeId") long recipeId) {
+    @PostMapping("/addUserRecipe/{username}/{recipeId}")
+    public ResponseEntity<Recipe> addUserRecipe(@PathVariable("username") String username,
+                                                @PathVariable("recipeId") long recipeId) {
         Optional<User> optionalUser = userService.findUserByUserName(username);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();

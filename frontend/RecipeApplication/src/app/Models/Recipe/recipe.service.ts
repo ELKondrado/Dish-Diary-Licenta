@@ -15,6 +15,7 @@ export class RecipeService {
 
   private getHeaders(): HttpHeaders {
     const accessToken = this.authService.getAccessToken();
+
     if (accessToken) {
       return new HttpHeaders({
         'Content-Type': 'application/json',
@@ -44,20 +45,22 @@ export class RecipeService {
   }
 
   //connecting recipes to users
-  public addUserRecipe(recipeId: number, username: string): Observable<Recipe> {
+  public addUserRecipe(username: string, recipeId: number): Observable<Recipe> {
     const headers = this.getHeaders();
-  
-    return this.http.post<Recipe>(`${this.apiServerUrl}/recipe/addUserRecipe?username=${username}&recipeId=${recipeId}`, { headers });
+    
+    return this.http.post<Recipe>(`${this.apiServerUrl}/recipe/addUserRecipe/${username}/${recipeId}`, null, { headers });
   }
 
   //getting all the recipes that a user has added
   public getUserRecipes(userId: number): Observable<Recipe[]> {
     const headers = this.getHeaders();
+
     return this.http.get<Recipe[]>(`${this.apiServerUrl}/recipe/user/${userId}/recipes`, { headers });
   }
 
   public addRecipe(recipe: Recipe): Observable<Recipe> {
     const headers = this.getHeaders();
+    
     return this.http.post<Recipe>(`${this.apiServerUrl}/recipe/add`, recipe, { headers });
   }
 

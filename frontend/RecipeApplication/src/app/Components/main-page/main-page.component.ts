@@ -30,6 +30,7 @@ export class MainPageComponent implements OnInit{
 
   ngOnInit(): void {
     this.fetchRecipes();
+    this.fetchUserMenu();
   }
 
   private fetchRecipes(): void {
@@ -37,6 +38,15 @@ export class MainPageComponent implements OnInit{
       this.user = this.authService.getUser();
       this.username = this.userService.getUsername();
       this.getUserRecipes();
+    });
+  }
+
+  private fetchUserMenu(): void {
+    const dropdown = document.querySelector(".dropdown");
+    const select = dropdown?.querySelector(".select");
+    const menu = dropdown?.querySelector(".menu");  
+    select?.addEventListener('click', () => {
+      menu?.classList.toggle('menu-open');
     });
   }
 
@@ -83,14 +93,6 @@ export class MainPageComponent implements OnInit{
     if (resultRecipes.length === 0 || !key){
       this.getUserRecipes();
     }
-  }
-
-  public discoverRecipes(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/recipes`]);
-  }
-
-  public onOpenRecipe(recipe: Recipe): void {
-    this.router.navigate([`/${this.userService.getUsername()}/recipe/${recipe.id}`]);
   }
 
   public onOpenModal(recipe: Recipe | undefined, mode: string): void {
@@ -180,6 +182,18 @@ export class MainPageComponent implements OnInit{
         alert(error.message);
       }
     );
+  }
+
+  public discoverRecipes(): void {
+    this.router.navigate([`/${this.userService.getUsername()}/recipes`]);
+  }
+
+  public onOpenRecipe(recipe: Recipe): void {
+    this.router.navigate([`/${this.userService.getUsername()}/recipe/${recipe.id}`]);
+  }
+
+  public userProfile(): void {
+    this.router.navigate([`/${this.userService.getUsername()}/profile`]);
   }
  
   public logout(): void {   

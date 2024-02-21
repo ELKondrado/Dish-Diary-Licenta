@@ -1,17 +1,39 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a routerLink="../main" class="navbar-brand" style="color:white; font-weight: 800; font-size:x-large">Dish Diary</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarColor02">
-      <ul class="navbar-nav mr-auto">
+<nav class="navbar navbar-expand-lg navbar-dark">
+   <a id="mainPage" class="navbar-brand UnderlineNav-item" (click)="mainPage()" style="color: white; font-weight: 800; font-size: x-large">DishDiary</a>
+   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+   </button>
+
+   <div class="collapse navbar-collapse" id="navbarColor02">
+      <ul class="navbar-nav mr-auto justify-content-start">
+         <li class="nav-item">
+            <a class="nav-link UnderlineNav-item">Add Recipe <span class="sr-only">(current)</span></a>
+         </li>
+         <li class="nav-item">
+            <a class="nav-link UnderlineNav-item" (click)="mainPage()">Repository <span class="sr-only">(current)</span></a>
+         </li>
+         <li class="nav-item">
+            <a class="nav-link UnderlineNav-item" style="color: red;">Discover Recipes <span class="sr-only">(current)</span></a>
+         </li>
       </ul>
       <form class="form-inline my-2 my-lg-0">
-         <input (ngModelChange)="searchRecipe(key.value)" #key ="ngModel" ngModel type="search" name="key" id="searchRecipe" class="form-control mr-sm-2" placeholder="Search recipes..." required>
-         <button id="logout-button" (click)="logout()">Logout</button>
-      </form>
+         <div class="search-bar">
+           <input (ngModelChange)="searchRecipe(key.value)" #key="ngModel" ngModel type="search" name="key" id="searchRecipe" class="form-control mr-sm-2" placeholder="Search recipes..." required>
+         </div>
+         <div class="dropdown">
+             <div class="select">
+                <span class="selected">{{this.user?.userName}}</span>
+                <div class="caret"></div>
+             </div>
+             <ul class="menu">
+                <li (click)="userProfile()">Profile</li>
+                <li (click)="logout()">Logout</li>
+             </ul>
+         </div>
+       </form>
    </div>
 </nav>
+
 
 <body class="main-body">
    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
@@ -20,7 +42,7 @@
          <div *ngFor="let recipe of recipes" class="col-md-6 col-xl-3 card-unit">
                <div class="card m-b-30">
                   <div class="card-body row">
-                     <h5 class="card-recipe-name">{{recipe?.name}}</h5>
+                     <h5 (click)="onOpenRecipe(recipe)" class="card-recipe-name">{{recipe?.name}}</h5>
                   </div>
                   <ul class="list-group list-group-flush">
                      <li class="list-group-item">ING: {{recipe?.ingredients}}</li>
@@ -28,9 +50,7 @@
                   </ul>
                   <div class="card-body card-list">
                      <div class="float-right btn-group btn-group-sm">
-
                         <div class="button_plus" (click)="onAddRecipeModal(recipe)"><span class="sr-only">(current)</span></div>
-
                      </div>
                   </div>
                </div>
@@ -59,6 +79,7 @@
       </div>
    </div>
 
+   <!-- Recipe Constraint Modal -->
    <div class="modal fade recipe-constraint" id="recipeConstraintModal" tabindex="-1" role="dialog"aria-hidden="true">
       <div class="modal-dialog" role="document">
          <div class="modal-content">
@@ -72,6 +93,26 @@
                <p>You already have this recipe!</p>
                <div class="modal-footer">
                   <button class="btn btn-danger" data-dismiss="modal">Ok</button>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- Recipe Added Successfully Modal -->
+   <div class="modal fade recipe-success" id="recipeSuccesModal" tabindex="-1" role="dialog"aria-hidden="true">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title" id="AddModelLabel">Add Recipe</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+               </button>
+            </div>
+            <div class="modal-body">
+               <p>Recipe Added Successfully!</p>
+               <div class="modal-footer">
+                  <button class="btn btn-danger" data-dismiss="modal" style="background-color: royalblue;">Ok</button>
                </div>
             </div>
          </div>
