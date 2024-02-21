@@ -6,10 +6,14 @@ import com.example.recipeapp.Model.User;
 import com.example.recipeapp.Services.RecipeService;
 import com.example.recipeapp.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -113,5 +117,27 @@ public class RecipeController {
     public ResponseEntity<List<Recipe>> getUserRecipes(@PathVariable("userId") Long userId) {
         List<Recipe> recipes = recipeService.getUserRecipes(userId);
         return new ResponseEntity<>(recipes, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/{recipeId}/uploadImage", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<String> uploadImage(@PathVariable("recipeId") Long recipeId,
+                                              @RequestPart("image") MultipartFile image) throws IOException {
+        Recipe recipe = recipeService.findRecipeById(recipeId);
+        recipeService.addRecipeImage(recipe, image);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/{recipeId}/image")
+    public ResponseEntity<byte[]> getProfileImage(@PathVariable("recipeId") Long recipeId) {
+        Recipe recipe = recipeService.findRecipeById(recipeId);
+
+        if (recipe.getImage() != null) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_JPEG);
+
+            return new ResponseEntity<>(recipe.getImage(), headers, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

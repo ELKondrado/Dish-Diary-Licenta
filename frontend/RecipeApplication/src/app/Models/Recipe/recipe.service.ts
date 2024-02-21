@@ -15,10 +15,8 @@ export class RecipeService {
 
   private getHeaders(): HttpHeaders {
     const accessToken = this.authService.getAccessToken();
-
     if (accessToken) {
       return new HttpHeaders({
-        'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`,
       });
     }
@@ -84,5 +82,16 @@ export class RecipeService {
   public deleteRecipe(recipeId: number): Observable<void> {
     const headers = this.getHeaders();
     return this.http.delete<void>(`${this.apiServerUrl}/recipe/delete/${recipeId}`, { headers });
+  }
+
+  public uploadImage(recipeId: number, formData: FormData) {
+    const headers = this.getHeaders();
+
+    return this.http.post(`${this.apiServerUrl}/recipe/${recipeId}/uploadImage`, formData, { headers } );
+  }
+  
+  public getImage(recipeId: number) {
+    const headers = this.getHeaders();
+    return this.http.get(`${this.apiServerUrl}/recipe/${recipeId}/image`, { headers, responseType: 'arraybuffer' });
   }
 }

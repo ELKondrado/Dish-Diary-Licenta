@@ -129,57 +129,80 @@ body {
 
 /* END NAVBAR */
 
-.card {
-    border-color: white;
+.recipe-info {
+    display: flex;
+    margin-right: 7.5rem;
+    margin-top: 3rem;
     color: white;
-    margin: 1rem;
-    width: 16rem;
-    height: 15rem;
-    background-color: #262626;
+    white-space: pre-wrap;
 }
 
-.card-body h5 {
-    margin: 0 0 10px;
-    font-weight: 600;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.recipe-image {
+    width: 100%;
+    height: 100%;
+    max-width: 600px;
+    max-height: 600px;
+    object-fit: cover; 
+    border: 0.1em solid #ddd;
 }
 
-.list-group-item {
-    border-color: white;
-    color: white;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    background-color: #262626;
-}
-
-.li a {
-    -webkit-border-radius: 50%;
-    background-color: rgba(89, 206, 181, 0.85);
-    border-radius: 50%;
-    color: #fff;
-    display: inline-block;
-    height: 30px;
-    line-height: 30px;
+.recipe-info .recipe-name h2{
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
     text-align: center;
-    width: 30px;
-    font-size: 12px;
 }
 
-a {
-    color: #707070;
+.recipe-upload-button{
+    display: grid;
+    place-items: center;
 }
 
-.modal-body input {
-    font-size: 1rem;
-    font-weight: 400;
+.upload-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 120px;
+    height: 30px;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    border: none;
+    position: relative; 
 }
 
-.modal-body label {
-    font-size: large;
-    font-weight: 600;
+#fileInput {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.upload-button:hover, .upload-button:focus {
+    background-color: #45a049;
+}
+
+.recipe-details {
+    flex: 2;
+    color: white;
+    background-color: #191c22;
+    padding: 1.5em;
+    margin-left: 3rem;
+    margin-right: 3rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.recipe-details .ingredients-header{
+    font-weight: 700;
+    font-size: larger;
+}
+
+.recipe-details .ingredients-header, .stepsOfPreparation-header {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 0.1em solid #ddd;
 }
 
 @media (max-width: 768px) {

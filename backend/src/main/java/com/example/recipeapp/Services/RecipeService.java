@@ -10,10 +10,12 @@ import com.example.recipeapp.Repositories.RecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -122,5 +124,12 @@ public class RecipeService {
 
     public List<Recipe> getUserRecipes(Long userId) {
         return recipeRepository.findByUsers_UserId(userId);
+    }
+
+    @Transactional
+    public void addRecipeImage(Recipe recipe, MultipartFile image) throws IOException {
+        byte[] imageData = image.getBytes();
+        recipe.setImage(imageData);
+        recipeRepository.save(recipe);
     }
 }
