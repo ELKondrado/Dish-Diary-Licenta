@@ -19,18 +19,17 @@ export class UserService {
     const accessToken = this.authService.getAccessToken();
     if (accessToken) {
       return new HttpHeaders({
-        'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`,
       });
     }
     throw new Error('Access token not available');
   }
 
-  setUsername(username: string): void {
+  public setUsername(username: string): void {
     this.username = username;
   }
 
-  getUsername(): string | undefined {
+  public getUsername(): string | undefined {
     return this.username;
   }
 
@@ -40,6 +39,17 @@ export class UserService {
 
   public register(user: User): Observable<User>{ 
     return this.http.post<User>(`${this.apiServerUrl}/auth/register`, user);
+  }
+
+  public uploadProfileImage(userId: number, formData: FormData) {
+    const headers = this.getHeaders();
+
+    return this.http.post(`${this.apiServerUrl}/user/${userId}/uploadImage`, formData, { headers } );
+  }
+  
+  public getProfileImage(userId: number) {
+    const headers = this.getHeaders();
+    return this.http.get(`${this.apiServerUrl}/user/${userId}/profileImage`, { headers, responseType: 'arraybuffer' });
   }
   //to update
   public getUsers(): Observable<User[]>{

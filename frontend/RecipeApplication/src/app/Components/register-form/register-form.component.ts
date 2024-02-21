@@ -28,8 +28,10 @@ export class RegisterFormComponent implements OnInit {
         console.log(response);
         this.userService.login(registerForm.value).subscribe(
           (response: any) => {
+            this.userService.setUsername(registerForm.value.username)
             this.authService.setAccessToken(response.token);
-            this.router.navigate(['/main']);
+            localStorage.setItem('access_token', response.token);
+            this.router.navigate([`/${this.userService.getUsername()}/main`]);
           }
         )
       },

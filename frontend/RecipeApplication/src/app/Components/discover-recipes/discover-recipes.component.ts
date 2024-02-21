@@ -24,27 +24,51 @@ export class DiscoverRecipesComponent implements OnInit{
   public recipes: Recipe[] = [];
   public username: string | undefined;
   public addedRecipe: Recipe | undefined;
+  public avatarUrl: String | undefined;
+  public selectedFile: File | undefined;
 
   ngOnInit(): void {
-    this.fetchRecipes();
-    this.fetchUserMenu();
+    this.fetchData();
+    this.fetchUser();
   }
 
-  private fetchRecipes(): void {
+  private fetchData(): void {
     this.authService.initializeApp().then(() => {
       this.user = this.authService.getUser();
       this.username = this.userService.getUsername();
       this.getRecipes();
+      this.getProfileImage();
     });
   }
 
-  private fetchUserMenu(): void {
+  private fetchUser(): void {
     const dropdown = document.querySelector(".dropdown");
-    const select = dropdown?.querySelector(".select");
-    const menu = dropdown?.querySelector(".menu");  
-    select?.addEventListener('click', () => {
+    const avatar = dropdown?.querySelector(".lil-avatar");
+    const menu = dropdown?.querySelector(".menu");
+  
+    avatar?.addEventListener('click', () => {
+      console.log("MENU")
+
       menu?.classList.toggle('menu-open');
     });
+
+    const image = document.querySelector('.profile-avatar') as HTMLImageElement;
+    const imageContainer = document.querySelector('.profile-avatar-container') as HTMLElement;
+
+    if (image && imageContainer) {
+      image.addEventListener('load', () => {
+        const containerWidth = imageContainer.offsetWidth;
+        const aspectRatio = 1;
+
+        const newWidth = containerWidth;
+        const newHeight = containerWidth * aspectRatio;
+
+        image.style.width = `${newWidth}px`;
+        image.style.height = `${newHeight}px`;
+        console.log( image.style.width)
+        console.log( image.style.height)
+      });
+    }
   }
 
   public getRecipes(): void {
@@ -110,8 +134,32 @@ export class DiscoverRecipesComponent implements OnInit{
     }
     this.recipes = resultRecipes;
     if (resultRecipes.length === 0 || !key){
-      this.fetchRecipes();
+      this.fetchData();
     }
+  }
+
+  public getProfileImage() {
+    if (this.user?.userId) {
+      this.userService.getProfileImage(this.user.userId).subscribe(
+        (data: any) => {
+          this.avatarUrl = this.arrayBufferToBase64(data);
+        },
+        (error: HttpErrorResponse) => {
+          console.error('Error getting profile image:', error);
+        }
+      );
+    }
+  }
+
+  public arrayBufferToBase64(buffer: ArrayBuffer): string {
+    const binary = new Uint8Array(buffer);
+    const bytes: string[] = [];
+
+    binary.forEach((byte) => {
+      bytes.push(String.fromCharCode(byte));
+    });
+
+    return 'data:image/jpeg;base64,' + btoa(bytes.join(''));
   }
 
   public mainPage(): void {

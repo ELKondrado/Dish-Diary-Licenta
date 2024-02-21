@@ -21,14 +21,13 @@
            <input (ngModelChange)="searchRecipe(key.value)" #key="ngModel" ngModel type="search" name="key" id="searchRecipe" class="form-control mr-sm-2" placeholder="Search recipes..." required>
          </div>
          <div class="dropdown">
-             <div class="select">
-                <span class="selected">{{this.user?.userName}}</span>
-                <div class="caret"></div>
-             </div>
-             <ul class="menu">
-                <li (click)="userProfile()">Profile</li>
-                <li (click)="logout()">Logout</li>
-             </ul>
+            <div class="lil-avatar">
+               <img class="avatar profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
+            </div>
+            <ul class="menu">
+               <li (click)="userProfile()">Profile</li>
+               <li (click)="logout()">Logout</li>
+            </ul>
          </div>
        </form>
    </div>

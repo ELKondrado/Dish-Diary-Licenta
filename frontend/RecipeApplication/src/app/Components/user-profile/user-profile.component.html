@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-dark">
-    <a id="mainPage" class="navbar-brand UnderlineNav-item" (click)="mainPage()" style="color: white; font-weight: 800; font-size: x-large">DishDiary</a>
+    <a id="mainPage" class="navbar-brand" (click)="mainPage()" style="color: white; font-weight: 800; font-size: x-large">DishDiary</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
        <span class="navbar-toggler-icon"></span>
     </button>
@@ -7,23 +7,22 @@
     <div class="collapse navbar-collapse" id="navbarColor02">
        <ul class="navbar-nav mr-auto justify-content-start">
         <li class="nav-item">
-           <a class="nav-link UnderlineNav-item">Add Recipe <span class="sr-only">(current)</span></a>
+           <a class="nav-link">Add Recipe <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link UnderlineNav-item" (click)="mainPage()">Repository <span class="sr-only">(current)</span></a>
+            <a class="nav-link" (click)="mainPage()">Repository <span class="sr-only">(current)</span></a>
        </li>
         <li class="nav-item">
-           <a class="nav-link UnderlineNav-item" (click)="discoverRecipes()">Discover Recipes <span class="sr-only">(current)</span></a>
+           <a class="nav-link" (click)="discoverRecipes()">Discover Recipes <span class="sr-only">(current)</span></a>
         </li>
        </ul>
        <form class="form-inline my-2 my-lg-0">
          <div class="search-bar">
-           <input #key="ngModel" ngModel type="search" name="key" id="searchRecipe" class="form-control mr-sm-2" placeholder="Search recipes..." required>
+            <input #key="ngModel" ngModel type="search" name="key" id="searchRecipe" class="form-control mr-sm-2" placeholder="Search recipes..." required>
          </div>
          <div class="dropdown">
-             <div class="select">
-                <span class="selected">{{this.user?.userName}}</span>
-                <div class="caret"></div>
+             <div class="lil-avatar">
+                <img class="avatar profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
              </div>
              <ul class="menu">
                 <li>Profile</li>
@@ -33,3 +32,49 @@
        </form>
     </div>
  </nav>
+
+<body>
+  <div class="container">
+   <div class="user-img-details">
+
+      <div class="profile">
+         <div class="profile-avatar-container">
+           <img class="profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
+         </div>
+         <div class="profile-username">
+            <h2>{{this.user?.userName}}</h2>
+         </div>
+         <div class="profile-upload-button">
+            <label for="fileInput" class="upload-button"><input type="file" id="fileInput" (change)="onSelectFile($event)">Upload File</label>
+         </div>
+       </div>
+
+      <div class="details">
+         <h2>Details</h2>
+         <div class="detail-item">
+            <p>Total recipes:</p>
+         </div>
+         <div class="detail-item">
+            <p>Total recipes created:</p>
+         </div>
+         <div class="detail-item">
+            <p>Total recipes added:</p>
+         </div>
+      </div>
+
+   </div>
+
+    <div class="repositories">
+      <h2>Repositories</h2>
+      <div class="repo-item">
+        <a href="#">Repository 1</a>
+        <span>Updated 2 days ago</span>
+      </div>
+      <div class="repo-item">
+        <a href="#">Repository 2</a>
+        <span>Updated 5 days ago</span>
+      </div>
+      <!-- Add more repository items as needed -->
+    </div>
+  </div>
+</body>

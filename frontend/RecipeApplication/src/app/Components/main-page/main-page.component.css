@@ -14,6 +14,8 @@ body {
     padding-bottom: 10rem;
 }
 
+/* START NAVBAR */
+
 .navbar {
     background-color: rgba(1, 4, 9, 255);
     padding-left: 1rem;
@@ -51,8 +53,9 @@ body {
     cursor: pointer;
 }
 
+/* START DROP DOWN */
+
 .dropdown {
-    min-width: 7rem;
     position: relative;
     margin: 1em;
 }
@@ -61,35 +64,12 @@ body {
     box-sizing: border-box;
 }
 
-.select {
-    background: rgba(1, 4, 9, 255);
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.avatar {
+    border-radius: 50%;
     border: 0.15em white solid;
-    border-radius: 0.3em;
-    padding: 0.2em;
+    width: 3rem;
+    height: 3rem;
     cursor: pointer;
-    transition: 0.4s;
-}
-
-.select:hover {
-    background: royalblue;
-}
-
-.caret {
-    width: 0;
-    height: 0;
-    margin: 0.3em;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-top: 6px solid white;
-    transition: 0.3s;
-}
-
-.caret-rotate {
-    transform: rotate(180deg);
 }
 
 .menu {
@@ -102,8 +82,8 @@ body {
     color: white;
     position: absolute;
     top: 3em;
-    left: 50%;
-    width: 100%;
+    left: 10%;
+    width: 7rem;
     transform: translateX(-50%);
     opacity: 0;
     display: none;
@@ -126,6 +106,30 @@ body {
     display: block;
     opacity: 1;
 }
+
+#searchRecipe {
+	font-size: medium;
+	font-weight: 500;
+}
+
+.lil-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.profile-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    object-position: center center;
+    border: 0.1em solid #ddd;
+}
+
+/* END DROP DOWN */
+
+/* START NAVBAR */
 
 #main-container {
     margin-top: 3rem;
@@ -185,17 +189,8 @@ a {
     font-weight: 600;
 }
 
-#searchRecipe {
-    font-size: medium;
-    font-weight: 500;
-}
-
 @media (max-width: 768px) {
     .navbar {
         padding-left: 0.5rem;
-    }
-
-    #logout-button {
-        margin-left: 0;
     }
 }
