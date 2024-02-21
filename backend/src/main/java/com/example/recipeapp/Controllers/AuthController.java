@@ -48,6 +48,7 @@ public class AuthController {
                     new UsernamePasswordAuthenticationToken(
                             loginDto.getUsername(),
                             loginDto.getPassword()));
+
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String token = jwtGenerator.generateToken(authentication);
 
@@ -55,7 +56,6 @@ public class AuthController {
             successResponse.put("token", token);
             return new ResponseEntity<>(successResponse, HttpStatus.OK);
         } catch (Exception e) {
-            // Authentication failed
             Map<String, String> errorResponse = new HashMap<>();
             errorResponse.put("error", "Invalid credentials");
             return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);

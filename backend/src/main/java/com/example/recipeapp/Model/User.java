@@ -29,6 +29,9 @@ public class User {
     private String userName;
     @Column(name="password")
     private String userPassword;
+    @Lob
+    @Column(name = "profile_image", columnDefinition = "BLOB")
+    private byte[] profileImage;
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
         inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))

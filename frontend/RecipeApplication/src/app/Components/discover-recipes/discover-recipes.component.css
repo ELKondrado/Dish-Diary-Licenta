@@ -12,14 +12,14 @@ body {
 }
 
 .navbar #searchRecipe {
-	background: transparent;
-	border: none;
-	flex-grow: 1;
-	border: 2px solid white;
-	border-radius: 4px;
-	color: white;
-	margin-right: 10px;
-	padding-right: 10px;
+    background: transparent;
+    border: none;
+    flex-grow: 1;
+    border: 0.15em solid white;
+    border-radius: 0.3em;
+    color: white;
+    margin-right: 2em;
+    padding-right: 3em;
 }
 
 .navbar #searchRecipe::placeholder {
@@ -44,8 +44,9 @@ body {
 	color: red;
 }
 
+/* START DROP DOWN */
+
 .dropdown {
-    min-width: 7rem;
     position: relative;
     margin: 1em;
 }
@@ -54,35 +55,12 @@ body {
     box-sizing: border-box;
 }
 
-.select {
-    background: rgba(1, 4, 9, 255);
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.avatar {
+    border-radius: 50%;
     border: 0.15em white solid;
-    border-radius: 0.3em;
-    padding: 0.2em;
+    width: 3rem;
+    height: 3rem;
     cursor: pointer;
-    transition: 0.4s;
-}
-
-.select:hover {
-    background: royalblue;
-}
-
-.caret {
-    width: 0;
-    height: 0;
-    margin: 0.3em;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-top: 6px solid white;
-    transition: 0.3s;
-}
-
-.caret-rotate {
-    transform: rotate(180deg);
 }
 
 .menu {
@@ -95,8 +73,8 @@ body {
     color: white;
     position: absolute;
     top: 3em;
-    left: 50%;
-    width: 100%;
+    left: 10%;
+    width: 7rem;
     transform: translateX(-50%);
     opacity: 0;
     display: none;
@@ -119,7 +97,29 @@ body {
     display: block;
     opacity: 1;
 }
+
+#searchRecipe {
+	font-size: medium;
+	font-weight: 500;
+}
+
+.lil-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.profile-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    object-position: center center;
+    border: 0.1em solid #ddd;
+}
   
+/* END DROP DOWN */
+
 #main-container {
     margin-top: 3rem;
     margin-bottom: 3rem;
@@ -178,26 +178,6 @@ a {
 	font-weight: 600;
 }
 
-#searchRecipe {
-	font-size: medium;
-	font-weight: 500;
-}
-
-#logout-button {
-	border-radius: 10%;
-	height: 35px;
-	background-color: red;
-	color: white;
-	border: none;
-	padding: 5px 10px;
-	margin-left: 10px;
-}
-
-#logout-button[disabled] {
-	background-color: lightgray;
-	color: gray;
-}
-
 .button_plus {
 	width: 2rem;
 	height: 2rem;
@@ -244,9 +224,5 @@ a {
 @media (max-width: 768px) {
 	.navbar {
 		padding-left: 0.5rem;
-	}
-
-	#logout-button {
-		margin-left: 0;
 	}
 }

@@ -1,38 +1,38 @@
 <nav class="navbar navbar-expand-lg navbar-dark">
-   <a id="mainPage" class="navbar-brand UnderlineNav-item" (click)="mainPage()" style="color: white; font-weight: 800; font-size: x-large">DishDiary</a>
+   <a id="mainPage" class="navbar-brand" (click)="mainPage()" style="color: white; font-weight: 800; font-size: x-large">DishDiary</a>
    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
    </button>
 
    <div class="collapse navbar-collapse" id="navbarColor02">
       <ul class="navbar-nav mr-auto justify-content-start">
-        <li class="nav-item">
-          <a class="nav-link UnderlineNav-item">Add Recipe <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
-         <a class="nav-link UnderlineNav-item" (click)="mainPage()">Repository <span class="sr-only">(current)</span></a>
-       </li>
-        <li class="nav-item">
-          <a class="nav-link UnderlineNav-item" (click)="discoverRecipes()">Discover Recipes <span class="sr-only">(current)</span></a>
-        </li>
+         <li class="nav-item">
+            <a class="nav-link">Add Recipe <span class="sr-only">(current)</span></a>
+         </li>
+         <li class="nav-item">
+            <a class="nav-link" (click)="mainPage()">Repository <span class="sr-only">(current)</span></a>
+         </li>
+         <li class="nav-item">
+            <a class="nav-link" (click)="discoverRecipes()">Discover Recipes <span class="sr-only">(current)</span></a>
+         </li>
       </ul>
       <form class="form-inline my-2 my-lg-0">
         <div class="search-bar">
-          <input #key="ngModel" ngModel type="search" name="key" id="searchRecipe" class="form-control mr-sm-2" placeholder="Search recipes..." required>
+            <input #key="ngModel" ngModel type="search" name="key" id="searchRecipe" class="form-control mr-sm-2" placeholder="Search recipes..." required>
         </div>
         <div class="dropdown">
-            <div class="select">
-               <span class="selected">{{this.user?.userName}}</span>
-               <div class="caret"></div>
+            <div class="lil-avatar">
+               <img class="avatar profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
             </div>
             <ul class="menu">
                <li (click)="userProfile()">Profile</li>
                <li (click)="logout()">Logout</li>
             </ul>
-        </div>
+         </div>
       </form>
    </div>
 </nav>
+
 <body class="main-body">
    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
    <div class="container" id="main-container">

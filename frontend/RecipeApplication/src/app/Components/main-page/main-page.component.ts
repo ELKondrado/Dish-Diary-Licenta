@@ -27,27 +27,51 @@ export class MainPageComponent implements OnInit{
   public editRecipe: Recipe | undefined;
   public deletedRecipe: Recipe | undefined;
   public username: string | undefined;
+  public avatarUrl: String | undefined;
+  public selectedFile: File | undefined;
 
   ngOnInit(): void {
-    this.fetchRecipes();
-    this.fetchUserMenu();
+    this.fetchData();
+    this.fetchUser();
   }
 
-  private fetchRecipes(): void {
+  private fetchData(): void {
     this.authService.initializeApp().then(() => {
       this.user = this.authService.getUser();
       this.username = this.userService.getUsername();
       this.getUserRecipes();
+      this.getProfileImage();
     });
   }
 
-  private fetchUserMenu(): void {
+  private fetchUser(): void {
     const dropdown = document.querySelector(".dropdown");
-    const select = dropdown?.querySelector(".select");
-    const menu = dropdown?.querySelector(".menu");  
-    select?.addEventListener('click', () => {
+    const avatar = dropdown?.querySelector(".lil-avatar");
+    const menu = dropdown?.querySelector(".menu");
+  
+    avatar?.addEventListener('click', () => {
+      console.log("MENU")
+
       menu?.classList.toggle('menu-open');
     });
+
+    const image = document.querySelector('.profile-avatar') as HTMLImageElement;
+    const imageContainer = document.querySelector('.profile-avatar-container') as HTMLElement;
+
+    if (image && imageContainer) {
+      image.addEventListener('load', () => {
+        const containerWidth = imageContainer.offsetWidth;
+        const aspectRatio = 1;
+
+        const newWidth = containerWidth;
+        const newHeight = containerWidth * aspectRatio;
+
+        image.style.width = `${newWidth}px`;
+        image.style.height = `${newHeight}px`;
+        console.log( image.style.width)
+        console.log( image.style.height)
+      });
+    }
   }
 
   public getUserRecipes(): void {
@@ -74,7 +98,7 @@ export class MainPageComponent implements OnInit{
     this.recipeService.updateRecipe(29, 'Recipe222', undefined, undefined).subscribe(
       (updatedRecipe: Recipe) => {
         console.log('Recipe updated successfully:', updatedRecipe);
-        this.fetchRecipes(); 
+        this.fetchData(); 
       },
       (error) => {
         console.error('Error updating recipe:', error);
@@ -127,7 +151,7 @@ export class MainPageComponent implements OnInit{
       (response: Recipe) => {
         console.log(response);
         addForm.reset();
-        this.fetchRecipes(); 
+        this.fetchData(); 
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -159,7 +183,7 @@ export class MainPageComponent implements OnInit{
       this.recipeService.updateRecipe(recipeId, recipeName, recipeIngredients, recipeStepsOfPreparation).subscribe(
         (response: Recipe) => {
           console.log(response);
-          this.fetchRecipes();
+          this.fetchData();
         },
         (error: HttpErrorResponse) => {
           console.error(error.message);
@@ -176,12 +200,36 @@ export class MainPageComponent implements OnInit{
     this.userService.deleteUserRecipe(userId, recipeId).subscribe(
       (response: void) => {
         console.log(response);
-        this.fetchRecipes();
+        this.fetchData();
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
       }
     );
+  }
+
+  public getProfileImage() {
+    if (this.user?.userId) {
+      this.userService.getProfileImage(this.user.userId).subscribe(
+        (data: any) => {
+          this.avatarUrl = this.arrayBufferToBase64(data);
+        },
+        (error: HttpErrorResponse) => {
+          console.error('Error getting profile image:', error);
+        }
+      );
+    }
+  }
+
+  public arrayBufferToBase64(buffer: ArrayBuffer): string {
+    const binary = new Uint8Array(buffer);
+    const bytes: string[] = [];
+
+    binary.forEach((byte) => {
+      bytes.push(String.fromCharCode(byte));
+    });
+
+    return 'data:image/jpeg;base64,' + btoa(bytes.join(''));
   }
 
   public discoverRecipes(): void {
