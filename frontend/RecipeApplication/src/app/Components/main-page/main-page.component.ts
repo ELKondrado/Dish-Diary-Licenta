@@ -50,28 +50,8 @@ export class MainPageComponent implements OnInit{
     const menu = dropdown?.querySelector(".menu");
   
     avatar?.addEventListener('click', () => {
-      console.log("MENU")
-
       menu?.classList.toggle('menu-open');
     });
-
-    const image = document.querySelector('.profile-avatar') as HTMLImageElement;
-    const imageContainer = document.querySelector('.profile-avatar-container') as HTMLElement;
-
-    if (image && imageContainer) {
-      image.addEventListener('load', () => {
-        const containerWidth = imageContainer.offsetWidth;
-        const aspectRatio = 1;
-
-        const newWidth = containerWidth;
-        const newHeight = containerWidth * aspectRatio;
-
-        image.style.width = `${newWidth}px`;
-        image.style.height = `${newHeight}px`;
-        console.log( image.style.width)
-        console.log( image.style.height)
-      });
-    }
   }
 
   public getUserRecipes(): void {
@@ -146,6 +126,7 @@ export class MainPageComponent implements OnInit{
   public onAddRecipe(addForm: NgForm): void {
     const button = document.getElementById('add-recipe-form');
     const username = this.authService.getUsernameFromToken();
+   
     button?.click()
     this.recipeService.addUserNewRecipe(addForm.value, username).subscribe(
       (response: Recipe) => {

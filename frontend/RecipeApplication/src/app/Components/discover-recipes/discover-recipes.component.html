@@ -23,6 +23,7 @@
          <div class="dropdown">
             <div class="lil-avatar">
                <img class="avatar profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
+               <img class="avatar profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
             </div>
             <ul class="menu">
                <li (click)="userProfile()">Profile</li>
@@ -41,7 +42,7 @@
          <div *ngFor="let recipe of recipes" class="col-md-6 col-xl-3 card-unit">
                <div class="card m-b-30">
                   <div class="card-body row">
-                     <h5 (click)="onOpenRecipe(recipe)" class="card-recipe-name">{{recipe?.name}}</h5>
+                     <h5 (click)="onOpenRecipe(recipe)" class="card-recipe-name"  style="cursor: pointer;">{{recipe?.name}}</h5>
                   </div>
                   <ul class="list-group list-group-flush">
                      <li class="list-group-item">ING: {{recipe?.ingredients}}</li>

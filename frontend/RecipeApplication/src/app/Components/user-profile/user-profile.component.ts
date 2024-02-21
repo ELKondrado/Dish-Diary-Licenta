@@ -47,28 +47,8 @@ export class UserProfileComponent implements OnInit{
     const menu = dropdown?.querySelector(".menu");
   
     avatar?.addEventListener('click', () => {
-      console.log("MENU")
-
       menu?.classList.toggle('menu-open');
     });
-
-    const image = document.querySelector('.profile-avatar') as HTMLImageElement;
-    const imageContainer = document.querySelector('.profile-avatar-container') as HTMLElement;
-
-    if (image && imageContainer) {
-      image.addEventListener('load', () => {
-        const containerWidth = imageContainer.offsetWidth;
-        const aspectRatio = 1;
-
-        const newWidth = containerWidth;
-        const newHeight = containerWidth * aspectRatio;
-
-        image.style.width = `${newWidth}px`;
-        image.style.height = `${newHeight}px`;
-        console.log( image.style.width)
-        console.log( image.style.height)
-      });
-    }
   }
 
   public onSelectFile(event: any) {

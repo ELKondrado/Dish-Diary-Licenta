@@ -207,8 +207,6 @@ body {
     flex: 1;
     color: white;
     background-color: #191c22;
-    border: 0.1em solid #ddd;
-    border-radius: 1rem;
     padding: 2rem;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
@@ -232,7 +230,6 @@ body {
     color: white;
     background-color: #191c22;
     border: 0.1em solid white;
-    border-radius: 1rem;
     padding: 1.5em;
     margin-left: 3rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

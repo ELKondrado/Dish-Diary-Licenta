@@ -23,6 +23,7 @@
         <div class="dropdown">
             <div class="lil-avatar">
                <img class="avatar profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
+               <img class="avatar profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
             </div>
             <ul class="menu">
                <li (click)="userProfile()">Profile</li>
@@ -35,24 +36,44 @@
 
 <body class="main-body">
    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-   <div class="container" id="main-container">
-      <div class="row">
-         <div class="col-md-6 col-xl-3 card-unit">
-               <div class="card m-b-30">
-                  <div class="card-body row">
-                     <h5 class="card-recipe-name">{{recipe?.name}}</h5>
-                  </div>
-                  <ul class="list-group list-group-flush">
-                     <li class="list-group-item">ING: {{recipe?.ingredients}}</li>
-                     <li class="list-group-item">SOP: {{recipe?.stepsOfPreparation}}</li>
-                  </ul>
 
-                  <div class="card-body card-list">
+   <div id="main-container">
 
-                  </div>
+      <div class="recipe-info">
+
+         <div class="recipe-details">
+            <h2>Details</h2>
+            
+            <div class="recipe-ingredients">
+               <div class="ingredients-header">
+                  <h5>Ingredients</h5>
                </div>
+               <div>
+                  <span>{{this.recipe?.ingredients}}</span>
+               </div>
+            </div>
+
+            <div class="recipe-stepsOfPreparation">
+               <div class="stepsOfPreparation-header">
+                  <h5 id="stepsOfPreparation">Steps Of Preparations</h5>
+               </div>
+               <span>{{recipe?.stepsOfPreparation}}</span>
+            </div>
+         </div>
+
+         <div class="recipe-avatar">
+            <div class="recipe-image-container">
+               <img class="recipe-image" *ngIf="recipeUrl" [src]="recipeUrl" alt="Recipe Image">
+            </div>
+            <div class="recipe-name">
+               <h2>{{this.recipe?.name}}</h2>
+            </div>
+            <div class="recipe-upload-button">
+               <label for="fileInput" class="upload-button"><input type="file" id="fileInput" (change)="onSelectFile($event)">Upload Image</label>
+            </div>
          </div>
       </div>
+
     </div>
 
 </body>

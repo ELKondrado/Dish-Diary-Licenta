@@ -189,6 +189,12 @@ a {
     font-weight: 600;
 }
 
+.modal-body textarea{
+    font-size: 1rem;
+    font-weight: 400;
+    height: 150px;
+}
+
 @media (max-width: 768px) {
     .navbar {
         padding-left: 0.5rem;

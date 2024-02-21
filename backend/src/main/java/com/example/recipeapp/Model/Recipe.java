@@ -1,5 +1,6 @@
 package com.example.recipeapp.Model;
 
+import com.sun.istack.NotNull;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -21,9 +22,17 @@ public class Recipe {
             generator = "recipe_sequence"
     )
     private long id;
+    @NotNull
+    @Column(name = "name")
     private String name;
+    @NotNull
+    @Column(name = "ingredients", length = 512)
     private String ingredients;
+    @NotNull
+    @Column(name = "steps_of_preparation", length = 2056)
     private String stepsOfPreparation;
+    @Lob
+    private byte[] image;
 
     @ManyToMany(mappedBy = "recipes", fetch = FetchType.LAZY)
     private List<User> users = new ArrayList<>();

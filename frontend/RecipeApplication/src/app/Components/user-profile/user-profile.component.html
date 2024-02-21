@@ -23,6 +23,7 @@
          <div class="dropdown">
              <div class="lil-avatar">
                 <img class="avatar profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
+                <img class="avatar profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
              </div>
              <ul class="menu">
                 <li>Profile</li>
@@ -40,12 +41,13 @@
       <div class="profile">
          <div class="profile-avatar-container">
            <img class="profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
+           <img class="profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
          </div>
          <div class="profile-username">
             <h2>{{this.user?.userName}}</h2>
          </div>
          <div class="profile-upload-button">
-            <label for="fileInput" class="upload-button"><input type="file" id="fileInput" (change)="onSelectFile($event)">Upload File</label>
+            <label for="fileInput" class="upload-button"><input type="file" id="fileInput" (change)="onSelectFile($event)">Upload Image</label>
          </div>
        </div>
 
@@ -64,7 +66,7 @@
 
    </div>
 
-    <div class="repositories">
+   <div class="repositories">
       <h2>Repositories</h2>
       <div class="repo-item">
         <a href="#">Repository 1</a>
@@ -74,7 +76,7 @@
         <a href="#">Repository 2</a>
         <span>Updated 5 days ago</span>
       </div>
-      <!-- Add more repository items as needed -->
-    </div>
-  </div>
+   </div>
+
+   </div>
 </body>

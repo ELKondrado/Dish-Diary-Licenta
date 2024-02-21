@@ -24,6 +24,7 @@
          <div class="dropdown">
             <div class="lil-avatar">
                <img class="avatar profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
+               <img class="avatar profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
             </div>
             <ul class="menu">
                <li (click)="userProfile()">Profile</li>
@@ -43,7 +44,7 @@
             <div *ngFor="let recipe of recipes" class="col-md-6 col-xl-3 card-unit">
                <div class="card m-b-30">
                   <div class="card-body row">
-                     <a (click)="onOpenRecipe(recipe)"><h5 class="card-recipe-name">{{recipe?.name}}</h5></a>
+                     <h5 (click)="onOpenRecipe(recipe)" class="card-recipe-name" style="cursor: pointer;">{{recipe?.name}}</h5>
                   </div>
                   <ul class="list-group list-group-flush">
                      <li class="list-group-item">ING: {{recipe?.ingredients}}</li>
@@ -81,11 +82,11 @@
                </div>
                <div class="form-group">
                   <label for="ingredients">Ingredients</label>
-                  <input type="text" ngModel name="ingredients" class="form-control" id="ingredients" placeholder="Ingredients" required>
+                  <textarea ngModel name="ingredients" class="form-control" id="ingredients" placeholder="Ingredients" required></textarea>
                </div>
                <div class="form-group">
                   <label for="stepsOfPreparation">Steps Of Preparation</label>
-                  <input type="text" ngModel name="stepsOfPreparation" class="form-control" id="stepsOfPreparation" placeholder="Steps Of Preparation" required>
+                  <textarea ngModel name="stepsOfPreparation" class="form-control" id="stepsOfPreparation" placeholder="Steps Of Preparation" required></textarea>
                </div>
                <div class="modal-footer">
                   <button type="button" id="add-recipe-form" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -116,11 +117,11 @@
                   
                   <div class="form-group">
                      <label for="ingredients">Ingredients</label>
-                     <input type="text" ngModel="{{editRecipe?.ingredients}}" name="ingredients" class="form-control" id="ingredients" name="ingredients" placeholder="Ingredients">
+                     <textarea ngModel="{{editRecipe?.ingredients}}" name="ingredients" class="form-control" id="ingredients" placeholder="Ingredients" required></textarea>
                   </div>
                   <div class="form-group">
                      <label for="stepsOfPreparation">Steps Of Preparation</label>
-                     <input type="text" ngModel="{{editRecipe?.stepsOfPreparation}}" name="stepsOfPreparation" class="form-control" id="stepsOfPreparation" placeholder="Steps Of Preparation">
+                     <textarea ngModel="{{editRecipe?.stepsOfPreparation}}" name="stepsOfPreparation" class="form-control" id="stepsOfPreparation" placeholder="Steps Of Preparation" required></textarea>
                   </div>
                   <div class="modal-footer">
                      <button type="button" id="" data-dismiss="modal" class="btn btn-secondary">Close</button>

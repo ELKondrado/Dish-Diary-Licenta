@@ -25,6 +25,7 @@ export class RecipeInfoComponent implements OnInit {
   public username: string | undefined;
   public recipe: Recipe | undefined;
   public avatarUrl: String | undefined;
+  public recipeUrl: String | undefined;
   public selectedFile: File | undefined;
 
   ngOnInit(): void {
@@ -47,28 +48,8 @@ export class RecipeInfoComponent implements OnInit {
     const menu = dropdown?.querySelector(".menu");
   
     avatar?.addEventListener('click', () => {
-      console.log("MENU")
-
       menu?.classList.toggle('menu-open');
     });
-
-    const image = document.querySelector('.profile-avatar') as HTMLImageElement;
-    const imageContainer = document.querySelector('.profile-avatar-container') as HTMLElement;
-
-    if (image && imageContainer) {
-      image.addEventListener('load', () => {
-        const containerWidth = imageContainer.offsetWidth;
-        const aspectRatio = 1;
-
-        const newWidth = containerWidth;
-        const newHeight = containerWidth * aspectRatio;
-
-        image.style.width = `${newWidth}px`;
-        image.style.height = `${newHeight}px`;
-        console.log( image.style.width)
-        console.log( image.style.height)
-      });
-    }
   }
 
   public fetchRecipe(): void{
@@ -78,6 +59,7 @@ export class RecipeInfoComponent implements OnInit {
         (recipe: Recipe) => {
           console.log(recipe)
           this.recipe = recipe;
+          this.getRecipeImage();
         },
         (error: HttpErrorResponse) => {
           console.error(error);
@@ -86,14 +68,62 @@ export class RecipeInfoComponent implements OnInit {
     });
   }
 
+  public onSelectFile(event: any) {
+    if (event.target.files && event.target.files.length > 0) {
+      this.selectedFile = event.target.files[0];
+
+      const reader = new FileReader();
+      if(this.selectedFile)
+      {
+          reader.readAsDataURL(this.selectedFile);
+          reader.onload = (eventReader: any) => {
+          this.recipeUrl = eventReader.target.result;
+          this.uploadImage();
+        };
+      }
+    }
+  }
+  
+  public uploadImage() {
+    if (this.recipe?.id && this.selectedFile) 
+    {
+      const formData = new FormData();
+      formData.append('image', this.selectedFile);
+  
+      this.recipeService.uploadImage(this.recipe.id, formData).subscribe(
+        () => {
+          this.getRecipeImage();
+        },
+        (error: HttpErrorResponse) => {
+          console.error('Error uploading profile image:', error);
+        }
+      );
+    }
+  }
+
   public getProfileImage() {
-    if (this.user?.userId) {
+    if (this.user?.userId) 
+    {
       this.userService.getProfileImage(this.user.userId).subscribe(
         (data: any) => {
           this.avatarUrl = this.arrayBufferToBase64(data);
         },
         (error: HttpErrorResponse) => {
           console.error('Error getting profile image:', error);
+        }
+      );
+    }
+  }
+
+  public getRecipeImage() {
+    if (this.recipe?.id) 
+    {
+      this.recipeService.getImage(this.recipe.id).subscribe(
+        (data: any) => {
+          this.recipeUrl = this.arrayBufferToBase64(data);
+        },
+        (error: HttpErrorResponse) => {
+          console.error('Error getting recipe image:', error);
         }
       );
     }
@@ -108,7 +138,7 @@ export class RecipeInfoComponent implements OnInit {
     });
 
     return 'data:image/jpeg;base64,' + btoa(bytes.join(''));
-  }
+}
 
   public mainPage(): void {
     this.router.navigate([`/${this.userService.getUsername()}/main`]);
