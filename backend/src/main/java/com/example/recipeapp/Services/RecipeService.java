@@ -7,6 +7,7 @@ import com.example.recipeapp.Exceptions.RecipeStepsOfPreparationNotFoundExceptio
 import com.example.recipeapp.Model.Recipe;
 import com.example.recipeapp.Model.User;
 import com.example.recipeapp.Repositories.RecipeRepository;
+import com.example.recipeapp.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,11 +24,13 @@ import java.util.Optional;
 @Service
 public class RecipeService {
     private final RecipeRepository recipeRepository;
+    private final UserRepository userRepository;
     private final UserService userService;
     @PersistenceContext
     private EntityManager em;
     @Autowired
-    public RecipeService(RecipeRepository recipeRepository, UserService userService) {
+    public RecipeService(RecipeRepository recipeRepository, UserRepository userRepository, UserService userService) {
+        this.userRepository = userRepository;
         this.recipeRepository = recipeRepository;
         this.userService = userService;
     }
@@ -60,6 +63,9 @@ public class RecipeService {
 
     public Recipe addNewRecipe(Recipe recipe, User user) {
         checkRecipeAttributes(recipe);
+        user.setTotalRecipes( user.getTotalRecipes() + 1);
+        user.setTotalRecipesCreated( user.getTotalRecipesCreated() + 1);
+        recipe.setUserOwner(user);
         user.getRecipes().add(recipe);
         recipe.getUsers().add(user);
         return recipeRepository.save(recipe);
@@ -69,8 +75,11 @@ public class RecipeService {
     public boolean addUserRecipe(Recipe recipe, User user) {
         checkRecipeAttributes(recipe);
         if(!userService.doesUserHaveRecipe(user, recipe)) {
+            user.setTotalRecipes( user.getTotalRecipes() + 1);
+            user.setTotalRecipesAdded( user.getTotalRecipesAdded() + 1);
             user.getRecipes().add(em.merge(recipe));
             recipe.getUsers().add(user);
+            userRepository.save(user);
             return true;
         }
         return false;

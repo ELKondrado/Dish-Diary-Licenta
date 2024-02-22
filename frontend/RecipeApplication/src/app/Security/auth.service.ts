@@ -1,9 +1,9 @@
-import { Injectable, APP_INITIALIZER } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { User } from '../Models/User/user';
-import { UserDto } from '../Models/User/userDto';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +11,7 @@ import { UserDto } from '../Models/User/userDto';
 export class AuthService {
   private accessToken: string | null = null;
   private accessTokenKey = 'access_token';
-  private user: UserDto | null = null;
+  private user: User | null = null;
   private apiServerUrl = 'http://localhost:8080';
 
   constructor(private router: Router, private http: HttpClient) {}
@@ -27,19 +27,20 @@ export class AuthService {
     throw new Error('Access token not available');
   }
 
-  setAccessToken(token: string) {
+  public setAccessToken(token: string) {
     this.accessToken = token;
+    localStorage.setItem(this.accessTokenKey, token);
   }
 
-  getAccessToken(): string | null {
+  public getAccessToken(): string | null {
     return this.accessToken;
   }
 
-  isLoggedIn(): boolean {
+  public isLoggedIn(): boolean {
     return !!this.accessToken;
   }
 
-  getUsernameFromToken(): string {
+  public getUsernameFromToken(): string {
     const token = this.accessToken;
     if (token) {
       const payload = JSON.parse(atob(token.split('.')[1]));
@@ -49,49 +50,44 @@ export class AuthService {
     return '';
   }
 
-  getUser(): UserDto | null {
+  public getUser(): User | null {
     return this.user;
   }
 
-  logout(): void {
+  public logout(): void {
     this.accessToken = null;
     localStorage.removeItem(this.accessTokenKey);
     this.router.navigate(['/login']);
   }
 
-  fetchUserDetails(): Observable<any> {
+  public fetchUserDetails(): Observable<User> {
     const headers = this.getHeaders();
     const username = this.getUsernameFromToken();
-    return this.http.get<any>(`${this.apiServerUrl}/user/details/${username}`, { headers });
+    return this.http.get<User>(`${this.apiServerUrl}/user/details/${username}`, { headers });
   }
 
-  loadUser(): Observable<void> {
-    return new Observable<void>((observer) => {
-      this.fetchUserDetails().subscribe(
-        (user: any) => {
-          this.user = user;
-        },
-        (error) => {
-          observer.error(error);
-        },
-        () => {
-          observer.next();
-          observer.complete();
-        }
-      );
-    });
+  public loadUser(): Observable<void> {
+    return this.fetchUserDetails().pipe(
+      tap((user: any) => {
+        this.user = user;
+      }),
+      catchError((error) => {
+        console.error('Error loading user details:', error);
+        return of();
+      })
+    );
   }
 
-  initializeApp(): Promise<void> {
-    return this.loadUser().toPromise();
+  public initializeApp(): Observable<void> {
+    return this.loadUser();
   }
 
-  initializeAuthentication(): Promise<void> {
+  public initializeAuthentication(): Observable<void> {
     const storedToken = localStorage.getItem(this.accessTokenKey);
     if (storedToken) {
       this.setAccessToken(storedToken);
-      return this.loadUser().toPromise();
+      return this.loadUser();
     }
-    return Promise.resolve(); 
+    return of();
   }
 }

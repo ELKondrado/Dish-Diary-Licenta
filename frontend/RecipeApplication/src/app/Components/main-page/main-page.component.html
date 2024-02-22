@@ -41,26 +41,31 @@
    <div>
       <div class="container" id="main-container">
          <div class="row">
-            <div *ngFor="let recipe of recipes" class="col-md-6 col-xl-3 card-unit">
-               <div class="card m-b-30">
-                  <div class="card-body row">
-                     <h5 (click)="onOpenRecipe(recipe)" class="card-recipe-name" style="cursor: pointer;">{{recipe?.name}}</h5>
-                  </div>
-                  <ul class="list-group list-group-flush">
-                     <li class="list-group-item">ING: {{recipe?.ingredients}}</li>
-                     <li class="list-group-item">SOP: {{recipe?.stepsOfPreparation}}</li>
+           <div *ngFor="let recipe of recipes" class="col-md-6 col-xl-3 card-unit">
+             <div class="card m-b-30">
+               <div class="card-body row card-recipe-title">
+                 <h5 (click)="onOpenRecipe(recipe)" style="cursor: pointer;">{{recipe?.name}}</h5>
+               </div>
+               <div class="image-container">
+                  <ul class="list-group list-group-flush recipe-image-container">
+                  <img *ngIf="recipe.image" [src]="recipe.image">
+         
                   </ul>
-                  <div class="card-body card-list">
-                     <div class="float-right btn-group btn-group-sm">
-                        <a (click)="onOpenModal(recipe, 'edit')" class="btn btn-primary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Edit" style="background-color: royalblue;"><i class="fa fa-pencil"></i></a>
-                        <a (click)="onOpenModal(recipe, 'delete')" class="btn btn-secondary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Delete"><i class="fa fa-times"></i></a>
-                     </div>
+               </div>
+               <div class="card-body card-list card-buttons">
+
+                  <div *ngIf="recipe.userOwner.userId == user?.userId" class="edit-area">
+                     <button (click)="onOpenModal(recipe, 'edit')" class="edit-button"><span class="text">Edit</span></button>
+                  </div>
+
+                  <div class="delete-area">
+                     <button (click)="onOpenModal(recipe, 'delete')" class="delete-button"><span class="text">Delete</span></button>
                   </div>
                </div>
-            </div>
+             </div>
+           </div>
          </div>
-         
-      </div>
+       </div>       
 
    </div>
 
@@ -155,7 +160,7 @@
    </div>
 
    <!-- Notification for no recipes -->
-   <div *ngIf="recipes?.length == 0" class="col-lg-12 col-md-12 col-xl-12">
+   <div *ngIf="recipes?.length == 0" class="col-lg-12 col-md-12 col-xl-12 no-recipes-modal">
       <div class="alert alert-info" role="alert">
          <h4 class="alert-heading">NO RECIPES!</h4>
          <p>No Recipes were found.</p>

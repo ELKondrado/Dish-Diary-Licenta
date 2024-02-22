@@ -5,7 +5,7 @@ import { Recipe } from '../../Models/Recipe/recipe';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { UserService } from '../../Models/User/user.service';
-import { UserDto } from '../../Models/User/userDto';
+import { User } from '../../Models/User/user';
 
 @Component({
   selector: 'app-recipe-info',
@@ -21,7 +21,7 @@ export class RecipeInfoComponent implements OnInit {
     private router: Router
   ) {}
 
-  public user: UserDto | null = null;
+  public user: User | null = null;
   public username: string | undefined;
   public recipe: Recipe | undefined;
   public avatarUrl: String | undefined;
@@ -34,7 +34,7 @@ export class RecipeInfoComponent implements OnInit {
   }
 
   public fetchData(): void{
-    this.authService.initializeApp().then(() => {
+    this.authService.initializeApp().subscribe(() => {
       this.user = this.authService.getUser();
       this.username = this.userService.getUsername();
       this.fetchRecipe();
@@ -60,6 +60,8 @@ export class RecipeInfoComponent implements OnInit {
           console.log(recipe)
           this.recipe = recipe;
           this.getRecipeImage();
+          console.log(this.user);
+          console.log(this.recipe.userOwner)
         },
         (error: HttpErrorResponse) => {
           console.error(error);

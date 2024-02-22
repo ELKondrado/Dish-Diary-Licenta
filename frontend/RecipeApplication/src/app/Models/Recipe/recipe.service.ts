@@ -52,7 +52,7 @@ export class RecipeService {
   //getting all the recipes that a user has added
   public getUserRecipes(userId: number): Observable<Recipe[]> {
     const headers = this.getHeaders();
-
+  
     return this.http.get<Recipe[]>(`${this.apiServerUrl}/recipe/user/${userId}/recipes`, { headers });
   }
 

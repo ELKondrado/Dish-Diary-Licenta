@@ -28,8 +28,10 @@ public class UserService {
         return userRepository.findUserByUserName(username);
     }
 
-    public void deleteUserRecipe(long userId, long recipeId) {
-        userRepository.deleteUserRecipe(userId, recipeId);
+    public void deleteUserRecipe(User user, long recipeId) {
+        userRepository.deleteUserRecipe(user.getUserId(), recipeId);
+        user.setTotalRecipes( user.getTotalRecipes() - 1);
+        userRepository.save(user);
     }
 
     public boolean doesUserHaveRecipe(User user, Recipe recipe) {

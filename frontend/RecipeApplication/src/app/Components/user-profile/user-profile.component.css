@@ -215,8 +215,8 @@ body {
 }
 
 .detail-item {
+    padding-top: 0.6rem;
     border-bottom: 1px solid #ddd;
-    padding: 0.75em 0;
 }
 
 .detail-item p {

@@ -2,6 +2,9 @@ body {
     height: 100%;
     overflow-y: scroll;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
 }
   
 .main-body {
@@ -125,13 +128,25 @@ body {
     margin-bottom: 3rem;
 }
   
+.card-recipe-title {
+    justify-content: center;
+    align-items: center; 
+    text-align: center;
+}
+
 .card {
     border-color: white;
     color: white;
     margin: 1rem;
     width: 16rem;
-    height: 15rem;
+    height: 24rem;
     background-color: #262626;
+    overflow: hidden;
+}
+
+.card-body {
+    padding-bottom: 0.5rem;
+    padding-top: 0.5rem;
 }
 
 .card-body h5 {
@@ -140,6 +155,74 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.recipe-image-container {
+   width: 16rem;
+   height: 17rem; 
+}
+
+.card img {
+    width: 100%;
+    height: 100%;
+    border: 1px solid white;
+    object-fit: cover;
+}
+
+.card-buttons {
+    width: 100%;
+    height: 1rem;
+    display: flex;
+    flex-direction: row; 
+    padding: 0;
+}
+
+.add-area {
+    width: 100%;
+    height: 100%;
+    background-color: 	#03C03C;
+    border: 1px solid white;
+}
+
+.add-area {
+    cursor: pointer;
+    border: 1px solid white;
+    background-color: #03C03C;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative; 
+}
+
+.add-area .add-button {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    border: none;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+    background: #03C03C;
+    position: absolute; 
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%); 
+}
+   
+.add-area .add-button, .add-area .add-button span {
+    transition: 300ms;
+}
+
+.add-area span {
+    text-align: center;
+}
+   
+.add-area .add-button .text {
+    transform: translateX(35px);
+    color: white;
+    font-weight: bold;
+}
+   
+.add-area .add-button:hover {
+    background: #008000;
 }
 
 .list-group-item {
@@ -168,59 +251,19 @@ a {
 	color: #707070;
 }
 
-.modal-body input {
-	font-size: 1rem;
-	font-weight: 400;
-}
-
 .modal-body label {
 	font-size: large;
 	font-weight: 600;
 }
 
-.button_plus {
-	width: 2rem;
-	height: 2rem;
-	background: #010409;
-	cursor: pointer;
-	border: 2px solid white;
-	top: 70%;
-	left: 70%;
+.no-recipes-modal{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: fit-content;
 }
 
-.button_plus:after {
-	content: '';
-	position: absolute;
-	transform: translate(-50%, -50%);
-	height: 4px;
-	width: 50%;
-	background: white;
-	top: 50%;
-	left: 50%;
-}
-
-.button_plus:before {
-	content: '';	
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	background: white;
-	height: 50%;
-	width: 4px;
-}
-
-.button_plus:hover:before,
-.button_plus:hover:after {
-	background: #fff;
-	transition: 0.2s;
-}
-
-.button_plus:hover {
-	background-color: royalblue;
-	transition: 0.2s;
-}
-  
 @media (max-width: 768px) {
 	.navbar {
 		padding-left: 0.5rem;
