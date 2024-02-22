@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-dark">
-   <a id="mainPage" class="navbar-brand UnderlineNav-item" (click)="mainPage()" style="color: white; font-weight: 800; font-size: x-large">DishDiary</a>
+   <a id="mainPage" class="navbar-brand" (click)="mainPage()" style="color: white; font-weight: 800; font-size: x-large">DishDiary</a>
    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
    </button>
@@ -7,18 +7,18 @@
    <div class="collapse navbar-collapse" id="navbarColor02">
       <ul class="navbar-nav mr-auto justify-content-start">
          <li class="nav-item">
-            <a class="nav-link UnderlineNav-item">Add Recipe <span class="sr-only">(current)</span></a>
+            <a class="nav-link">Add Recipe <span class="sr-only">(current)</span></a>
          </li>
          <li class="nav-item">
-            <a class="nav-link UnderlineNav-item" (click)="mainPage()">Repository <span class="sr-only">(current)</span></a>
+            <a class="nav-link" (click)="mainPage()">Repository <span class="sr-only">(current)</span></a>
          </li>
          <li class="nav-item">
-            <a class="nav-link UnderlineNav-item" style="color: red;">Discover Recipes <span class="sr-only">(current)</span></a>
+            <a class="nav-link" style="color: red;">Discover Recipes <span class="sr-only">(current)</span></a>
          </li>
       </ul>
       <form class="form-inline my-2 my-lg-0">
          <div class="search-bar">
-           <input (ngModelChange)="searchRecipe(key.value)" #key="ngModel" ngModel type="search" name="key" id="searchRecipe" class="form-control mr-sm-2" placeholder="Search recipes..." required>
+           <input (ngModelChange)="searchRecipe(key.value)" #key="ngModel" ngModel type="search" name="key" id="searchRecipe" class="form-control mr-sm-2 search-recipe-box" placeholder="Search recipes..." required>
          </div>
          <div class="dropdown">
             <div class="lil-avatar">
@@ -40,8 +40,8 @@
    
    <div class="container" id="main-container">
       <div class="row">
-        <div *ngFor="let recipe of recipes" class="col-md-6 col-xl-3 card-unit">
-          <div class="card m-b-30">
+         <div *ngFor="let recipe of recipes" class="col-6 col-md-6 col-lg-4 col-xl-3 card-unit">
+            <div class="card m-b-30">
             <div class="card-body row card-recipe-title">
               <h5 (click)="onOpenRecipe(recipe)" style="cursor: pointer;">{{recipe?.name}}</h5>
             </div>
@@ -85,7 +85,7 @@
    </div>
 
    <!-- Recipe Added Successfully Modal -->
-   <div class="modal fade recipe-success" id="recipeSuccesModal" tabindex="-1" role="dialog"aria-hidden="true">
+   <div class="modal fade recipe-success" id="recipeSuccesModal" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog" role="document">
          <div class="modal-content">
             <div class="modal-header">

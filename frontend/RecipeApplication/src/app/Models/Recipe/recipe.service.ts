@@ -28,6 +28,12 @@ export class RecipeService {
     return this.http.get<Recipe[]>(`${this.apiServerUrl}/recipe/all`, { headers });
   }
 
+  // getting created recipes
+  public getRecipesByOwner(username: string): Observable<Recipe[]> {
+    const headers = this.getHeaders();
+    return this.http.get<Recipe[]>(`${this.apiServerUrl}/recipe/${username}/createdRecipes`, { headers });
+  }
+
   public getRecipeById(recipeId: number): Observable<Recipe>{
     const headers = this.getHeaders();
 

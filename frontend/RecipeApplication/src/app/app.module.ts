@@ -14,6 +14,7 @@ import { AuthService } from './Security/auth.service';
 import { DiscoverRecipesComponent } from './Components/discover-recipes/discover-recipes.component';
 import { RecipeInfoComponent } from './Components/recipe-info/recipe-info.component';
 import { UserProfileComponent } from './Components/user-profile/user-profile.component';
+import { IonicModule } from '@ionic/angular';
 
 const routes: Routes = [
   {path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -39,7 +40,8 @@ const routes: Routes = [
     BrowserModule,
     HttpClientModule,
     FormsModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
+    IonicModule.forRoot()
   ],
   providers: [
     AuthService,

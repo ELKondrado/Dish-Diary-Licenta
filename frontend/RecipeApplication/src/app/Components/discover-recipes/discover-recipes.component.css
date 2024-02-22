@@ -265,7 +265,35 @@ a {
 }
 
 @media (max-width: 768px) {
-	.navbar {
-		padding-left: 0.5rem;
-	}
+	.main-body{
+        min-height: 100%;
+    }
+
+    .navbar {
+        padding-left: 0.5rem;
+    }
+
+    .dropdown {
+        margin: 0;
+        margin-left: auto;
+    }
+
+    .card {
+        margin: 0.5rem;
+        width: 10rem;
+        height: 14rem;
+    }
+
+    .recipe-image-container {
+        width: 10rem;
+        height: 9.5rem;
+    }
+
+    .card-buttons {
+        height: 1rem;
+    }
+
+    .card-recipe-title {
+       height: 2px;
+    }
 }

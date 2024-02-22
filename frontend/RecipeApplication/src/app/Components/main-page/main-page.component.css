@@ -4,7 +4,6 @@ body {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    flex-wrap: wrap;
 }
 
 .main-body {
@@ -158,7 +157,7 @@ body {
 }
 
 .card-body h5 {
-    margin: 0 0 10px;
+    margin: 0;
     font-weight: 600;
     white-space: nowrap;
     overflow: hidden;
@@ -319,7 +318,35 @@ a {
 }
 
 @media (max-width: 768px) {
+    .main-body{
+        min-height: 100%;
+    }
+
     .navbar {
         padding-left: 0.5rem;
+    }
+
+    .dropdown {
+        margin: 0;
+        margin-left: auto;
+    }
+
+    .card {
+        margin: 0.5rem;
+        width: 10rem;
+        height: 14rem;
+    }
+
+    .recipe-image-container {
+        width: 10rem;
+        height: 9.5rem;
+    }
+
+    .card-buttons {
+        height: 1rem;
+    }
+
+    .card-recipe-title {
+       height: 2px;
     }
 }
