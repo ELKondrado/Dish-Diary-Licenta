@@ -141,4 +141,8 @@ public class RecipeService {
         recipe.setImage(imageData);
         recipeRepository.save(recipe);
     }
+
+    public List<Recipe> getRecipesByOwner(Long userId) {
+        return recipeRepository.findRecipesByOwner(userId);
+    }
 }

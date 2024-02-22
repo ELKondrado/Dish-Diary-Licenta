@@ -256,7 +256,6 @@ body {
 @media (max-width: 768px) {
     .main-body{
         min-height: 100%;
-
     }
 
     .navbar {

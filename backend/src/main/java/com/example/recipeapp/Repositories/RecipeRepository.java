@@ -19,8 +19,8 @@ public interface RecipeRepository extends JpaRepository<Recipe,Long> {
 
     Optional<Recipe> findRecipeById(Long id);
 
-    @Query("SELECT r FROM Recipe r WHERE r.name = :#{#recipe.name} AND r.ingredients = :#{#recipe.ingredients} AND r.stepsOfPreparation = :#{#recipe.stepsOfPreparation}")
-    Optional<Recipe> findRecipe(@Param("recipe") Recipe recipe);
+    @Query("SELECT r FROM Recipe r WHERE r.userOwner.id = :userId")
+    List<Recipe> findRecipesByOwner(@Param("userId") Long userId);
 
     List<Recipe> findByUsers_UserId(Long userId);
 }

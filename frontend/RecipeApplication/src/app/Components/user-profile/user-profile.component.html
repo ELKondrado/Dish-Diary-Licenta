@@ -35,48 +35,128 @@
  </nav>
 
 <body>
-  <div class="container">
-   <div class="user-img-details">
+  <div class="container" id="main-container">
+      <div class="user-img-details">
 
-      <div class="profile">
-         <div class="profile-avatar-container">
-           <img class="profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
-           <img class="profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
+         <div class="profile">
+            <div class="profile-avatar-container">
+            <img class="profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
+            <img class="profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
+            </div>
+            <div class="profile-username">
+               <h2>{{this.user?.userName}}</h2>
+            </div>
+            <div class="profile-upload-button">
+               <label for="fileInput" class="upload-button"><input type="file" id="fileInput" (change)="onSelectFile($event)">Upload Image</label>
+            </div>
          </div>
-         <div class="profile-username">
-            <h2>{{this.user?.userName}}</h2>
-         </div>
-         <div class="profile-upload-button">
-            <label for="fileInput" class="upload-button"><input type="file" id="fileInput" (change)="onSelectFile($event)">Upload Image</label>
-         </div>
-       </div>
 
-      <div class="details">
-         <h2>Details</h2>
-         <div class="detail-item">
-            <p>Total recipes: {{user?.totalRecipes}}</p>
+         <div class="details">
+            <h2>Details</h2>
+            <div class="detail-item">
+               <p (click)="onOpenRecipesHistory('total')" style="cursor: pointer;">Total current recipes: {{user?.totalRecipes}}</p>
+            </div>
+            <div class="detail-item">
+               <p (click)="onOpenRecipesHistory('created')" style="cursor: pointer;">Total recipes created: {{user?.totalRecipesCreated}}</p>
+            </div>
+            <div class="detail-item">
+               <p>Total recipes added: {{user?.totalRecipesAdded}}</p>
+               <p (click)="onOpenRecipesHistory('added')" style="cursor: pointer;">Current added Recipes: {{addedRecipes?.length}}</p>
+            </div>
          </div>
-         <div class="detail-item">
-            <p>Total recipes created: {{user?.totalRecipesCreated}}</p>
+
+      </div>
+
+      <div class="repositories">
+         <h2>Repositories</h2>
+         <div class="repo-item">
+         <a href="#">Repository 1</a>
+         <span>Updated 2 days ago</span>
          </div>
-         <div class="detail-item">
-            <p>Total recipes added: {{user?.totalRecipesAdded}}</p>
+         <div class="repo-item">
+         <a href="#">Repository 2</a>
+         <span>Updated 5 days ago</span>
          </div>
       </div>
 
    </div>
 
-   <div class="repositories">
-      <h2>Repositories</h2>
-      <div class="repo-item">
-        <a href="#">Repository 1</a>
-        <span>Updated 2 days ago</span>
-      </div>
-      <div class="repo-item">
-        <a href="#">Repository 2</a>
-        <span>Updated 5 days ago</span>
+   <!-- Total Recipes Modal -->
+   <div class="modal fade" id="totalRecipesModal" tabindex="-1" role="dialog" aria-labelledby="totalRecipesLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h2 class="modal-title" id="totalRecipesLabel">Total Recipes</h2>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+               </button>
+            </div>
+
+            <div class="modal-body">
+               <div *ngFor="let recipe of repositoryRecipes; let i = index">
+                  <h5>{{i+1}}: {{recipe.name}}</h5>
+                </div>
+
+               <div class="modal-footer">
+                  <div class="modal-footer">
+                     <button class="btn btn-danger" data-dismiss="modal">Close</button>
+                  </div>
+               </div>
+            </div>
+         </div>
       </div>
    </div>
 
+   <!-- Created Recipes Modal -->
+   <div class="modal fade" id="createdRecipesModal" tabindex="-1" role="dialog" aria-labelledby="createdRecipesLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h2 class="modal-title" id="createdRecipesLabel">Created Recipes</h2>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+               </button>
+            </div>
+
+            <div class="modal-body">
+               <div *ngFor="let recipe of createdRecipes; let i = index">
+                  <h5>{{i+1}}: {{recipe.name}}</h5>
+                </div>
+
+               <div class="modal-footer">
+                  <div class="modal-footer">
+                     <button class="btn btn-danger" data-dismiss="modal">Close</button>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
    </div>
+
+   <!-- Added Recipes Modal -->
+   <div class="modal fade" id="addedRecipesModal" tabindex="-1" role="dialog" aria-labelledby="addedRecipesLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h2 class="modal-title" id="addedRecipesLabel">Added Recipes</h2>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+               </button>
+            </div>
+
+            <div class="modal-body">
+               <div *ngFor="let recipe of addedRecipes; let i = index">
+                  <h5>{{i+1}}: {{recipe.name}}</h5>
+                </div>
+
+               <div class="modal-footer">
+                  <div class="modal-footer">
+                     <button class="btn btn-danger" data-dismiss="modal">Close</button>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
 </body>

@@ -43,6 +43,19 @@ public class RecipeController {
         return new ResponseEntity<>(recipe, HttpStatus.OK);
     }
 
+    @GetMapping("/{username}/createdRecipes")
+    public ResponseEntity<List<Recipe>> getCreatedRecipes(@PathVariable("username") String username){
+
+        Optional<User> optionalUser = userService.fetchUserDetails(username);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            List<Recipe> recipes = recipeService.getRecipesByOwner(user.getUserId());
+            return new ResponseEntity<>(recipes, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @PostMapping("/add")
     public ResponseEntity<Recipe> registerNewRecipe(@RequestBody Recipe recipe){
         Recipe newRecipe = recipeService.addNewRecipe(recipe);

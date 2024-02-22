@@ -1,8 +1,10 @@
 package com.example.recipeapp.Controllers;
 
+import com.example.recipeapp.Model.Recipe;
 import com.example.recipeapp.Model.User;
 import com.example.recipeapp.Repositories.RecipeRepository;
 import com.example.recipeapp.Repositories.UserRepository;
+import com.example.recipeapp.Services.RecipeService;
 import com.example.recipeapp.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -22,13 +24,11 @@ import java.util.Optional;
 public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
-    private final RecipeRepository recipeRepository;
 
     @Autowired
-    public UserController(UserService userService, UserRepository userRepository, RecipeRepository recipeRepository) {
+    public UserController(UserService userService, UserRepository userRepository) {
         this.userService = userService;
         this.userRepository = userRepository;
-        this.recipeRepository = recipeRepository;
     }
 
     @GetMapping("/details/{username}")

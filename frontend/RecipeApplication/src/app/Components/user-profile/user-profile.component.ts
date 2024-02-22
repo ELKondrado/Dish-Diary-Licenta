@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../Security/auth.service';
 import { UserService } from '../../Models/User/user.service';
-import { RecipeService } from '../../Models/Recipe/recipe.service';
 import { Recipe } from '../../Models/Recipe/recipe';
 import { HttpErrorResponse } from '@angular/common/http';
 import { User } from '../../Models/User/user';
+import { RecipeService } from '../../Models/Recipe/recipe.service';
 
 @Component({
   selector: 'app-user-profile',
@@ -14,7 +14,6 @@ import { User } from '../../Models/User/user';
 })
 export class UserProfileComponent implements OnInit{
   constructor(
-    private route: ActivatedRoute,
     private authService: AuthService,
     private userService: UserService,
     private recipeService: RecipeService,
@@ -26,6 +25,9 @@ export class UserProfileComponent implements OnInit{
   public recipe: Recipe | undefined;
   public avatarUrl: String | undefined;
   public selectedFile: File | undefined;
+  public repositoryRecipes: Recipe[] | undefined;
+  public createdRecipes: Recipe[] | undefined;
+  public addedRecipes: Recipe[] | undefined;
 
   ngOnInit(): void {
     this.fetchData();
@@ -36,7 +38,11 @@ export class UserProfileComponent implements OnInit{
     this.authService.initializeApp().subscribe(
       () => {
       this.user = this.authService.getUser();
+      console.log(this.user)
+
       this.username = this.userService.getUsername();
+      this.getRepositoryRecipes();
+      this.getCreatedRecipes()
       this.getProfileImage();
     });
   }
@@ -49,6 +55,68 @@ export class UserProfileComponent implements OnInit{
     avatar?.addEventListener('click', () => {
       menu?.classList.toggle('menu-open');
     });
+  }
+
+  public getRepositoryRecipes(): void {
+    if(this.user)
+    {
+      this.recipeService.getUserRecipes(this.user?.userId).subscribe(
+        (response: Recipe[]) => {
+          this.repositoryRecipes = response;
+          this.getAddedRecipes();
+        },
+        (error: HttpErrorResponse) => {
+          console.error(error.message);
+        }
+      );
+    }
+  }
+
+  public getCreatedRecipes() {
+    if(this.user)
+    {
+      this.recipeService.getRecipesByOwner(this.user?.userName).subscribe(
+        (createdRecipes: Recipe[]) => {
+          this.createdRecipes = createdRecipes;
+          this.getAddedRecipes();
+        },
+        (error: HttpErrorResponse) => {
+          console.error("ERROR getting created recipes: " + error);
+        }
+      )
+    }
+  }
+  
+  public getAddedRecipes() {
+    if (this.createdRecipes && this.repositoryRecipes) {
+      const filteredRecipes = this.repositoryRecipes.filter(recipe1 =>
+        !this.createdRecipes!.some(recipe2 => recipe1.id === recipe2.id)
+      );
+      this.addedRecipes = filteredRecipes;
+    }
+  }  
+  
+  public onOpenRecipesHistory(mode: string) {
+    
+    const container = document.getElementById("main-container");
+    const button = document.createElement('button');
+
+    button.type = 'button';
+    button.style.display = 'none';
+    button.setAttribute('data-toggle', 'modal');
+
+    if(mode == 'total'){
+      button.setAttribute('data-target', '#totalRecipesModal');
+    }
+    else if(mode == 'created'){
+      button.setAttribute('data-target', '#createdRecipesModal');
+    }
+    else if(mode == 'added'){
+      button.setAttribute('data-target', '#addedRecipesModal');
+    }
+
+    container?.appendChild(button);
+    button.click();
   }
 
   public onSelectFile(event: any) {
@@ -105,7 +173,7 @@ export class UserProfileComponent implements OnInit{
     });
 
     return 'data:image/jpeg;base64,' + btoa(bytes.join(''));
-}
+  }
 
   public mainPage(): void {
     this.router.navigate([`/${this.userService.getUsername()}/main`]);
