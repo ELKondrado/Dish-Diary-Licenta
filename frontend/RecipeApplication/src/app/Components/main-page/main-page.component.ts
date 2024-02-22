@@ -1,12 +1,12 @@
-import { Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild, ViewContainerRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../../Models/User/user.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RecipeService } from '../../Models/Recipe/recipe.service';
 import { AuthService } from '../../Security/auth.service';
 import { Recipe } from '../../Models/Recipe/recipe';
-import { UserDto } from '../../Models/User/userDto';
 import { NgForm } from '@angular/forms';
+import { User } from '../../Models/User/user';
 
 @Component({
   selector: 'app-main-page',
@@ -14,7 +14,6 @@ import { NgForm } from '@angular/forms';
   styleUrl: './main-page.component.css'
 })
 export class MainPageComponent implements OnInit{
-
   constructor(
     private recipeService: RecipeService,
     private authService: AuthService, 
@@ -22,7 +21,7 @@ export class MainPageComponent implements OnInit{
     private router: Router
   ) {}
 
-  public user: UserDto | null = null;
+  public user: User | null = null;
   public recipes: Recipe[] = [];
   public editRecipe: Recipe | undefined;
   public deletedRecipe: Recipe | undefined;
@@ -36,7 +35,7 @@ export class MainPageComponent implements OnInit{
   }
 
   private fetchData(): void {
-    this.authService.initializeApp().then(() => {
+    this.authService.initializeApp().subscribe(() => {
       this.user = this.authService.getUser();
       this.username = this.userService.getUsername();
       this.getUserRecipes();
@@ -62,6 +61,9 @@ export class MainPageComponent implements OnInit{
         (response: Recipe[]) => {
           console.log(response);
           this.recipes = response;
+          this.recipes.forEach(recipe => {
+            recipe.image = 'data:image/jpeg;base64,' + recipe.image;
+          });
         },
         (error) => {
           console.error(error);

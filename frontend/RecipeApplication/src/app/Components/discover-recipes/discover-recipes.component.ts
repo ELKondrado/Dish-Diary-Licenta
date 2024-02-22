@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { RecipeService } from '../../Models/Recipe/recipe.service';
 import { AuthService } from '../../Security/auth.service';
 import { UserService } from '../../Models/User/user.service';
 import { Router } from '@angular/router';
 import { Recipe } from '../../Models/Recipe/recipe';
-import { UserDto } from '../../Models/User/userDto';
 import { HttpErrorResponse } from '@angular/common/http';
+import { User } from '../../Models/User/user';
 
 @Component({
   selector: 'app-discover-recipes',
@@ -20,8 +20,9 @@ export class DiscoverRecipesComponent implements OnInit{
     private router: Router
   ) {}
 
-  public user: UserDto | null = null;
+  public user: User | null = null;
   public recipes: Recipe[] = [];
+  public repositoryRecipes: Recipe[] = [];
   public username: string | undefined;
   public addedRecipe: Recipe | undefined;
   public avatarUrl: String | undefined;
@@ -33,10 +34,11 @@ export class DiscoverRecipesComponent implements OnInit{
   }
 
   private fetchData(): void {
-    this.authService.initializeApp().then(() => {
+    this.authService.initializeApp().subscribe(() => {
       this.user = this.authService.getUser();
       this.username = this.userService.getUsername();
       this.getRecipes();
+      this.getRepositoryRecipes();
       this.getProfileImage();
     });
   }
@@ -53,14 +55,40 @@ export class DiscoverRecipesComponent implements OnInit{
 
   public getRecipes(): void {
     this.recipeService.getRecipes().subscribe(
-      (response: any) => {
+      (response: Recipe[]) => {
         console.log(response);
         this.recipes = response;
+        this.recipes.forEach(recipe => {
+          recipe.image = 'data:image/jpeg;base64,' + recipe.image;
+        });
+        this.filterDiscoverRecipes();
       },
       (error: HttpErrorResponse) => {
         console.error(error.message);
       }
     );
+  }
+
+  public getRepositoryRecipes(): void {
+    if(this.user)
+    {
+      this.recipeService.getUserRecipes(this.user?.userId).subscribe(
+        (response: Recipe[]) => {
+          this.repositoryRecipes = response;
+          this.filterDiscoverRecipes();
+        },
+        (error: HttpErrorResponse) => {
+          console.error(error.message);
+        }
+      );
+    }
+  }
+
+  public filterDiscoverRecipes() {
+    const filteredRecipes = this.recipes.filter(recipe1 =>
+      !this.repositoryRecipes.some(recipe2 => recipe1.id === recipe2.id)
+    );
+    this.recipes = filteredRecipes;
   }
 
   public onAddRecipeModal(recipe: Recipe | undefined): void {
@@ -90,11 +118,8 @@ export class DiscoverRecipesComponent implements OnInit{
 
     this.recipeService.addUserRecipe(username, recipeId).subscribe(
       (response: any) => {
-        if (response == null) {
-          button.setAttribute('data-target', '#recipeConstraintModal');
-          button.click();
-        }
-        else{
+        if (response) {
+          this.getRepositoryRecipes();
           button.setAttribute('data-target', '#recipeSuccesModal');
           button.click();
         }

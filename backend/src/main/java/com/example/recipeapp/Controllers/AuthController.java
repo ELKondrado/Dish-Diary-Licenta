@@ -76,6 +76,9 @@ public class AuthController {
         user.setUserName(registerDto.getUsername());
         user.setUserPassword(passwordEncoder.encode(registerDto.getPassword()));
         user.setRoles(Collections.singletonList(userRole));
+        user.setTotalRecipes(0);
+        user.setTotalRecipesCreated(0);
+        user.setTotalRecipesAdded(0);
 
         userRepository.save(user);
 

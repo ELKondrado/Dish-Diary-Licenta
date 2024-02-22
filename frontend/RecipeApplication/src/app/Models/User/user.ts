@@ -1,5 +1,9 @@
 export interface User{
-    id: number;
-    username: string;
-    password: string;
+    userId: number;
+    userName: string;
+    userPassword: string;
+    profileImage?: string;
+    totalRecipes: number;
+    totalRecipesCreated: number;
+    totalRecipesAdded: number;
 }

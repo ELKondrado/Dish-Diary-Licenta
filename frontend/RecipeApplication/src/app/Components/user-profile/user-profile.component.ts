@@ -3,9 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../Security/auth.service';
 import { UserService } from '../../Models/User/user.service';
 import { RecipeService } from '../../Models/Recipe/recipe.service';
-import { UserDto } from '../../Models/User/userDto';
 import { Recipe } from '../../Models/Recipe/recipe';
 import { HttpErrorResponse } from '@angular/common/http';
+import { User } from '../../Models/User/user';
 
 @Component({
   selector: 'app-user-profile',
@@ -21,20 +21,20 @@ export class UserProfileComponent implements OnInit{
     private router: Router
   ) {}
 
-  public user: UserDto | null = null;
+  public user: User | null = null;
   public username: string | undefined;
   public recipe: Recipe | undefined;
   public avatarUrl: String | undefined;
   public selectedFile: File | undefined;
-
 
   ngOnInit(): void {
     this.fetchData();
     this.fetchUser();
   }
 
-  public fetchData(): void{
-    this.authService.initializeApp().then(() => {
+  private fetchData(): void{
+    this.authService.initializeApp().subscribe(
+      () => {
       this.user = this.authService.getUser();
       this.username = this.userService.getUsername();
       this.getProfileImage();

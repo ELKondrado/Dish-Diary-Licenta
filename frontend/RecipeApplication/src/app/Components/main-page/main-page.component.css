@@ -136,13 +136,25 @@ body {
     margin-bottom: 3rem;
 }
 
+.card-recipe-title {
+    justify-content: center;
+    align-items: center; 
+    text-align: center;
+}
+
 .card {
     border-color: white;
     color: white;
     margin: 1rem;
     width: 16rem;
-    height: 15rem;
+    height: 24rem;
     background-color: #262626;
+    overflow: hidden;
+}
+
+.card-body {
+    padding-bottom: 0.5rem;
+    padding-top: 0.5rem;
 }
 
 .card-body h5 {
@@ -153,6 +165,109 @@ body {
     text-overflow: ellipsis;
 }
 
+.recipe-image-container {
+   width: 16rem;
+   height: 17rem; 
+}
+
+.card img {
+    width: 100%;
+    height: 100%;
+    border: 1px solid white;
+    object-fit: cover;
+}
+
+.card-buttons {
+    width: 100%;
+    height: 1rem;
+    display: flex;
+    flex-direction: row; 
+    padding: 0;
+}
+
+.edit-area {
+    flex: 1; 
+    background-color: royalblue;
+    border: 1px solid white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative; 
+}
+
+.edit-area .edit-button {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    border: none;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+    background: #007FFF;
+    position: absolute; 
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%); 
+}
+
+.edit-area .edit-button, .edit-area .edit-button span {
+    transition: 300ms;
+}
+
+.edit-area span {
+    text-align: center;
+}
+
+.edit-area .edit-button .text {
+    transform: translateX(35px);
+    color: white;
+    font-weight: bold;
+}
+
+.edit-area .edit-button:hover {
+    background: royalblue;
+}
+
+.delete-area {
+    cursor: pointer;
+    flex: 1;
+    border: 1px solid white;
+    background-color: #e62222;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative; 
+}
+
+.delete-area .delete-button {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    border: none;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+    background: #EF0107;
+    position: absolute; 
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%); 
+}
+   
+.delete-area .delete-button, .delete-area .delete-button span {
+    transition: 300ms;
+}
+
+.delete-area span {
+    text-align: center;
+}
+   
+.delete-area .delete-button .text {
+    transform: translateX(35px);
+    color: white;
+    font-weight: bold;
+}
+   
+.delete-area .delete-button:hover {
+    background: #CF1020;
+}
+   
 .list-group-item {
     border-color: white;
     color: white;
@@ -189,10 +304,18 @@ a {
     font-weight: 600;
 }
 
-.modal-body textarea{
+.modal-body textarea {
     font-size: 1rem;
     font-weight: 400;
     height: 150px;
+}
+
+.no-recipes-modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: fit-content;
 }
 
 @media (max-width: 768px) {

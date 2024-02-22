@@ -33,6 +33,7 @@ public class UserController {
 
     @GetMapping("/details/{username}")
     public ResponseEntity<User> getUserDetails(@PathVariable("username") String username){
+
         Optional<User> optionalUser = userService.fetchUserDetails(username);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
@@ -46,7 +47,11 @@ public class UserController {
     @DeleteMapping("/deleteUserRecipe/{userId}/{recipeId}")
     public ResponseEntity<User> deleteUserRecipe(@PathVariable("userId") long userId,
                                                  @PathVariable("recipeId") long recipeId) {
-        userService.deleteUserRecipe(userId, recipeId);
+        Optional<User> optionalUser = userRepository.findUserByUserId(userId);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            userService.deleteUserRecipe(user, recipeId);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

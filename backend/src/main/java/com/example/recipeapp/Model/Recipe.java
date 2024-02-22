@@ -36,4 +36,7 @@ public class Recipe {
 
     @ManyToMany(mappedBy = "recipes", fetch = FetchType.LAZY)
     private List<User> users = new ArrayList<>();
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    private User userOwner;
 }
