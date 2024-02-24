@@ -69,7 +69,7 @@
                <h2>{{this.recipe?.name}}</h2>
             </div>
             <div *ngIf="recipe?.userOwner?.userId == user?.userId" class="recipe-upload-button">
-               <label for="fileInput" class="upload-button"><input type="file" id="fileInput" (change)="onSelectFile($event)">Upload Image</label>
+               <label class="upload-button"><input type="file" id="fileInput" (change)="onSelectFile($event)">Upload Image</label>
             </div>
          </div>
       </div>

@@ -26,10 +26,10 @@ public class Recipe {
     @Column(name = "name")
     private String name;
     @NotNull
-    @Column(name = "ingredients", length = 512)
+    @Column(name = "ingredients", length = 4096)
     private String ingredients;
     @NotNull
-    @Column(name = "steps_of_preparation", length = 2056)
+    @Column(name = "steps_of_preparation", length = 8192)
     private String stepsOfPreparation;
     @Lob
     private byte[] image;
