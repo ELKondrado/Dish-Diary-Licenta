@@ -253,6 +253,20 @@ body {
     color: #586069;
 }
 
+.modal-title {
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 @media (max-width: 768px) {
     .main-body{
         min-height: 100%;
@@ -262,11 +276,11 @@ body {
         padding-left: 0.5rem;
     }
 
-    .container {
-        margin: auto;
-        flex-direction: column; 
+    .main-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
         align-items: center;
-        margin-bottom: 10rem;
     }
 
     .user-img-details {
