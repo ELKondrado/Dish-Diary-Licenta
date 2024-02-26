@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { UserService } from '../../Models/User/user.service';
 import { User } from '../../Models/User/user';
+import { Review } from '../../Models/Review/review';
 
 @Component({
   selector: 'app-recipe-info',
@@ -27,6 +28,18 @@ export class RecipeInfoComponent implements OnInit {
   public avatarUrl: String | undefined;
   public recipeUrl: String | undefined;
   public selectedFile: File | undefined;
+  public reviews: Review[] | undefined;
+  public showReviewForm: boolean = false;
+  public averageRating: number = 0;
+  public reviewModel: Review = { 
+    id: 1,
+    userOwner: null,
+    userProfileImage: '',
+    userName: '',
+    userStarRating: 1,
+    userReviewText: '',
+    date: new Date(), 
+  };
 
   ngOnInit(): void {
     this.fetchData();
@@ -60,14 +73,75 @@ export class RecipeInfoComponent implements OnInit {
           console.log(recipe)
           this.recipe = recipe;
           this.getRecipeImage();
+          this.fetchReviewsForRecipe();
           console.log(this.user);
-          console.log(this.recipe.userOwner)
         },
         (error: HttpErrorResponse) => {
           console.error(error);
         }
       );
     });
+  }
+
+  public fetchReviewsForRecipe() {
+    if (this.recipe?.id) 
+    {
+      this.recipeService.getReviewsForRecipe(this.recipe.id).subscribe(
+        (reviews: Review[]) => {
+          this.reviews = reviews;
+          this.fetchUserProfilesForReviews();
+          this.fetchAverageRating();
+          console.log(reviews);
+        },
+        (error: HttpErrorResponse) => {
+          console.error('Error getting the reviews:', error);
+        }
+      );
+    }
+  }
+
+  public fetchUserProfilesForReviews() {
+    if(this.reviews){
+      this.reviews.forEach(review => {
+        review.userProfileImage = 'data:image/jpeg;base64,' + review.userProfileImage;
+      });
+    }
+  }
+
+  public fetchAverageRating() {
+    this.averageRating = 0; 
+  
+    if (this.reviews && this.reviews.length !== 0) {
+      this.reviews.forEach((review) => (this.averageRating += review.userStarRating));
+      this.averageRating /= this.reviews.length;
+    }
+  }
+
+  public toggleReviewForm() {
+    this.showReviewForm = !this.showReviewForm;
+  }
+
+  public addReview() {
+    if(this.user && this.recipe) {
+      this.reviewModel.userOwner = this.user;
+      this.reviewModel.userName = this.user.userName;
+      this.reviewModel.userProfileImage = this.user.profileImage;
+      this.reviewModel.date = new Date();
+      console.log(this.recipe)
+      console.log(this.reviewModel)
+
+      this.recipeService.addReviewToRecipe(this.recipe.id, this.user.userName, this.reviewModel).subscribe(
+        (response: Review) => {
+          console.log(response)
+          this.fetchReviewsForRecipe();
+        },
+        (error: HttpErrorResponse) => {
+          console.error("Error adding the review:" + error);
+        }
+      );
+    }
+    
+    this.showReviewForm = false;
   }
 
   public onSelectFile(event: any) {

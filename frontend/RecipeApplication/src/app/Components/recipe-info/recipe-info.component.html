@@ -72,8 +72,64 @@
                <label class="upload-button"><input type="file" id="fileInput" (change)="onSelectFile($event)">Upload Image</label>
             </div>
          </div>
+        
       </div>
 
+      <div class="recipe-reviews">
+         <div class="reviews-title-rating">
+            <h2 class="reviews-title">Reviews</h2>
+            <h2 *ngIf="reviews?.length != 0" class="reviews-rating">Rating <span class="star-rating">{{averageRating.toFixed(2)}}</span></h2>
+         </div>
+
+         <!-- Review Form -->
+         <div *ngIf="showReviewForm" class="review-form">
+            <div class="review-rating-input">
+               <label for="rating">Select the Rating</label>
+               <select id="rating" class="form-control" [(ngModel)]="reviewModel.userStarRating">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+               </select>
+            </div>
+
+            <div class="review-text-input">
+               <div class="form-group mt-3">
+                  <label for="reviewText">Review:</label>
+                  <textarea id="reviewText" class="form-control" rows="4" [(ngModel)]="reviewModel.userReviewText" maxlength="2055"></textarea>
+               </div>
+            </div>
+            
+            <div class="add-review-button">
+               <button type="button" class="btn btn-primary" (click)="addReview()" [disabled]="reviewModel.userReviewText.trim().length == 0">Add Review</button>
+            </div>
+         </div>
+
+         <h2 *ngIf="reviews?.length == 0">No Reviews Yet!</h2>
+
+         <button *ngIf="!showReviewForm" type="button" class="btn btn-primary create-review-button" (click)="toggleReviewForm()">Create New Review</button>
+         <div *ngFor="let review of reviews" class="review">
+             <div class="user-avatar">
+                 <img src="{{review.userProfileImage}}" alt="User Avatar">
+             </div>
+             <div class="review-details">
+                 <div class="user-info">
+                     <span class="username">{{review.userName}}</span>
+                     <span class="star-rating">{{review.userStarRating}}</span>
+                 </div>                     
+                 <p class="date">{{review.date}}</p>
+
+                 <p class="review-text">{{review.userReviewText}}</p>
+             </div>
+         </div>
+      </div>
+   
     </div>
 
 </body>

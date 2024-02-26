@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Recipe } from './recipe';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../Security/auth.service';
+import { Review } from '../Review/review';
 
 @Injectable({
   providedIn: 'root'
@@ -90,9 +91,18 @@ export class RecipeService {
     return this.http.delete<void>(`${this.apiServerUrl}/recipe/delete/${recipeId}`, { headers });
   }
 
+  public getReviewsForRecipe(recipeId: number): Observable<Review[]> {
+    const headers = this.getHeaders();
+    return this.http.get<Review[]>(`${this.apiServerUrl}/recipe/getReviewsForRecipe/${recipeId}`, { headers });
+  }
+
+  public addReviewToRecipe(recipeId: number, username: string, review: Review): Observable<Review> {
+    const headers = this.getHeaders();
+    return this.http.post<Review>(`${this.apiServerUrl}/recipe/addReviewToRecipe/${recipeId}/${username}`, review, { headers });
+  }
+
   public uploadImage(recipeId: number, formData: FormData) {
     const headers = this.getHeaders();
-
     return this.http.post(`${this.apiServerUrl}/recipe/${recipeId}/uploadImage`, formData, { headers } );
   }
   

@@ -2,6 +2,7 @@ package com.example.recipeapp.Controllers;
 
 import com.example.recipeapp.Exceptions.RecipeNotFoundException;
 import com.example.recipeapp.Model.Recipe;
+import com.example.recipeapp.Model.Review;
 import com.example.recipeapp.Model.User;
 import com.example.recipeapp.Services.RecipeService;
 import com.example.recipeapp.Services.UserService;
@@ -152,5 +153,26 @@ public class RecipeController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @PostMapping("/addReviewToRecipe/{recipeId}/{username}")
+    public ResponseEntity<Review> addReview(@RequestBody Review review,
+                                            @PathVariable("recipeId") long recipeId,
+                                            @PathVariable("username") String username){
+        Optional<User> optionalUser = userService.findUserByUserName(username);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            Recipe recipe = recipeService.findRecipeById(recipeId);
+            Review newReview = recipeService.addReviewToRecipe(review, recipe, user);
+            return new ResponseEntity<>(review, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/getReviewsForRecipe/{recipeId}")
+    public ResponseEntity<List<Review>> getReviews(@PathVariable("recipeId") long recipeId){
+        List<Review> reviews = recipeService.getReviewsForRecipe(recipeId);
+        return new ResponseEntity<>(reviews, HttpStatus.OK);
     }
 }

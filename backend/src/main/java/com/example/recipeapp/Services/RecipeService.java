@@ -5,14 +5,15 @@ import com.example.recipeapp.Exceptions.RecipeNameNotFoundException;
 import com.example.recipeapp.Exceptions.RecipeNotFoundException;
 import com.example.recipeapp.Exceptions.RecipeStepsOfPreparationNotFoundException;
 import com.example.recipeapp.Model.Recipe;
+import com.example.recipeapp.Model.Review;
 import com.example.recipeapp.Model.User;
 import com.example.recipeapp.Repositories.RecipeRepository;
+import com.example.recipeapp.Repositories.ReviewRepository;
 import com.example.recipeapp.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
@@ -24,15 +25,19 @@ import java.util.Optional;
 @Service
 public class RecipeService {
     private final RecipeRepository recipeRepository;
+    private final ReviewRepository reviewRepository;
+
     private final UserRepository userRepository;
     private final UserService userService;
+
     @PersistenceContext
     private EntityManager em;
     @Autowired
-    public RecipeService(RecipeRepository recipeRepository, UserRepository userRepository, UserService userService) {
+    public RecipeService(RecipeRepository recipeRepository, UserRepository userRepository, UserService userService, ReviewRepository reviewRepository) {
         this.userRepository = userRepository;
         this.recipeRepository = recipeRepository;
         this.userService = userService;
+        this.reviewRepository = reviewRepository;
     }
 
     private void checkRecipeAttributes(Recipe recipe) {
@@ -47,9 +52,27 @@ public class RecipeService {
         }
     }
 
-    @GetMapping
+    private void checkReviewAttributes(Review review) {
+        if(review.getUserReviewText() == null) {
+            throw new IllegalStateException("Review Text does not exist!");
+        }
+        if(review.getUserName() == null) {
+            throw new IllegalStateException("Review username does not exist!");
+        }
+        if(review.getUserStarRating() == null) {
+            throw new IllegalStateException("Review Start Rating does not exist!");
+        }
+    }
+
     public List<Recipe> getRecipes(){
         return recipeRepository.findAll();
+    }
+
+    public List<Review> getReviewsForRecipe(long recipeId) {
+        Recipe recipe = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new RecipeNotFoundException("Recipe with id: " + recipeId + " does not exist"));
+
+        return reviewRepository.findReviewsByRecipeId(recipe.getId());
     }
 
     public Recipe findRecipeById(Long id) {
@@ -63,8 +86,8 @@ public class RecipeService {
 
     public Recipe addNewRecipe(Recipe recipe, User user) {
         checkRecipeAttributes(recipe);
-        user.setTotalRecipes( user.getTotalRecipes() + 1);
-        user.setTotalRecipesCreated( user.getTotalRecipesCreated() + 1);
+        user.setTotalRecipes(user.getTotalRecipes() + 1);
+        user.setTotalRecipesCreated(user.getTotalRecipesCreated() + 1);
         recipe.setUserOwner(user);
         user.getRecipes().add(recipe);
         recipe.getUsers().add(user);
@@ -144,5 +167,14 @@ public class RecipeService {
 
     public List<Recipe> getRecipesByOwner(Long userId) {
         return recipeRepository.findRecipesByOwner(userId);
+    }
+
+    @Transactional
+    public Review addReviewToRecipe(Review review, Recipe recipe, User user) {
+        checkReviewAttributes(review);
+        review.setUserOwner(user);
+        recipe.getReviews().add(review);
+        recipeRepository.save(recipe);
+        return review;
     }
 }

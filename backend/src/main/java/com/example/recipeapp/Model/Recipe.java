@@ -1,5 +1,6 @@
 package com.example.recipeapp.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 import lombok.Data;
 
@@ -39,4 +40,10 @@ public class Recipe {
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private User userOwner;
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "recipe_review", joinColumns = @JoinColumn(name = "recipe_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "review_id", referencedColumnName = "id"))
+    private List<Review> reviews;
 }
