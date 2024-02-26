@@ -54,5 +54,9 @@ public class User {
     @JoinTable(name = "user_recipes", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
         inverseJoinColumns = @JoinColumn(name = "recipe_id", referencedColumnName = "id"))
     private List<Recipe> recipes = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Friendship> friendships = new ArrayList<>();
 }
 

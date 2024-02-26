@@ -1,5 +1,6 @@
 package com.example.recipeapp.Services;
 
+import com.example.recipeapp.Model.Friendship;
 import com.example.recipeapp.Model.Recipe;
 import com.example.recipeapp.Model.User;
 import com.example.recipeapp.Repositories.UserRepository;
@@ -9,7 +10,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -36,6 +39,32 @@ public class UserService {
 
     public boolean doesUserHaveRecipe(User user, Recipe recipe) {
         return user.getRecipes().contains(recipe);
+    }
+
+    public List<User> getFriends(User user) {
+        return user.getFriendships().stream()
+                .map(Friendship::getFriend)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void addFriend(User user, User friend) {
+        if (!user.equals(friend)) {
+            if (user.getFriendships().stream().noneMatch(friendship -> friendship.getFriend().equals(friend))) {
+                Friendship userFriendship = new Friendship(user, friend);
+                Friendship friendFriendship = new Friendship(friend, user);
+
+                user.getFriendships().add(userFriendship);
+                friend.getFriendships().add(friendFriendship);
+
+                userRepository.save(user);
+                userRepository.save(friend);
+            } else {
+                throw new IllegalStateException("Users are already friends.");
+            }
+        } else {
+            throw new IllegalStateException("Cannot add yourself as a friend.");
+        }
     }
 
     @Transactional
