@@ -54,10 +54,9 @@ export class MainPageComponent implements OnInit{
   }
 
   public getUserRecipes(): void {
-    const userId = this.user?.userId ?? -1;
-    if(userId != -1)
+    if(this.user)
     {
-      this.recipeService.getUserRecipes(userId).subscribe(
+      this.recipeService.getUserRecipes(this.user.userId).subscribe(
         (response: Recipe[]) => {
           console.log(response);
           this.recipes = response;
@@ -225,6 +224,10 @@ export class MainPageComponent implements OnInit{
 
   public userProfile(): void {
     this.router.navigate([`/${this.userService.getUsername()}/profile`]);
+  }
+
+  public userFriends(): void {
+    this.router.navigate([`/${this.userService.getUsername()}/friends`]);
   }
  
   public logout(): void {   

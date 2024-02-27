@@ -1,9 +1,6 @@
 package com.example.recipeapp.Services;
 
-import com.example.recipeapp.Exceptions.RecipeIngredientsNotFoundException;
-import com.example.recipeapp.Exceptions.RecipeNameNotFoundException;
-import com.example.recipeapp.Exceptions.RecipeNotFoundException;
-import com.example.recipeapp.Exceptions.RecipeStepsOfPreparationNotFoundException;
+import com.example.recipeapp.Exceptions.*;
 import com.example.recipeapp.Model.Recipe;
 import com.example.recipeapp.Model.Review;
 import com.example.recipeapp.Model.User;
@@ -26,7 +23,6 @@ import java.util.Optional;
 public class RecipeService {
     private final RecipeRepository recipeRepository;
     private final ReviewRepository reviewRepository;
-
     private final UserRepository userRepository;
     private final UserService userService;
 
@@ -114,6 +110,18 @@ public class RecipeService {
             throw new RecipeNotFoundException("Recipe with id: " + recipeId + " does not exist");
         }
         recipeRepository.deleteById(recipeId);
+    }
+
+    public void deleteReview(Long recipeId, Long reviewId) {
+        boolean exists = recipeRepository.existsById(recipeId);
+        if (!exists) {
+            throw new RecipeNotFoundException("Recipe with id: " + recipeId + " does not exist");
+        }
+        exists = reviewRepository.existsById(reviewId);
+        if (!exists) {
+            throw new ReviewNotFoundException("Review with id: " + reviewId + " does not exist");
+        }
+        reviewRepository.deleteReviewOfRecipe(recipeId, reviewId);
     }
 
     @Transactional

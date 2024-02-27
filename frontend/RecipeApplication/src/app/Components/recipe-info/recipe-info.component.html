@@ -7,9 +7,6 @@
    <div class="collapse navbar-collapse" id="navbarColor02">
       <ul class="navbar-nav mr-auto justify-content-start">
          <li class="nav-item">
-            <a class="nav-link">Add Recipe <span class="sr-only">(current)</span></a>
-         </li>
-         <li class="nav-item">
             <a class="nav-link" (click)="mainPage()">Repository <span class="sr-only">(current)</span></a>
          </li>
          <li class="nav-item">
@@ -27,6 +24,7 @@
             </div>
             <ul class="menu">
                <li (click)="userProfile()">Profile</li>
+               <li (click)="userFriends()">Friends</li>
                <li (click)="logout()">Logout</li>
             </ul>
          </div>
@@ -38,6 +36,10 @@
    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 
    <div id="main-container">
+
+      <div class="recipe-name">
+         <h2>{{this.recipe?.name}}</h2>
+      </div>
 
       <div class="recipe-info">
 
@@ -65,12 +67,18 @@
             <div class="recipe-image-container">
                <img class="recipe-image" *ngIf="recipeUrl" [src]="recipeUrl" alt="Recipe Image">
             </div>
-            <div class="recipe-name">
-               <h2>{{this.recipe?.name}}</h2>
-            </div>
-            <div *ngIf="recipe?.userOwner?.userId == user?.userId" class="recipe-upload-button">
-               <label class="upload-button"><input type="file" id="fileInput" (change)="onSelectFile($event)">Upload Image</label>
-            </div>
+         
+            <div class="recipe-buttons">
+               <div *ngIf="recipe?.userOwner?.userId == user?.userId" class="recipe-upload-button">
+                  <label class="upload-button"><input type="file" id="fileInput" (change)="onSelectFile($event)">Upload Image</label>
+               </div>
+               
+               <div *ngIf="recipe && userRecipes && isRecipeInUserRecipes == false" class="recipe-add-button">
+                  <label class="add-button">Add Recipe</label>
+                </div>                
+                
+            </div>  
+
          </div>
         
       </div>
@@ -122,6 +130,9 @@
                  <div class="user-info">
                      <span class="username">{{review.userName}}</span>
                      <span class="star-rating">{{review.userStarRating}}</span>
+                     <div class="deleteReview">
+                        <button (click)="onDeleteReviewModal(review)" *ngIf="user?.userId == review.userOwner?.userId" class="deleteReviewButton">-</button>
+                     </div>
                  </div>                     
                  <p class="date">{{review.date}}</p>
 
@@ -130,6 +141,69 @@
          </div>
       </div>
    
-    </div>
+   </div>
+
+
+   <!-- Add Recipe To User Modal -->
+   <div class="modal fade" id="addRecipeToUserModal" tabindex="-1" role="dialog" aria-labelledby="addModelLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title" id="AddModelLabel">Add Recipe</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+               </button>
+            </div>
+            <div class="modal-body">
+               <p>Are you sure you want to add the recipe: {{addedRecipe?.name}}?</p>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                  <button *ngIf="addedRecipe" (click)="addRecipeToUser(addedRecipe.id)" class="btn btn-danger" data-dismiss="modal">Yes</button>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- Recipe Added Successfully Modal -->
+   <div class="modal fade recipe-success" id="recipeSuccesModal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title" id="AddModelLabel">Add Recipe</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+               </button>
+            </div>
+            <div class="modal-body">
+               <p>Recipe Added Successfully!</p>
+               <div class="modal-footer">
+                  <button class="btn btn-danger" data-dismiss="modal" style="background-color: royalblue;">Ok</button>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- Delete Review To User Modal -->
+   <div class="modal fade" id="deleteReviewForRecipeModal" tabindex="-1" role="dialog" aria-labelledby="deleteReviewLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title" id="deleteReviewLabel">Delete Review</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+               </button>
+            </div>
+            <div class="modal-body">
+               <p>Are you sure you want to delete the review?</p>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                  <button *ngIf="deletedReview" (click)="deleteReviewForRecipe(deletedReview.id)" class="btn btn-danger" data-dismiss="modal">Yes</button>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
 
 </body>

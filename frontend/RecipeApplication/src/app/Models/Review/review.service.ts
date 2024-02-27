@@ -25,4 +25,19 @@ export class ReviewService {
       throw new Error('Access token not available');
     }
   
+    
+  public getReviewsForRecipe(recipeId: number): Observable<Review[]> {
+    const headers = this.getHeaders();
+    return this.http.get<Review[]>(`${this.apiServerUrl}/recipe/getReviewsForRecipe/${recipeId}`, { headers });
+  }
+
+  public addReviewToRecipe(recipeId: number, username: string, review: Review): Observable<Review> {
+    const headers = this.getHeaders();
+    return this.http.post<Review>(`${this.apiServerUrl}/recipe/addReviewToRecipe/${recipeId}/${username}`, review, { headers });
+  }
+
+  public deleteReviewsForRecipe(recipeId: number, reviewId: number): Observable<void> {
+    const headers = this.getHeaders();
+    return this.http.delete<void>(`${this.apiServerUrl}/recipe/deleteReview/${recipeId}/${reviewId}`, { headers });
+  }
 }

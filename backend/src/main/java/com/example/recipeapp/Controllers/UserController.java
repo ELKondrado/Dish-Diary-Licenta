@@ -34,7 +34,6 @@ public class UserController {
 
     @GetMapping("/details/{username}")
     public ResponseEntity<User> getUserDetails(@PathVariable("username") String username){
-
         Optional<User> optionalUser = userService.fetchUserDetails(username);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
@@ -56,7 +55,7 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping(value = "/getFriends/{userId}")
+    @GetMapping(value = "/getFriends/{userId}")
     public ResponseEntity<List<User>> addFriend(@PathVariable("userId") Long userId) {
         Optional<User> optionalUser = userRepository.findUserByUserId(userId);
         if (optionalUser.isPresent()) {

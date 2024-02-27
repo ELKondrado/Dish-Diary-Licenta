@@ -7,9 +7,6 @@
    <div class="collapse navbar-collapse" id="navbarColor02">
       <ul class="navbar-nav mr-auto justify-content-start">
          <li class="nav-item">
-            <a class="nav-link">Add Recipe <span class="sr-only">(current)</span></a>
-         </li>
-         <li class="nav-item">
             <a class="nav-link" (click)="mainPage()">Repository <span class="sr-only">(current)</span></a>
          </li>
          <li class="nav-item">
@@ -27,6 +24,7 @@
             </div>
             <ul class="menu">
                <li (click)="userProfile()">Profile</li>
+               <li (click)="userFriends()">Friends</li>
                <li (click)="logout()">Logout</li>
             </ul>
          </div>
@@ -39,29 +37,35 @@
    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
    
    <div class="container" id="main-container">
-      <div class="row">
-         <div *ngFor="let recipe of recipes" class="col-6 col-md-6 col-lg-4 col-xl-3 card-unit">
-            <div class="card m-b-30">
-            <div class="card-body row card-recipe-title">
-              <h5 (click)="onOpenRecipe(recipe)" style="cursor: pointer;">{{recipe?.name}}</h5>
-            </div>
-            <div class="image-container">
-               <ul class="list-group list-group-flush recipe-image-container">
-               <img *ngIf="recipe.image" [src]="recipe.image">
-      
-               </ul>
-            </div>
-            <div class="card-body card-list card-buttons">
+         
+      <div class="recipe-cards-container">
 
-               <div class="add-area">
-                  <button class="add-button" (click)="onAddRecipeModal(recipe)"><span class="text">Add</span></button>
+         <div *ngFor="let recipe of recipes">
+            <div class="recipe-card">
+               
+               <div class="recipe-card-body recipe-card-title">
+                  <h6 (click)="onOpenRecipe(recipe)" style="cursor: pointer;">{{recipe?.name}}</h6>
                </div>
 
+               <div>
+                  <ul (click)="onOpenRecipe(recipe)" class="list-group recipe-card-image-container" style="cursor: pointer;">
+                     <img *ngIf="recipe.image" [src]="recipe.image">
+                  </ul>
+               </div>
+
+               <div class="recipe-card-buttons">
+
+                  <div class="add-area">
+                     <button class="add-button" (click)="onAddRecipeModal(recipe)"><span class="text">Add</span></button>
+                  </div>
+
+                </div>
+
             </div>
-          </div>
-        </div>
+         </div>
+
       </div>
-    </div>       
+   </div>
 
    <!-- Add Recipe To User Modal -->
    <div class="modal fade" id="addRecipeToUserModal" tabindex="-1" role="dialog" aria-labelledby="addModelLabel" aria-hidden="true">

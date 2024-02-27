@@ -1,10 +1,7 @@
 body {
-    height: 100%;
+    height: 100vh;
     overflow-y: scroll;
     box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
 }
 
 .main-body {
@@ -156,18 +153,27 @@ body {
     border: 0.1em solid #ddd;
 }
 
-.recipe-info .recipe-name h2{
+.recipe-name h2{
+    margin-top: 0.5rem;
+    margin-bottom: 5rem;
+    text-align: center;
+    font-size: 80px;
+}
+
+.recipe-name {
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
+    color: white;
     text-align: center;
 }
 
-.recipe-upload-button{
+.recipe-buttons{
+    margin-top: 0.5rem;
     display: grid;
     place-items: center;
 }
 
-.upload-button {
+.recipe-buttons label {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -180,7 +186,7 @@ body {
     position: relative; 
 }
 
-#fileInput {
+.recipe-buttons #fileInput {
     cursor: pointer;
     opacity: 0;
     position: absolute;
@@ -190,7 +196,7 @@ body {
     height: 100%;
 }
 
-.upload-button:hover, .upload-button:focus {
+.recipe-buttons label:hover, label:focus{
     background-color: #45a049;
 }
 
@@ -244,6 +250,27 @@ body {
     display: flex;
     margin-bottom: 2rem;
 }
+
+.deleteReview {
+    margin-top: 5px;
+    margin-left: auto;
+}
+
+.deleteReviewButton {
+    background: transparent;
+    border: 1px solid #f00;
+    border-radius: 2em;
+    color: #f00;
+    display: inline-block;
+    font-size: 12px;
+    height: 20px;
+    line-height: 2px;
+    margin: 0 0 8px;
+    padding: 0;
+    text-align: center;
+    width: 20px;
+    }
+    
 
 .user-avatar {
     width: 50px;
@@ -378,5 +405,11 @@ body {
         color: white;
         background-color: #191c22;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .recipe-reviews {
+        margin-left: 1rem;
+        margin-right: 1rem;
+        margin-bottom: 10rem;
     }
 }
