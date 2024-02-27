@@ -3,6 +3,8 @@
 Dish Diary is an application designed to help you manage and organize your recipes digitally. Say goodbye to traditional pen-and-paper methods and welcome a more convenient way to store, share, and discover new culinary creations.
 
 ## Features
+- **Security:**
+  - Secure authentication with JWT
 
 - **Recipe Management:**
   - Easily add, edit, and remove recipes.
