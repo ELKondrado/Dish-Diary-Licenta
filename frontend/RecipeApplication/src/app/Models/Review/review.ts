@@ -7,5 +7,5 @@ export interface Review {
     userName: string;
     userStarRating: number;
     userReviewText: string;
-    date: Date;
+    date: Date | string;
 }

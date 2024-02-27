@@ -1,3 +1,5 @@
+import { Recipe } from "../Recipe/recipe";
+
 export interface User{
     userId: number;
     userName: string;
@@ -6,4 +8,5 @@ export interface User{
     totalRecipes: number;
     totalRecipesCreated: number;
     totalRecipesAdded: number;
+    recipes: Recipe[];
 }

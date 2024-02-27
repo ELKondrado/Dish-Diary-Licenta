@@ -7,9 +7,6 @@
     <div class="collapse navbar-collapse" id="navbarColor02">
        <ul class="navbar-nav mr-auto justify-content-start">
         <li class="nav-item">
-           <a class="nav-link">Add Recipe <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
             <a class="nav-link" (click)="mainPage()">Repository <span class="sr-only">(current)</span></a>
        </li>
         <li class="nav-item">
@@ -27,6 +24,7 @@
              </div>
              <ul class="menu">
                 <li>Profile</li>
+                <li (click)="userFriends()">Friends</li>
                 <li (click)="logout()">Logout</li>
              </ul>
          </div>

@@ -1,0 +1,200 @@
+body {
+    height: 100vh;
+    overflow-y: scroll;
+    box-sizing: border-box;
+}
+
+.main-body {
+    height: 100vh;
+    min-height: 100%;
+    box-sizing: border-box;
+    padding-bottom: 10rem;
+}
+
+/* START NAVBAR */
+
+.navbar {
+    background-color: rgba(1, 4, 9, 255);
+    padding-left: 1rem;
+}
+
+.navbar button:hover {
+    color: red;
+}
+
+.navbar #searchRecipe {
+    background: transparent;
+    border: none;
+    flex-grow: 1;
+    border: 0.15em solid white;
+    border-radius: 0.3em;
+    color: white;
+    margin-right: 2em;
+    padding-right: 3em;
+}
+
+.navbar #searchRecipe::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.navbar #searchRecipe:focus {
+    outline: none;
+    border-color: white;
+}
+
+.navbar a:hover {
+    color: red;
+}
+
+.navbar a {
+    cursor: pointer;
+}
+
+/* START DROP DOWN */
+
+.dropdown {
+    position: relative;
+    margin: 1em;
+}
+
+.dropdown * {
+    box-sizing: border-box;
+}
+
+.avatar {
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    cursor: pointer;
+}
+
+.menu {
+    list-style: none;
+    padding: 0.2em 0.5em;
+    background: rgba(1, 4, 9, 255);
+    border: 1px white solid;
+    box-shadow: 0 0.5em 1em rgba(0, 0, 0, 0.3);
+    border-radius: 0.5em;
+    color: white;
+    position: absolute;
+    top: 3em;
+    left: 10%;
+    width: 7rem;
+    transform: translateX(-50%);
+    opacity: 0;
+    display: none;
+    transition: 0.2s;
+    z-index: 1;
+}
+
+.menu li {
+    padding: 0.7em 0.5em;
+    margin: 0.3em 0;
+    border-radius: 0.5em;
+    cursor: pointer;
+}
+
+.menu li:hover {
+    background: #262626;
+}
+
+.menu-open {
+    display: block;
+    opacity: 1;
+}
+
+#searchRecipe {
+	font-size: medium;
+	font-weight: 500;
+}
+
+.lil-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 0.1rem solid white;
+}
+
+.profile-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    object-position: center center;
+}
+
+/* END DROP DOWN */
+
+/* END NAVBAR */
+
+.friends-title {
+    display: flex;
+    flex-direction: row;
+    margin-top: 1rem;
+    margin-left: 3rem;
+    margin-right: 3rem;
+    margin-bottom: 2rem;
+    border-bottom: 0.1rem solid white;
+}
+
+.friend-profile-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    object-position: center center;
+}
+
+.friends-title h2{
+    color: white;
+    font-size: 70px;
+    text-align: center;
+}
+
+.friends-title span{
+    margin-left: auto;
+    font-weight: 600;
+    color: #45a049;
+    font-size: 70px;
+    text-align: center;
+}
+
+.friends-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-left: 5rem;
+    margin-left: 5rem;
+    margin-top: 0rem;
+    margin-bottom: 10rem;
+}
+
+.friend {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    padding-left: 3rem;
+    padding-right: 3rem;
+}
+
+.friend-avatar-container {
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 0.1em solid #ddd;
+}
+
+.friend-username {
+    max-width: 250px;
+    color: white;
+    text-align: center;
+}
+
+.friend h2 {
+    margin-top: 0.2rem;
+    margin-bottom: 0.2em;
+    font-size: 30px;
+}
+
+.friend p {
+    color: #666;
+}

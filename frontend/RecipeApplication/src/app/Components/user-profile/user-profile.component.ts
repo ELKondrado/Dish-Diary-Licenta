@@ -183,6 +183,10 @@ export class UserProfileComponent implements OnInit{
     this.router.navigate([`/${this.userService.getUsername()}/recipes`]);
   }
 
+  public userFriends(): void {
+    this.router.navigate([`/${this.userService.getUsername()}/friends`]);
+  }
+ 
   public logout(): void{   
     this.authService.logout();
   }

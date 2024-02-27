@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { RecipeService } from '../../Models/Recipe/recipe.service';
 import { AuthService } from '../../Security/auth.service';
 import { Recipe } from '../../Models/Recipe/recipe';
@@ -7,6 +7,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { UserService } from '../../Models/User/user.service';
 import { User } from '../../Models/User/user';
 import { Review } from '../../Models/Review/review';
+import { ReviewService } from '../../Models/Review/review.service';
 
 @Component({
   selector: 'app-recipe-info',
@@ -19,18 +20,23 @@ export class RecipeInfoComponent implements OnInit {
     private authService: AuthService,
     private userService: UserService,
     private recipeService: RecipeService,
+    private reviewService: ReviewService,
     private router: Router
   ) {}
 
   public user: User | null = null;
   public username: string | undefined;
+  public userRecipes: Recipe[] | undefined;
   public recipe: Recipe | undefined;
+  public isRecipeInUserRecipes: boolean = false;
   public avatarUrl: String | undefined;
   public recipeUrl: String | undefined;
   public selectedFile: File | undefined;
   public reviews: Review[] | undefined;
   public showReviewForm: boolean = false;
   public averageRating: number = 0;
+  public deletedReview: Review | undefined;
+  public addedRecipe: Recipe | undefined;
   public reviewModel: Review = { 
     id: 1,
     userOwner: null,
@@ -52,6 +58,7 @@ export class RecipeInfoComponent implements OnInit {
       this.username = this.userService.getUsername();
       this.fetchRecipe();
       this.getProfileImage();
+      this.getUserRecipes();
     });
   }
 
@@ -86,7 +93,7 @@ export class RecipeInfoComponent implements OnInit {
   public fetchReviewsForRecipe() {
     if (this.recipe?.id) 
     {
-      this.recipeService.getReviewsForRecipe(this.recipe.id).subscribe(
+      this.reviewService.getReviewsForRecipe(this.recipe.id).subscribe(
         (reviews: Review[]) => {
           this.reviews = reviews;
           this.fetchUserProfilesForReviews();
@@ -121,16 +128,51 @@ export class RecipeInfoComponent implements OnInit {
     this.showReviewForm = !this.showReviewForm;
   }
 
+  public onAddRecipeModal(recipe: Recipe | undefined): void {
+    const container = document.getElementById("main-container");
+    const button = document.createElement('button');
+    this.addedRecipe = recipe;
+
+    button.type = 'button';
+    button.style.display = 'none';
+    button.setAttribute('data-toggle', 'modal');
+    button.setAttribute('data-target', '#addRecipeToUserModal');
+
+    container?.appendChild(button);
+    button.click();
+  }
+
+  public addRecipeToUser(recipeId: number): void {
+    const username = this.authService.getUsernameFromToken();
+    const container = document.getElementById("main-container");
+    const button = document.createElement('button');
+    
+    button.type = 'button';
+    button.style.display = 'none';
+    button.setAttribute('data-toggle', 'modal');
+    container?.appendChild(button);
+
+    this.recipeService.addUserRecipe(username, recipeId).subscribe(
+      (response: any) => {
+        if (response) {
+          button.setAttribute('data-target', '#recipeSuccesModal');
+          button.click();
+        }
+      },
+      (error: HttpErrorResponse) => {
+        console.error(error);
+      }
+    );
+  }
+
   public addReview() {
     if(this.user && this.recipe) {
       this.reviewModel.userOwner = this.user;
       this.reviewModel.userName = this.user.userName;
       this.reviewModel.userProfileImage = this.user.profileImage;
       this.reviewModel.date = new Date();
-      console.log(this.recipe)
-      console.log(this.reviewModel)
 
-      this.recipeService.addReviewToRecipe(this.recipe.id, this.user.userName, this.reviewModel).subscribe(
+      this.reviewService.addReviewToRecipe(this.recipe.id, this.user.userName, this.reviewModel).subscribe(
         (response: Review) => {
           console.log(response)
           this.fetchReviewsForRecipe();
@@ -140,8 +182,56 @@ export class RecipeInfoComponent implements OnInit {
         }
       );
     }
-    
     this.showReviewForm = false;
+  }
+
+  public onDeleteReviewModal(review: Review | undefined): void {
+    const container = document.getElementById("main-container");
+    const button = document.createElement('button');
+    this.deletedReview = review;
+
+    button.type = 'button';
+    button.style.display = 'none';
+    button.setAttribute('data-toggle', 'modal');
+    button.setAttribute('data-target', '#deleteReviewForRecipeModal');
+
+    container?.appendChild(button);
+    button.click();
+  }
+
+  public deleteReviewForRecipe(reviewId: number) {
+    if(this.user && this.recipe) {
+      this.reviewService.deleteReviewsForRecipe(this.recipe.id, reviewId).subscribe(
+        () => {
+          this.fetchReviewsForRecipe();
+        },
+        (error: HttpErrorResponse) => {
+          console.error("Error adding the review:" + error);
+        }
+      );
+    }
+  }
+
+  public getUserRecipes(): void{
+    if(this.user)
+    {
+      this.recipeService.getUserRecipes(this.user.userId).subscribe(
+        (recipes: Recipe[]) => {
+          this.userRecipes = recipes;
+          this.userRecipes.forEach(recipe => {
+            recipe.image = 'data:image/jpeg;base64,' + recipe.image;
+          });
+          this.isRecipeInUserRecipes = !!this.recipe && !!this.userRecipes && this.userRecipes.some(userRecipe => userRecipe.id == this.recipe?.id);
+
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+    }
+    else{
+      console.error("User for getUserRecipes not found!")
+    }
   }
 
   public onSelectFile(event: any) {
@@ -226,6 +316,10 @@ export class RecipeInfoComponent implements OnInit {
 
   public userProfile(): void {
     this.router.navigate([`/${this.userService.getUsername()}/profile`]);
+  }
+
+  public userFriends(): void {
+    this.router.navigate([`/${this.userService.getUsername()}/friends`]);
   }
 
   public logout(): void{   

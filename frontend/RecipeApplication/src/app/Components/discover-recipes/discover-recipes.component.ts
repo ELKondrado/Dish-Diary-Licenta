@@ -179,6 +179,10 @@ export class DiscoverRecipesComponent implements OnInit{
     this.router.navigate([`/${this.userService.getUsername()}/profile`]);
   }
 
+  public userFriends(): void {
+    this.router.navigate([`/${this.userService.getUsername()}/friends`]);
+  }
+
   public logout(): void {   
     this.authService.logout();
   }

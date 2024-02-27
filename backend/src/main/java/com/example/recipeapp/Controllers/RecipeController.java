@@ -175,4 +175,11 @@ public class RecipeController {
         List<Review> reviews = recipeService.getReviewsForRecipe(recipeId);
         return new ResponseEntity<>(reviews, HttpStatus.OK);
     }
+
+    @DeleteMapping("/deleteReview/{recipeId}/{reviewId}")
+    public ResponseEntity<Review> deleteReview(@PathVariable("recipeId") Long recipeId,
+                                               @PathVariable("reviewId") Long reviewId){
+        recipeService.deleteReview(recipeId, reviewId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

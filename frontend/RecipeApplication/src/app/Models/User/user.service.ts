@@ -41,6 +41,11 @@ export class UserService {
     return this.http.post<User>(`${this.apiServerUrl}/auth/register`, user);
   }
 
+  public getFriends(userId: number): Observable<User[]> {
+    const headers = this.getHeaders();
+    return this.http.get<User[]>(`${this.apiServerUrl}/user/getFriends/${userId}`, { headers });
+  }
+
   public uploadProfileImage(userId: number, formData: FormData) {
     const headers = this.getHeaders();
 

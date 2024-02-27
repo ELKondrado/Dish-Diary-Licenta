@@ -1,9 +1,7 @@
 body {
-    height: 100%;
+    height: 100vh;
     overflow-y: scroll;
     box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
 }
 
 .main-body {
@@ -128,35 +126,41 @@ body {
 
 /* END DROP DOWN */
 
-/* START NAVBAR */
+/* END NAVBAR */
 
 #main-container {
-    margin-top: 3rem;
+    margin-top: 1rem;
     margin-bottom: 3rem;
 }
 
-.card-recipe-title {
+.recipe-cards-container {
+    display: flex;
+    flex-direction: row;
     justify-content: center;
+    flex-wrap: wrap;
+    margin-right: -2rem;
+    margin-left: -2rem;
+}
+
+.add-recipe-button-container {
+    margin-top: 2rem;
+    display: grid;
+    place-items: center;
+}
+
+.add-recipe-button {
+    border: 1px solid white;
+}
+
+.recipe-card-title {
+    display: grid;
     align-items: center; 
     text-align: center;
+    padding: 0.5rem;
 }
 
-.card {
-    border-color: white;
-    color: white;
-    margin: 1rem;
-    width: 16rem;
-    height: 24rem;
-    background-color: #262626;
-    overflow: hidden;
-}
-
-.card-body {
-    padding-bottom: 0.5rem;
-    padding-top: 0.5rem;
-}
-
-.card-body h5 {
+.recipe-card-title h6 {
+    font-size: 20px;
     margin: 0;
     font-weight: 600;
     white-space: nowrap;
@@ -164,23 +168,34 @@ body {
     text-overflow: ellipsis;
 }
 
-.recipe-image-container {
+.recipe-card {
+    border: 1px solid white;
+    color: white;
+    margin: 1rem;
+    width: 16rem;
+    height: 21.5rem;
+    background-color: #262626;
+    overflow: hidden;
+}
+
+.recipe-card-image-container {
    width: 16rem;
    height: 17rem; 
 }
 
-.card img {
+.recipe-card img {
     width: 100%;
     height: 100%;
     border: 1px solid white;
     object-fit: cover;
 }
 
-.card-buttons {
+.recipe-card-buttons {
     width: 100%;
-    height: 1rem;
+    height: 2rem;
     display: flex;
-    flex-direction: row; 
+    flex-direction: row;
+    justify-content: center;
     padding: 0;
 }
 
@@ -331,22 +346,33 @@ a {
         margin-left: auto;
     }
 
-    .card {
+    .recipe-cards-container {
+        margin-bottom: 12rem;
+    }
+
+    .recipe-card {
         margin: 0.5rem;
         width: 10rem;
-        height: 14rem;
+        height: 14.75rem;
     }
 
-    .recipe-image-container {
+    .recipe-card-image-container {
         width: 10rem;
-        height: 9.5rem;
+        height: 11rem;
     }
 
-    .card-buttons {
-        height: 1rem;
+    .recipe-card-buttons .delete-area, .edit-area{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 1.75rem;
     }
 
-    .card-recipe-title {
-       height: 2px;
+    .recipe-card-title {
+        height: 2rem;
+    }
+
+    .recipe-card-title h6{
+        font-size: 16px;
     }
 }

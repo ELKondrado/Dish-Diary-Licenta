@@ -112,6 +112,7 @@ body {
     height: 50px;
     border-radius: 50%;
     overflow: hidden;
+    border: 0.1rem solid white;
 }
 
 .profile-avatar {
@@ -119,13 +120,11 @@ body {
     height: 100%;
     object-fit: cover; 
     object-position: center center;
-    border: 0.1em solid #ddd;
 }
 
 /* END DROP DOWN */
 
 /* END NAVBAR */
-
 
 .container {
     display: flex;
