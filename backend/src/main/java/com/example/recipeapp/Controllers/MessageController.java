@@ -52,13 +52,33 @@ public class MessageController {
         }
     }
 
-    @GetMapping("/getMessages/{user1Id}")
-    public ResponseEntity<List<Message>> getMessages(@PathVariable("user1Id") long user1Id){
+    @GetMapping("/getMessages/{userId}")
+    public ResponseEntity<List<Message>> getMessages(@PathVariable("userId") long userId){
+        Optional<User> optionalUser = userRepository.findUserByUserId(userId);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            List<Message> messages = messageService.getMessages(user);
+            return new ResponseEntity<>(messages, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/getMessagesFromUser/{user1Id}/{user2Id}")
+    public ResponseEntity<List<Message>> getMessagesFromUser(@PathVariable("user1Id") long user1Id,
+                                                             @PathVariable("user2Id") long user2Id){
         Optional<User> optionalUser1 = userRepository.findUserByUserId(user1Id);
         if (optionalUser1.isPresent()) {
             User user1 = optionalUser1.get();
-            List<Message> messages = messageRepository.getMessages(user1.getUserId());
-            return new ResponseEntity<>(messages, HttpStatus.OK);
+            Optional<User> optionalUser2 = userRepository.findUserByUserId(user2Id);
+            if (optionalUser2.isPresent()) {
+                User user2 = optionalUser2.get();
+                List<Message> messagesFromUser = messageService.getMessagesFromUser(user1, user2);
+                return new ResponseEntity<>(messagesFromUser, HttpStatus.OK);
+            }
+            else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

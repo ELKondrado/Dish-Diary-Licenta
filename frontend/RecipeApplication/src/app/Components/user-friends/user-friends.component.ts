@@ -211,8 +211,8 @@ export class UserFriendsComponent implements OnInit{
     this.router.navigate([`/${this.userService.getUsername()}/profile`]);
   }
 
-  public userFriends(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/friends`]);
+  public userChat(): void {
+    this.router.navigate([`/${this.userService.getUsername()}/chat`]);
   }
 
   public userNotifications(): void {

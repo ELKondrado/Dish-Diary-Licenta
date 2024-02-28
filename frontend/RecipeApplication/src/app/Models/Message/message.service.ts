@@ -23,8 +23,17 @@ export class MessageService {
       throw new Error('Access token not available');
   }
 
+  public sendMessage(senderId: number, receiverId: number, requestedBody: string): Observable<Message> {
+    const headers = this.getHeaders();
+    return this.http.post<Message>(`${this.apiServerUrl}/user/chat/sendMessage/${senderId}/${receiverId}`, requestedBody, { headers });
+}
   public getMessages(userId: number): Observable<Message[]> {
       const headers = this.getHeaders();
       return this.http.get<Message[]>(`${this.apiServerUrl}/user/chat/getMessages/${userId}`, { headers });
   }
+
+  public getMessagesFromUser(user1Id: number, user2Id: number): Observable<Message[]> {
+    const headers = this.getHeaders();
+    return this.http.get<Message[]>(`${this.apiServerUrl}/user/chat/getMessagesFromUser/${user1Id}/${user2Id}`, { headers });
+}
 }

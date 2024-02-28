@@ -64,6 +64,7 @@ body {
     overflow: hidden;
     color: white;
     transition: max-height 0.5s;
+    z-index: 1;
 }
 
 .sub-menu-wrap.open-menu{
