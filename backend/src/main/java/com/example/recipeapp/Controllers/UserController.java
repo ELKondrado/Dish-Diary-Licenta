@@ -15,8 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -43,6 +42,29 @@ public class UserController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @PutMapping("/editProfileAttributes/{userId}")
+    public ResponseEntity<Map<String, String>> getUserDetails(@PathVariable("userId") long userId,
+                                               @RequestBody Map<String, String> request){
+        Map<String, String> response = new HashMap<>();
+
+        Optional<User> optionalUser = userRepository.findUserByUserId(userId);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            if(userService.updateUserNickname(user, request.get("userNicknameToChange")) == -1) {
+                response.put("status", "NICKNAME ALREADY USED");
+            }
+            else{
+                user = userService.updateUserBio(user, request.get("userBioToChange"));
+                userRepository.save(user);
+                response.put("status", "SUCCESS");
+            }
+        } else {
+            response.put("status", "USER NOT FOUND");
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/deleteUserRecipe/{userId}/{recipeId}")
@@ -87,28 +109,41 @@ public class UserController {
         }
     }
 
-    @PostMapping("/sendFriendRequest/{userSenderId}/{receiverUserName}")
-    public ResponseEntity<Notification> sendFriendRequest(@PathVariable Long userSenderId,
-                                                    @PathVariable String receiverUserName) {
+    @PostMapping("/sendFriendRequest/{userSenderId}/{receiverUserNickname}")
+    public ResponseEntity<Map<String, String>> sendFriendRequest(
+            @PathVariable Long userSenderId,
+            @PathVariable String receiverUserNickname) {
+
+        Map<String, String> response = new HashMap<>();
+
         Optional<User> optionalUserSender = userRepository.findUserByUserId(userSenderId);
 
-        if(optionalUserSender.isPresent()) {
+        if (optionalUserSender.isPresent()) {
             User userSender = optionalUserSender.get();
 
-            Optional<User> optionalUserReceiver = userRepository.findUserByUserName(receiverUserName);
-            if(optionalUserReceiver.isPresent()) {
+            Optional<User> optionalUserReceiver = userRepository.findUserByUserNickname(receiverUserNickname);
+            if (optionalUserReceiver.isPresent()) {
                 User userReceiver = optionalUserReceiver.get();
-
-                userService.sendFriendRequest(userSender, userReceiver);
+                Short status = userService.sendFriendRequest(userSender, userReceiver);
+                if(status == 0) {
+                    response.put("status", "SUCCESS");
+                }
+                else if(status == -1) {
+                    response.put("status", "FRIEND REQUEST ALREADY SENT");
+                }
+                else if(status == -2) {
+                    response.put("status", "RECEIVER ALREADY FRIEND");
+                }
+                else if(status == -3) {
+                    response.put("status", "CANNOT ADD YOURSELF");
+                }
+            } else {
+                response.put("status", "USER RECEIVER NOT FOUND");
             }
-            else{
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
+        } else {
+            response.put("status", "SENDER NOT FOUND");
         }
-        else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/acceptFriendRequest/{notificationId}")

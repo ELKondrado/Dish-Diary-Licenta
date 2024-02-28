@@ -1,23 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthService } from '../../Security/auth.service';
-import { UserService } from '../../Models/User/user.service';
-import { Recipe } from '../../Models/Recipe/recipe';
 import { HttpErrorResponse } from '@angular/common/http';
-import { User } from '../../Models/User/user';
-import { RecipeService } from '../../Models/Recipe/recipe.service';
-import { NotificationService } from '../../Models/Notification/notification.service';
-import { Notification } from '../../Models/Notification/notification';
-import { NgForm } from '@angular/forms';
-import { ProfileDto } from '../../Models/User/profileDto';
+import { Component } from '@angular/core';
+import { Notification } from '../Models/Notification/notification';
+import { User } from '../Models/User/user';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NotificationService } from '../Models/Notification/notification.service';
+import { UserService } from '../Models/User/user.service';
+import { AuthService } from '../Security/auth.service';
+import { Recipe } from '../Models/Recipe/recipe';
+import { RecipeService } from '../Models/Recipe/recipe.service';
 
 @Component({
-  selector: 'app-user-profile',
-  templateUrl: './user-profile.component.html',
-  styleUrl: './user-profile.component.css'
+  selector: 'app-friend-user-profile',
+  templateUrl: './friend-user-profile.component.html',
+  styleUrl: './friend-user-profile.component.css'
 })
-export class UserProfileComponent implements OnInit{
+export class FriendUserProfileComponent {
   constructor(
+    private route: ActivatedRoute,
     private authService: AuthService,
     private userService: UserService,
     private recipeService: RecipeService,
@@ -27,14 +26,14 @@ export class UserProfileComponent implements OnInit{
 
   public user: User | null = null;
   public username: string | undefined;
+  public friend: User | undefined;
   public notifications: Notification[] | undefined;
   public avatarUrl: String | undefined;
+  public friendAvatarUrl: String | undefined;
   public selectedFile: File | undefined;
   public repositoryRecipes: Recipe[] | undefined;
   public createdRecipes: Recipe[] | undefined;
   public addedRecipes: Recipe[] | undefined;
-  public showEditProfile: boolean = false;
-  public nicknameAlreadyUsed: boolean = false;
 
   ngOnInit(): void {
     this.fetchData();
@@ -46,8 +45,7 @@ export class UserProfileComponent implements OnInit{
       () => {
       this.user = this.authService.getUser();
       this.username = this.userService.getUsername();
-      this.getRepositoryRecipes();
-      this.getCreatedRecipes()
+      this.fetchFriend();
       this.getProfileImage();
       this.getNotifications();
     });
@@ -63,34 +61,26 @@ export class UserProfileComponent implements OnInit{
     });
   }
 
-  public toggleMenu(): void {
+  public fetchFriend(): void{
+    this.route.params.subscribe((params) => {
+      const friendUserName = params['friendUserName'];
+      this.userService.getUserDetails(friendUserName).subscribe(
+        (friend: User) => {
+          this.friend = friend;
+          this.friend.profileImage = 'data:image/jpeg;base64,' + this.friend.profileImage;
+          this.getRepositoryRecipes();
+          this.getCreatedRecipes()
+        },
+        (error: HttpErrorResponse) => {
+          console.error(error);
+        }
+      );
+    });
+  }
+
+  public toggleMenu(){
     let subMenu = document.getElementById("subMenu");
     subMenu?.classList.toggle("open-menu");
-  }
-
-  public toggleProfileEdit(): void {
-    this.showEditProfile = !this.showEditProfile;
-  }
-
-  public onEditProfile(editForm: NgForm): void {
-    if(this.user && editForm){
-      this.userService.updateUserAttributes(this.user.userId, editForm).subscribe(
-        (response: any) => {
-          console.log(response)
-          if(response.status == "NICKNAME ALREADY USED"){
-            this.nicknameAlreadyUsed = true;
-          }
-          else if(response.status == "SUCCESS"){
-            this.nicknameAlreadyUsed = false;
-            this.toggleProfileEdit();
-          }
-        },
-        (error: HttpErrorResponse) =>
-        {
-          console.error("ERROR editing profile attributes: " + error);
-        }
-      )
-    }
   }
 
   public getNotifications(): void {
@@ -102,7 +92,6 @@ export class UserProfileComponent implements OnInit{
             notification.sender.profileImage = 'data:image/jpeg;base64,' + notification.sender.profileImage;
           });
           this.notifications = notifications.filter(notification => notification.status === 'PENDING');
-          console.log(this.notifications.length);
         },
         (error) => {
           console.error("ERROR getting the notifications: " + error);
@@ -112,10 +101,12 @@ export class UserProfileComponent implements OnInit{
   }
 
   public getRepositoryRecipes(): void {
-    if(this.user)
+    console.log(this.friend)
+    if(this.friend)
     {
-      this.recipeService.getUserRecipes(this.user?.userId).subscribe(
+      this.recipeService.getUserRecipes(this.friend?.userId).subscribe(
         (response: Recipe[]) => {
+          console.log(response)
           this.repositoryRecipes = response;
           this.getAddedRecipes();
         },
@@ -127,10 +118,11 @@ export class UserProfileComponent implements OnInit{
   }
 
   public getCreatedRecipes() {
-    if(this.user)
+    if(this.friend)
     {
-      this.recipeService.getRecipesByOwner(this.user?.userName).subscribe(
+      this.recipeService.getRecipesByOwner(this.friend?.userName).subscribe(
         (createdRecipes: Recipe[]) => {
+          console.log(createdRecipes)
           this.createdRecipes = createdRecipes;
           this.getAddedRecipes();
         },
@@ -151,7 +143,6 @@ export class UserProfileComponent implements OnInit{
   }  
   
   public onOpenRecipesHistory(mode: string) {
-    
     const container = document.getElementById("main-container");
     const button = document.createElement('button');
 
@@ -182,9 +173,9 @@ export class UserProfileComponent implements OnInit{
       {
           reader.readAsDataURL(this.selectedFile);
           reader.onload = (eventReader: any) => {
-            this.avatarUrl = eventReader.target.result;
-            this.uploadImage();
-          };
+          this.avatarUrl = eventReader.target.result;
+          this.uploadImage();
+        };
       }
     }
   }
@@ -235,6 +226,10 @@ export class UserProfileComponent implements OnInit{
 
   public discoverRecipes(): void {
     this.router.navigate([`/${this.userService.getUsername()}/recipes`]);
+  }
+
+  public userProfile(): void {
+    this.router.navigate([`/${this.userService.getUsername()}/profile`]);
   }
 
   public userFriends(): void {

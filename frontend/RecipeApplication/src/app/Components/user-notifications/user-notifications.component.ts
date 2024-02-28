@@ -77,6 +77,11 @@ export class UserNotificationsComponent {
     button.click();
   }
 
+  public toggleMenu(){
+    let subMenu = document.getElementById("subMenu");
+    subMenu?.classList.toggle("open-menu");
+  }
+
   public getNotifications(): void {
     if(this.user)
     {

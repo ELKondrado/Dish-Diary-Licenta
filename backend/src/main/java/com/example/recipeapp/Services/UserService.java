@@ -2,6 +2,7 @@ package com.example.recipeapp.Services;
 
 import com.example.recipeapp.Exceptions.FriendRequestException;
 import com.example.recipeapp.Exceptions.NotificationNotFoundException;
+import com.example.recipeapp.Exceptions.RecipeNameNotFoundException;
 import com.example.recipeapp.Model.Friendship;
 import com.example.recipeapp.Model.Notification.Notification;
 import com.example.recipeapp.Model.Notification.NotificationStatus;
@@ -18,6 +19,7 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -38,6 +40,31 @@ public class UserService {
 
     public Optional<User> fetchUserDetails(String username) {
         return userRepository.findUserByUserName(username);
+    }
+
+    @Transactional
+    public short updateUserNickname(User user, String nickname) {
+        if(nickname != null && nickname.length() > 0){
+            Optional<User> optionalUser = userRepository.findUserByUserNickname(nickname);
+            if(optionalUser.isPresent()) {
+                User newUser = optionalUser.get();
+                if(user == newUser) {
+                    return 0;
+                }
+                return -1;
+            }
+            user.setUserNickname(nickname);
+            userRepository.save(user);
+        }
+        return 0;
+    }
+
+    @Transactional
+    public User updateUserBio(User user, String bio) {
+        if(bio != null && bio.length() > 0){
+            user.setUserBio(bio);
+        }
+        return user;
     }
 
     public void deleteUserRecipe(User user, long recipeId) {
@@ -76,17 +103,17 @@ public class UserService {
         }
     }
 
-    public void sendFriendRequest(User userSender, User userReceiver){
+    public Short sendFriendRequest(User userSender, User userReceiver){
         if (notificationRepository.existsBySenderAndReceiver(userSender, userReceiver)) {
-            throw new FriendRequestException("Friend request already sent!");
+            return -1; //
         }
         if (!userSender.equals(userReceiver)) {
-
-            if (userReceiver.getFriendships().stream().anyMatch(friendship -> friendship.getFriend().equals(userReceiver))) {
-                throw new FriendRequestException("Users are already friends!");
+            if (userSender.getFriendships().stream().anyMatch(friendship -> friendship.getFriend().equals(userReceiver))) {
+                return -2;
             }
+
         } else {
-            throw new FriendRequestException("Cannot add yourself as a friend!");
+            return -3;
         }
 
         Notification notification = new Notification();
@@ -96,6 +123,7 @@ public class UserService {
         notification.setStatus(NotificationStatus.PENDING);
         notification.setDateCreated(new Date());
         notificationRepository.save(notification);
+        return 0;
     }
 
     public void acceptFriendRequest(Notification notification){

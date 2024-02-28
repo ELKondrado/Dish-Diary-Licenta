@@ -8,6 +8,8 @@ import { UserService } from '../../Models/User/user.service';
 import { User } from '../../Models/User/user';
 import { Review } from '../../Models/Review/review';
 import { ReviewService } from '../../Models/Review/review.service';
+import { NotificationService } from '../../Models/Notification/notification.service';
+import { Notification } from '../../Models/Notification/notification';
 
 @Component({
   selector: 'app-recipe-info',
@@ -21,11 +23,13 @@ export class RecipeInfoComponent implements OnInit {
     private userService: UserService,
     private recipeService: RecipeService,
     private reviewService: ReviewService,
+    private notificationService: NotificationService,
     private router: Router
   ) {}
 
   public user: User | null = null;
   public username: string | undefined;
+  public notifications: Notification[] | undefined;
   public userRecipes: Recipe[] | undefined;
   public recipe: Recipe | undefined;
   public isRecipeInUserRecipes: boolean = false;
@@ -59,6 +63,7 @@ export class RecipeInfoComponent implements OnInit {
       this.fetchRecipe();
       this.getProfileImage();
       this.getUserRecipes();
+      this.getNotifications();
     });
   }
 
@@ -126,6 +131,29 @@ export class RecipeInfoComponent implements OnInit {
 
   public toggleReviewForm() {
     this.showReviewForm = !this.showReviewForm;
+  }
+
+  public toggleMenu(){
+    let subMenu = document.getElementById("subMenu");
+    subMenu?.classList.toggle("open-menu");
+  }
+
+  public getNotifications(): void {
+    if(this.user)
+    {
+      this.notificationService.getNotifications(this.user.userId).subscribe(
+        (notifications: Notification[]) => {
+          console.log(notifications);
+          notifications.forEach(notification => {
+            notification.sender.profileImage = 'data:image/jpeg;base64,' + notification.sender.profileImage;
+          });
+          this.notifications = notifications.filter(notification => notification.status === 'PENDING');
+        },
+        (error) => {
+          console.error("ERROR getting the notifications: " + error);
+        }
+      );
+    }
   }
 
   public onAddRecipeModal(recipe: Recipe | undefined): void {

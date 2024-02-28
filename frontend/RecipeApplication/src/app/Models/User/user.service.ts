@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User } from './user';
 import { AuthService } from '../../Security/auth.service';
+import { NgForm } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -41,6 +42,16 @@ export class UserService {
     return this.http.post<User>(`${this.apiServerUrl}/auth/register`, user);
   }
 
+  public updateUserAttributes(userId: number, requestBody: NgForm): Observable<User>{ 
+    const headers = this.getHeaders();
+    return this.http.put<User>(`${this.apiServerUrl}/user/editProfileAttributes/${userId}`, requestBody, { headers });
+  }
+
+  public getUserDetails(username: number): Observable<User>{ 
+    const headers = this.getHeaders();
+    return this.http.get<User>(`${this.apiServerUrl}/user/details/${username}`, { headers });
+  }
+
   public getFriends(userId: number): Observable<User[]> {
     const headers = this.getHeaders();
     return this.http.get<User[]>(`${this.apiServerUrl}/user/getFriends/${userId}`, { headers });
@@ -50,6 +61,7 @@ export class UserService {
     const headers = this.getHeaders();
     return this.http.get<Notification[]>(`${this.apiServerUrl}/user/getFriends/${userId}`, { headers });
   }
+
   public uploadProfileImage(userId: number, formData: FormData) {
     const headers = this.getHeaders();
 

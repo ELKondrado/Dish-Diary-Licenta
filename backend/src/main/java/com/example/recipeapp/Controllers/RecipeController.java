@@ -79,15 +79,12 @@ public class RecipeController {
         if (request.containsKey("name")) {
             recipe = recipeService.updateRecipeName(recipe, request.get("name"));
         }
-
         if (request.containsKey("ingredients")) {
             recipe = recipeService.updateRecipeIngredients(recipe, request.get("ingredients"));
         }
-
         if (request.containsKey("stepsOfPreparation")) {
             recipe = recipeService.updateRecipeStepsOfPreparation(recipe, request.get("stepsOfPreparation"));
         }
-
         return new ResponseEntity<>(recipe, HttpStatus.OK);
     }
 

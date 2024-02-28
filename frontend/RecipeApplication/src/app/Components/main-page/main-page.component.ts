@@ -7,6 +7,8 @@ import { AuthService } from '../../Security/auth.service';
 import { Recipe } from '../../Models/Recipe/recipe';
 import { NgForm } from '@angular/forms';
 import { User } from '../../Models/User/user';
+import { NotificationService } from '../../Models/Notification/notification.service';
+import { Notification } from '../../Models/Notification/notification';
 
 @Component({
   selector: 'app-main-page',
@@ -18,11 +20,13 @@ export class MainPageComponent implements OnInit{
     private recipeService: RecipeService,
     private authService: AuthService, 
     private userService: UserService,
+    private notificationService: NotificationService,
     private router: Router
   ) {}
 
   public user: User | null = null;
   public recipes: Recipe[] = [];
+  public notifications: Notification[] | undefined;
   public editRecipe: Recipe | undefined;
   public deletedRecipe: Recipe | undefined;
   public username: string | undefined;
@@ -40,6 +44,7 @@ export class MainPageComponent implements OnInit{
       this.username = this.userService.getUsername();
       this.getUserRecipes();
       this.getProfileImage();
+      this.getNotifications();
     });
   }
 
@@ -71,6 +76,29 @@ export class MainPageComponent implements OnInit{
     }
     else{
       console.error("User ID for getUserRecipes not found!")
+    }
+  }
+
+  public toggleMenu(){
+    let subMenu = document.getElementById("subMenu");
+    subMenu?.classList.toggle("open-menu");
+  }
+
+  public getNotifications(): void {
+    if(this.user)
+    {
+      this.notificationService.getNotifications(this.user.userId).subscribe(
+        (notifications: Notification[]) => {
+          console.log(notifications);
+          notifications.forEach(notification => {
+            notification.sender.profileImage = 'data:image/jpeg;base64,' + notification.sender.profileImage;
+          });
+          this.notifications = notifications.filter(notification => notification.status === 'PENDING');
+        },
+        (error) => {
+          console.error("ERROR getting the notifications: " + error);
+        }
+      );
     }
   }
 
