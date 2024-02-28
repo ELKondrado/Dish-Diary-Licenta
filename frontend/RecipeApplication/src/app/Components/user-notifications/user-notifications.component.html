@@ -1,0 +1,114 @@
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <a id="mainPage" class="navbar-brand" (click)="mainPage()" style="color: white; font-weight: 800; font-size: x-large">DishDiary</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+       <span class="navbar-toggler-icon"></span>
+    </button>
+ 
+    <div class="collapse navbar-collapse" id="navbarColor02">
+       <ul class="navbar-nav mr-auto justify-content-start">
+        <li class="nav-item">
+            <a class="nav-link" (click)="mainPage()">Repository <span class="sr-only">(current)</span></a>
+       </li>
+        <li class="nav-item">
+           <a class="nav-link" (click)="discoverRecipes()">Discover Recipes <span class="sr-only">(current)</span></a>
+        </li>
+       </ul>
+       <form class="form-inline my-2 my-lg-0">
+         <div class="dropdown">
+             <div class="lil-avatar">
+                <img class="avatar profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
+                <img class="avatar profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
+             </div>
+             <div class="menu">
+                <div class="li-container">
+                    <li (click)="userProfile()">Profile</li>
+                </div>
+                <div class="li-container">
+                     <li (click)="userFriends()">Friends</li>
+                </div>
+                <div class="li-container">
+                    <li>Notifications</li>
+                </div>
+                <div class="li-container">
+                    <li (click)="logout()">Logout</li>
+                </div>
+             </div>
+         </div>
+       </form>
+    </div>
+</nav>
+
+<body>
+
+    <div id="main-container">
+
+        <div class="notifications-title">
+            <h2>Notifications</h2>
+        </div>
+        
+        <div class="notifications-container">
+            <h2>Friend Requests</h2>
+            <div *ngFor="let notification of notifications" class="friend-request">
+                <div class="elements">
+                    <div class="user-avatar">
+                        <img src="{{notification.sender.profileImage}}" alt="User Avatar">
+                     </div>
+                    <h4>{{notification.sender.userName}}</h4>
+                    <div (click)="onResponseFriendRequestModal(notification, 'accept')" class="accept-icon-container">
+                        <div class="accept icon"></div>
+                    </div>
+                    <div (click)="onResponseFriendRequestModal(notification, 'reject')" class="reject-icon-container">
+                        <div class="reject icon"></div>
+                    </div>
+                </div>
+                
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Accept Friend Request Modal -->
+    <div class="modal fade" id="acceptFriendRequestModal" tabindex="-1" role="dialog" aria-labelledby="acceptFriendRequestModelLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="acceptFriendRequestModelLabel">Accept Friend Request</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to accept the friend request from {{friendRequestNotification?.sender?.userName}}?</p>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                        <button *ngIf="friendRequestNotification" (click)="acceptFriendRequest(friendRequestNotification)" class="btn btn-danger" data-dismiss="modal">Yes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <!-- Reject Friend Request Modal -->
+     <div class="modal fade" id="rejectFriendRequestModal" tabindex="-1" role="dialog" aria-labelledby="rejectFriendRequestModelLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="rejectFriendRequestModelLabel">Accept Friend Request</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to reject the friend request from {{friendRequestNotification?.sender?.userName}}?</p>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                        <button *ngIf="friendRequestNotification" (click)="rejectFriendRequest(friendRequestNotification)" class="btn btn-danger" data-dismiss="modal">Yes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>

@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../Security/auth.service';
 import { UserService } from '../../Models/User/user.service';
-import { RecipeService } from '../../Models/Recipe/recipe.service';
 import { Router } from '@angular/router';
 import { User } from '../../Models/User/user';
-import { Recipe } from '../../Models/Recipe/recipe';
 import { HttpErrorResponse } from '@angular/common/http';
+import { NgForm } from '@angular/forms';
+import { NotificationService } from '../../Models/Notification/notification.service';
 
 @Component({
   selector: 'app-user-friends',
@@ -16,7 +16,7 @@ export class UserFriendsComponent implements OnInit{
   constructor(
     private authService: AuthService,
     private userService: UserService,
-    private recipeService: RecipeService,
+    private notificationService: NotificationService,
     private router: Router
   ) {}
 
@@ -70,6 +70,34 @@ export class UserFriendsComponent implements OnInit{
     }
   }
 
+  public onAddRecipeModal(): void {
+    const container = document.getElementById("main-container");
+    const button = document.createElement('button');
+
+    button.type = 'button';
+    button.style.display = 'none';
+    button.setAttribute('data-toggle', 'modal');
+    button.setAttribute('data-target', '#addFriendModal');
+
+    container?.appendChild(button);
+    button.click();
+  }
+
+  public sendFriendRequest(addForm: NgForm): void {
+    if(this.user){
+      const receiverUserName = addForm.value.name;
+      this.notificationService.sendFriendRequest(this.user.userId, receiverUserName).subscribe(
+        (response: any) => {
+          console.log(response);
+          addForm.reset();
+        },
+        (error: HttpErrorResponse) => {
+          console.error("ERROR in sending the friend request: " + error)
+        }
+      );
+    }
+  }
+
   public getProfileImage(): void {
     if (this.user?.userId) {
       this.userService.getProfileImage(this.user.userId).subscribe(
@@ -108,6 +136,10 @@ export class UserFriendsComponent implements OnInit{
 
   public userFriends(): void {
     this.router.navigate([`/${this.userService.getUsername()}/friends`]);
+  }
+
+  public userNotifications(): void {
+    this.router.navigate([`/${this.userService.getUsername()}/notifications`]);
   }
  
   public logout(): void{   

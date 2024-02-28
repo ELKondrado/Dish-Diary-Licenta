@@ -22,26 +22,6 @@ body {
     color: red;
 }
 
-.navbar #searchRecipe {
-    background: transparent;
-    border: none;
-    flex-grow: 1;
-    border: 0.15em solid white;
-    border-radius: 0.3em;
-    color: white;
-    margin-right: 2em;
-    padding-right: 3em;
-}
-
-.navbar #searchRecipe::placeholder {
-    color: rgba(255, 255, 255, 0.7);
-}
-
-.navbar #searchRecipe:focus {
-    outline: none;
-    border-color: white;
-}
-
 .navbar a:hover {
     color: red;
 }
@@ -77,9 +57,9 @@ body {
     border-radius: 0.5em;
     color: white;
     position: absolute;
-    top: 3em;
-    left: 10%;
-    width: 7rem;
+    top: 4em;
+    left: 0%;
+    width: 8rem;
     transform: translateX(-50%);
     opacity: 0;
     display: none;
@@ -103,10 +83,7 @@ body {
     opacity: 1;
 }
 
-#searchRecipe {
-	font-size: medium;
-	font-weight: 500;
-}
+
 
 .lil-avatar {
     width: 50px;
@@ -158,6 +135,11 @@ body {
     text-align: center;
 }
 
+.add-friend-button-container {
+    display: grid;
+    place-items: center;
+}
+
 .friends-container {
     display: flex;
     flex-direction: row;
@@ -198,3 +180,14 @@ body {
 .friend p {
     color: #666;
 }
+
+.modal-body input {
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+.modal-body label {
+    font-size: large;
+    font-weight: 600;
+}
+

@@ -142,29 +142,6 @@ export class RecipeInfoComponent implements OnInit {
     button.click();
   }
 
-  public addRecipeToUser(recipeId: number): void {
-    const username = this.authService.getUsernameFromToken();
-    const container = document.getElementById("main-container");
-    const button = document.createElement('button');
-    
-    button.type = 'button';
-    button.style.display = 'none';
-    button.setAttribute('data-toggle', 'modal');
-    container?.appendChild(button);
-
-    this.recipeService.addUserRecipe(username, recipeId).subscribe(
-      (response: any) => {
-        if (response) {
-          button.setAttribute('data-target', '#recipeSuccesModal');
-          button.click();
-        }
-      },
-      (error: HttpErrorResponse) => {
-        console.error(error);
-      }
-    );
-  }
-
   public addReview() {
     if(this.user && this.recipe) {
       this.reviewModel.userOwner = this.user;
@@ -232,6 +209,30 @@ export class RecipeInfoComponent implements OnInit {
     else{
       console.error("User for getUserRecipes not found!")
     }
+  }
+
+  public addRecipeToUser(recipeId: number): void {
+    const username = this.authService.getUsernameFromToken();
+
+    const container = document.getElementById("main-container");
+    const button = document.createElement('button');
+    
+    button.type = 'button';
+    button.style.display = 'none';
+    button.setAttribute('data-toggle', 'modal');
+    container?.appendChild(button);
+
+    this.recipeService.addUserRecipe(username, recipeId).subscribe(
+      (response: any) => {
+        if (response) {
+          button.setAttribute('data-target', '#recipeSuccesModal');
+          button.click();
+        }
+      },
+      (error: HttpErrorResponse) => {
+        console.error(error);
+      }
+    );
   }
 
   public onSelectFile(event: any) {
@@ -320,6 +321,10 @@ export class RecipeInfoComponent implements OnInit {
 
   public userFriends(): void {
     this.router.navigate([`/${this.userService.getUsername()}/friends`]);
+  }
+
+  public userNotifications(): void {
+    this.router.navigate([`/${this.userService.getUsername()}/notifications`]);
   }
 
   public logout(): void{   

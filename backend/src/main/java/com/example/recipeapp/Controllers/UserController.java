@@ -1,11 +1,10 @@
 package com.example.recipeapp.Controllers;
 
 import com.example.recipeapp.Model.Friendship;
-import com.example.recipeapp.Model.Recipe;
+import com.example.recipeapp.Model.Notification.Notification;
 import com.example.recipeapp.Model.User;
-import com.example.recipeapp.Repositories.RecipeRepository;
+import com.example.recipeapp.Repositories.NotificationRepository;
 import com.example.recipeapp.Repositories.UserRepository;
-import com.example.recipeapp.Services.RecipeService;
 import com.example.recipeapp.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -25,11 +24,13 @@ import java.util.Optional;
 public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
+    private final NotificationRepository notificationRepository;
 
     @Autowired
-    public UserController(UserService userService, UserRepository userRepository) {
+    public UserController(UserService userService, UserRepository userRepository, NotificationRepository notificationRepository) {
         this.userService = userService;
         this.userRepository = userRepository;
+        this.notificationRepository = notificationRepository;
     }
 
     @GetMapping("/details/{username}")
@@ -78,10 +79,69 @@ public class UserController {
                 User friend = optionalFriend.get();
                 userService.addFriend(user, friend);
                 return new ResponseEntity<>(HttpStatus.OK);
-            }
-            else {
+            } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/sendFriendRequest/{userSenderId}/{receiverUserName}")
+    public ResponseEntity<Notification> sendFriendRequest(@PathVariable Long userSenderId,
+                                                    @PathVariable String receiverUserName) {
+        Optional<User> optionalUserSender = userRepository.findUserByUserId(userSenderId);
+
+        if(optionalUserSender.isPresent()) {
+            User userSender = optionalUserSender.get();
+
+            Optional<User> optionalUserReceiver = userRepository.findUserByUserName(receiverUserName);
+            if(optionalUserReceiver.isPresent()) {
+                User userReceiver = optionalUserReceiver.get();
+
+                userService.sendFriendRequest(userSender, userReceiver);
+            }
+            else{
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/acceptFriendRequest/{notificationId}")
+    public ResponseEntity<Notification> acceptFriendRequest(@PathVariable Long notificationId) {
+        Optional<Notification> optionalNotification = notificationRepository.findNotificationById(notificationId);
+
+        if(optionalNotification.isPresent()) {
+            Notification notification = optionalNotification.get();
+            userService.acceptFriendRequest(notification);
+            addFriend(notification.getSender().getUserId(), notification.getReceiver().getUserId());
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/rejectFriendRequest/{notificationId}")
+    public ResponseEntity<Notification> rejectFriendRequest(@PathVariable Long notificationId) {
+        Optional<Notification> optionalNotification = notificationRepository.findNotificationById(notificationId);
+
+        if(optionalNotification.isPresent()) {
+            Notification notification = optionalNotification.get();
+            userService.rejectFriendRequest(notification);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/getNotifications/{userId}")
+    public ResponseEntity<List<Notification>> getNotifications(@PathVariable("userId") Long userId) {
+        Optional<User> optionalUser = userRepository.findUserByUserId(userId);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            List<Notification> notifications = userService.getNotifications(user);
+            return new ResponseEntity<>(notifications, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

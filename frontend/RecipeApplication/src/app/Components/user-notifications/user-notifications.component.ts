@@ -1,32 +1,32 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component } from '@angular/core';
 import { AuthService } from '../../Security/auth.service';
 import { UserService } from '../../Models/User/user.service';
+import { Router } from '@angular/router';
+import { User } from '../../Models/User/user';
 import { Recipe } from '../../Models/Recipe/recipe';
 import { HttpErrorResponse } from '@angular/common/http';
-import { User } from '../../Models/User/user';
-import { RecipeService } from '../../Models/Recipe/recipe.service';
+import { NotificationService } from '../../Models/Notification/notification.service';
+import { Notification } from '../../Models/Notification/notification';
 
 @Component({
-  selector: 'app-user-profile',
-  templateUrl: './user-profile.component.html',
-  styleUrl: './user-profile.component.css'
+  selector: 'app-user-notifications',
+  templateUrl: './user-notifications.component.html',
+  styleUrl: './user-notifications.component.css'
 })
-export class UserProfileComponent implements OnInit{
+export class UserNotificationsComponent {
   constructor(
     private authService: AuthService,
     private userService: UserService,
-    private recipeService: RecipeService,
+    private notificationService: NotificationService,
     private router: Router
   ) {}
 
   public user: User | null = null;
   public username: string | undefined;
-  public recipe: Recipe | undefined;
+  public notifications: Notification[] | undefined;
+  public friendRequestNotification: Notification | undefined;
   public avatarUrl: String | undefined;
   public selectedFile: File | undefined;
-  public repositoryRecipes: Recipe[] | undefined;
-  public createdRecipes: Recipe[] | undefined;
   public addedRecipes: Recipe[] | undefined;
 
   ngOnInit(): void {
@@ -41,9 +41,8 @@ export class UserProfileComponent implements OnInit{
       console.log(this.user)
 
       this.username = this.userService.getUsername();
-      this.getRepositoryRecipes();
-      this.getCreatedRecipes()
       this.getProfileImage();
+      this.getNotifications();
     });
   }
 
@@ -57,66 +56,71 @@ export class UserProfileComponent implements OnInit{
     });
   }
 
-  public getRepositoryRecipes(): void {
-    if(this.user)
-    {
-      this.recipeService.getUserRecipes(this.user?.userId).subscribe(
-        (response: Recipe[]) => {
-          this.repositoryRecipes = response;
-          this.getAddedRecipes();
-        },
-        (error: HttpErrorResponse) => {
-          console.error(error.message);
-        }
-      );
-    }
-  }
+  public onResponseFriendRequestModal(friendRequestNotification: Notification | undefined, mode: string): void {
 
-  public getCreatedRecipes() {
-    if(this.user)
-    {
-      this.recipeService.getRecipesByOwner(this.user?.userName).subscribe(
-        (createdRecipes: Recipe[]) => {
-          this.createdRecipes = createdRecipes;
-          this.getAddedRecipes();
-        },
-        (error: HttpErrorResponse) => {
-          console.error("ERROR getting created recipes: " + error);
-        }
-      )
-    }
-  }
-  
-  public getAddedRecipes() {
-    if (this.createdRecipes && this.repositoryRecipes) {
-      const filteredRecipes = this.repositoryRecipes.filter(recipe1 =>
-        !this.createdRecipes!.some(recipe2 => recipe1.id === recipe2.id)
-      );
-      this.addedRecipes = filteredRecipes;
-    }
-  }  
-  
-  public onOpenRecipesHistory(mode: string) {
-    
     const container = document.getElementById("main-container");
     const button = document.createElement('button');
-
     button.type = 'button';
     button.style.display = 'none';
     button.setAttribute('data-toggle', 'modal');
 
-    if(mode == 'total'){
-      button.setAttribute('data-target', '#totalRecipesModal');
+    if( mode === 'accept') {
+      this.friendRequestNotification = friendRequestNotification;
+      button.setAttribute('data-target', '#acceptFriendRequestModal');
     }
-    else if(mode == 'created'){
-      button.setAttribute('data-target', '#createdRecipesModal');
-    }
-    else if(mode == 'added'){
-      button.setAttribute('data-target', '#addedRecipesModal');
+    if( mode === 'reject') {
+      this.friendRequestNotification = friendRequestNotification;
+      button.setAttribute('data-target', '#rejectFriendRequestModal');
     }
 
     container?.appendChild(button);
     button.click();
+  }
+
+  public getNotifications(): void {
+    if(this.user)
+    {
+      this.notificationService.getNotifications(this.user.userId).subscribe(
+        (notifications: Notification[]) => {
+          console.log(notifications);
+          notifications.forEach(notification => {
+            notification.sender.profileImage = 'data:image/jpeg;base64,' + notification.sender.profileImage;
+          });
+          this.notifications = notifications.filter(notification => notification.status === 'PENDING');
+        },
+        (error) => {
+          console.error("ERROR getting the notifications: " + error);
+        }
+      );
+    }
+  }
+
+  public acceptFriendRequest(notification: Notification): void {
+    if(notification){
+      this.notificationService.acceptFriendRequest(notification.id).subscribe(
+        (response: any) => {
+          console.log(response);
+          this.getNotifications();
+        },
+        (error: HttpErrorResponse) => {
+          console.error("ERROR accepting the friend request: " + error);
+        }
+      );
+    }
+  }
+
+  public rejectFriendRequest(notification: Notification): void {
+    if(notification){
+      this.notificationService.rejectFriendRequest(notification.id).subscribe(
+        (response: any) => {
+          console.log(response);
+          this.getNotifications();
+        },
+        (error: HttpErrorResponse) => {
+          console.error("ERROR rejecting the friend request: " + error);
+        }
+      );
+    }
   }
 
   public onSelectFile(event: any) {
@@ -145,7 +149,7 @@ export class UserProfileComponent implements OnInit{
           this.getProfileImage();
         },
         (error: HttpErrorResponse) => {
-          console.error('Error uploading profile image:', error);
+          console.error("ERROR uploading profile image: ", error);
         }
       );
     }
@@ -158,7 +162,7 @@ export class UserProfileComponent implements OnInit{
           this.avatarUrl = this.arrayBufferToBase64(data);
         },
         (error: HttpErrorResponse) => {
-          console.error('Error getting profile image:', error);
+          console.error("ERROR getting profile image: ", error);
         }
       );
     }
@@ -183,12 +187,12 @@ export class UserProfileComponent implements OnInit{
     this.router.navigate([`/${this.userService.getUsername()}/recipes`]);
   }
 
+  public userProfile(): void {
+    this.router.navigate([`/${this.userService.getUsername()}/profile`]);
+  }
+
   public userFriends(): void {
     this.router.navigate([`/${this.userService.getUsername()}/friends`]);
-  }
- 
-  public userNotifications(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/notifications`]);
   }
 
   public logout(): void{   
