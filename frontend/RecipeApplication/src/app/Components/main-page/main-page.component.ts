@@ -229,6 +229,10 @@ export class MainPageComponent implements OnInit{
   public userFriends(): void {
     this.router.navigate([`/${this.userService.getUsername()}/friends`]);
   }
+
+  public userNotifications(): void {
+    this.router.navigate([`/${this.userService.getUsername()}/notifications`]);
+  }
  
   public logout(): void {   
     this.authService.logout();

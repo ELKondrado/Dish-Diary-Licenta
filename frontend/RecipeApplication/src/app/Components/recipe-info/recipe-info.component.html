@@ -14,9 +14,6 @@
          </li>
       </ul>
       <form class="form-inline my-2 my-lg-0">
-        <div class="search-bar">
-            <input #key="ngModel" ngModel type="search" name="key" id="searchRecipe" class="form-control mr-sm-2" placeholder="Search recipes..." required>
-        </div>
         <div class="dropdown">
             <div class="lil-avatar">
                <img class="avatar profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
@@ -25,6 +22,7 @@
             <ul class="menu">
                <li (click)="userProfile()">Profile</li>
                <li (click)="userFriends()">Friends</li>
+               <li (click)="userNotifications()">Notifications</li>
                <li (click)="logout()">Logout</li>
             </ul>
          </div>
@@ -74,7 +72,7 @@
                </div>
                
                <div *ngIf="recipe && userRecipes && isRecipeInUserRecipes == false" class="recipe-add-button">
-                  <label class="add-button">Add Recipe</label>
+                  <label (click)="onAddRecipeModal(recipe)" class="add-button">Add Recipe</label>
                 </div>                
                 
             </div>  
@@ -123,21 +121,21 @@
 
          <button *ngIf="!showReviewForm" type="button" class="btn btn-primary create-review-button" (click)="toggleReviewForm()">Create New Review</button>
          <div *ngFor="let review of reviews" class="review">
-             <div class="user-avatar">
-                 <img src="{{review.userProfileImage}}" alt="User Avatar">
-             </div>
-             <div class="review-details">
-                 <div class="user-info">
-                     <span class="username">{{review.userName}}</span>
-                     <span class="star-rating">{{review.userStarRating}}</span>
-                     <div class="deleteReview">
-                        <button (click)="onDeleteReviewModal(review)" *ngIf="user?.userId == review.userOwner?.userId" class="deleteReviewButton">-</button>
-                     </div>
-                 </div>                     
-                 <p class="date">{{review.date}}</p>
+            <div class="user-avatar">
+               <img src="{{review.userProfileImage}}" alt="User Avatar">
+            </div>
+            <div class="review-details">
+               <div class="user-info">
+                  <span class="username">{{review.userName}}</span>
+                  <span class="star-rating">{{review.userStarRating}}</span>
+                  <div class="deleteReview">
+                     <button (click)="onDeleteReviewModal(review)" *ngIf="user?.userId == review.userOwner?.userId" class="deleteReviewButton">-</button>
+                  </div>
+               </div>                     
+               <p class="date">{{review.date}}</p>
 
-                 <p class="review-text">{{review.userReviewText}}</p>
-             </div>
+               <p class="review-text">{{review.userReviewText}}</p>
+            </div>
          </div>
       </div>
    

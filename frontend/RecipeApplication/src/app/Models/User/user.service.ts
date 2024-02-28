@@ -46,6 +46,10 @@ export class UserService {
     return this.http.get<User[]>(`${this.apiServerUrl}/user/getFriends/${userId}`, { headers });
   }
 
+  public getNotifications(userId: number): Observable<Notification[]> {
+    const headers = this.getHeaders();
+    return this.http.get<Notification[]>(`${this.apiServerUrl}/user/getFriends/${userId}`, { headers });
+  }
   public uploadProfileImage(userId: number, formData: FormData) {
     const headers = this.getHeaders();
 

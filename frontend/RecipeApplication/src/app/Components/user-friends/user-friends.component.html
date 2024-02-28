@@ -1,55 +1,86 @@
 <nav class="navbar navbar-expand-lg navbar-dark">
-    <a id="mainPage" class="navbar-brand" (click)="mainPage()" style="color: white; font-weight: 800; font-size: x-large">DishDiary</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
-       <span class="navbar-toggler-icon"></span>
-    </button>
- 
-    <div class="collapse navbar-collapse" id="navbarColor02">
-       <ul class="navbar-nav mr-auto justify-content-start">
-         <li class="nav-item">
-          <a class="nav-link" (click)="mainPage()">Repository <span class="sr-only">(current)</span></a>
-        </li>
-         <li class="nav-item">
-           <a class="nav-link" (click)="discoverRecipes()">Discover Recipes <span class="sr-only">(current)</span></a>
-         </li>
-       </ul>
-       <form class="form-inline my-2 my-lg-0">
-          <div class="search-bar">
-             <input #key="ngModel" ngModel type="search" name="key" id="searchRecipe" class="form-control mr-sm-2" placeholder="Search recipes..." required>
-          </div>
- 
-          <div class="dropdown">
-             <div class="lil-avatar">
-                <img class="avatar profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
-                <img class="avatar profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
-             </div>
-             <ul class="menu">
-                <li (click)="userProfile()">Profile</li>
-                <li (click)="userFriends()">Friends</li>
-                <li (click)="logout()">Logout</li>
-             </ul>
-          </div>
-       </form>
-    </div>
+   <a id="mainPage" class="navbar-brand" (click)="mainPage()" style="color: white; font-weight: 800; font-size: x-large">DishDiary</a>
+   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+   </button>
+
+   <div class="collapse navbar-collapse" id="navbarColor02">
+      <ul class="navbar-nav mr-auto justify-content-start">
+      <li class="nav-item">
+         <a class="nav-link" (click)="mainPage()">Repository <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+         <a class="nav-link" (click)="discoverRecipes()">Discover Recipes <span class="sr-only">(current)</span></a>
+      </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+         <div class="dropdown">
+            <div class="lil-avatar">
+               <img class="avatar profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
+               <img class="avatar profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
+            </div>
+            <ul class="menu">
+               <li (click)="userProfile()">Profile</li>
+               <li (click)="userFriends()">Friends</li>
+               <li (click)="userNotifications()">Notifications</li>
+               <li (click)="logout()">Logout</li>
+            </ul>
+         </div>
+      </form>
+   </div>
  </nav>
 
  <body>
 
-    <div class="friends-title">
-        <h2>Friends</h2>
-        <span>{{friends?.length}}</span>
-    </div>   
-    
-    <div class="friends-container">
-        <div class="friend"  *ngFor="let friend of friends">
+   <div id="main-container">
+      <div class="friends-title">
+         <h2>Friends</h2>
+         <span>{{friends?.length}}</span>
+      </div>   
+      
+      <div class="add-friend-button-container">
+         <button (click)="onAddRecipeModal()" type="button" class="btn btn-primary add-friend-button" >Add New Friend</button>
+      </div>
+
+      <div class="friends-container">
+
+         <div class="friend"  *ngFor="let friend of friends">
             <div class="friend-avatar-container">
-                <img class="friend-profile-avatar" *ngIf="friend.profileImage" src="{{friend.profileImage}}" alt="Friend Profile Image">
-                <img class="friend-profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Friend Profile Image">
+                  <img class="friend-profile-avatar" *ngIf="friend.profileImage" src="{{friend.profileImage}}" alt="Friend Profile Image">
+                  <img class="friend-profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Friend Profile Image">
             </div>
             <div class="friend-username">
-                <h2>{{friend?.userName}}</h2>
+                  <h2>{{friend?.userName}}</h2>
             </div>
-        </div>
-    </div>
-    
+         </div>
+      </div>
+      
+      <!-- Add Friend Modal -->
+      <div class="modal fade" id="addFriendModal" tabindex="-1" role="dialog" aria-labelledby="addFriendModalLabel" aria-hidden="true">
+         <div class="modal-dialog" role="document">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h5 class="modal-title" id="addFriendModalLabel">Add Friend</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                  </button>
+               </div>
+               <div class="modal-body">
+                  <form #addForm="ngForm" (ngSubmit)="sendFriendRequest(addForm)">
+                  <div class="form-group">
+                     <label for="name">Username</label>
+                     <input type="text" ngModel name="name" class="form-control" id="name" placeholder="Enter your friend's username" max="254" required>
+                  </div>
+                  <div class="modal-footer">
+                     <button type="button" id="add-recipe-form" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                     <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary" style="background-color: royalblue;" >Send Friend Request</button>
+                  </div>
+                  </form>
+               </div>
+            </div>
+         </div>
+      </div>
+
+   </div>
+
  </body>
