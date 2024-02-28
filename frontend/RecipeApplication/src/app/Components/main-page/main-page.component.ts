@@ -8,7 +8,7 @@ import { Recipe } from '../../Models/Recipe/recipe';
 import { NgForm } from '@angular/forms';
 import { User } from '../../Models/User/user';
 import { NotificationService } from '../../Models/Notification/notification.service';
-import { Notification } from '../../Models/Notification/notification';
+import { Notif } from '../../Models/Notification/notification';
 
 @Component({
   selector: 'app-main-page',
@@ -26,7 +26,7 @@ export class MainPageComponent implements OnInit{
 
   public user: User | null = null;
   public recipes: Recipe[] = [];
-  public notifications: Notification[] | undefined;
+  public notifications: Notif[] | undefined;
   public editRecipe: Recipe | undefined;
   public deletedRecipe: Recipe | undefined;
   public username: string | undefined;
@@ -88,7 +88,7 @@ export class MainPageComponent implements OnInit{
     if(this.user)
     {
       this.notificationService.getNotifications(this.user.userId).subscribe(
-        (notifications: Notification[]) => {
+        (notifications: Notif[]) => {
           console.log(notifications);
           notifications.forEach(notification => {
             notification.sender.profileImage = 'data:image/jpeg;base64,' + notification.sender.profileImage;
@@ -256,6 +256,10 @@ export class MainPageComponent implements OnInit{
 
   public userFriends(): void {
     this.router.navigate([`/${this.userService.getUsername()}/friends`]);
+  }
+
+  public userChat(): void {
+    this.router.navigate([`/${this.userService.getUsername()}/chat`]);
   }
 
   public userNotifications(): void {

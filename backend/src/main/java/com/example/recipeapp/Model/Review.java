@@ -28,8 +28,6 @@ public class Review {
     @Lob
     private byte[] userProfileImage;
     @NotNull
-    private String userName;
-    @NotNull
     private Byte userStarRating;
     @NotNull
     @Column(length = 2056)

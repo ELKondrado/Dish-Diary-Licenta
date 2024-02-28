@@ -17,7 +17,9 @@ import { UserProfileComponent } from './Components/user-profile/user-profile.com
 import { IonicModule } from '@ionic/angular';
 import { UserFriendsComponent } from './Components/user-friends/user-friends.component';
 import { UserNotificationsComponent } from './Components/user-notifications/user-notifications.component';
-import { FriendUserProfileComponent } from './friend-user-profile/friend-user-profile.component';
+import { FriendUserProfileComponent } from './Components/friend-user-profile/friend-user-profile.component';
+import { UserChatComponent } from './Components/user-chat/user-chat.component';
+import { DatePipe } from '@angular/common';
 
 const routes: Routes = [
   {path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -29,7 +31,8 @@ const routes: Routes = [
   {path: ':username/profile', component: UserProfileComponent, canActivate: [AuthGuard]},
   {path: ':username/friends', component: UserFriendsComponent, canActivate: [AuthGuard]},
   {path: ':username/notifications', component: UserNotificationsComponent, canActivate: [AuthGuard]},
-  {path: ':username/friend-profile/:friendUserName', component: FriendUserProfileComponent, canActivate: [AuthGuard]}
+  {path: ':username/friend-profile/:friendUserName', component: FriendUserProfileComponent, canActivate: [AuthGuard]},
+  {path: ':username/chat', component: UserChatComponent, canActivate: [AuthGuard]}
 ];
 
 @NgModule({
@@ -43,7 +46,8 @@ const routes: Routes = [
     UserProfileComponent,
     UserFriendsComponent,
     UserNotificationsComponent,
-    FriendUserProfileComponent
+    FriendUserProfileComponent,
+    UserChatComponent
   ],
   imports: [
     BrowserModule,
@@ -56,6 +60,7 @@ const routes: Routes = [
     AuthService,
     RecipeService,
     UserService,
+    DatePipe
   ],  
   bootstrap: [AppComponent],
 })

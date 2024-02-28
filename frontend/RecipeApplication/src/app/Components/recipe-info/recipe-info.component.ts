@@ -9,7 +9,8 @@ import { User } from '../../Models/User/user';
 import { Review } from '../../Models/Review/review';
 import { ReviewService } from '../../Models/Review/review.service';
 import { NotificationService } from '../../Models/Notification/notification.service';
-import { Notification } from '../../Models/Notification/notification';
+import { Notif } from '../../Models/Notification/notification';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-recipe-info',
@@ -18,6 +19,7 @@ import { Notification } from '../../Models/Notification/notification';
 })
 export class RecipeInfoComponent implements OnInit {
   constructor(
+    private datePipe: DatePipe,
     private route: ActivatedRoute,
     private authService: AuthService,
     private userService: UserService,
@@ -29,7 +31,7 @@ export class RecipeInfoComponent implements OnInit {
 
   public user: User | null = null;
   public username: string | undefined;
-  public notifications: Notification[] | undefined;
+  public notifications: Notif[] | undefined;
   public userRecipes: Recipe[] | undefined;
   public recipe: Recipe | undefined;
   public isRecipeInUserRecipes: boolean = false;
@@ -45,7 +47,6 @@ export class RecipeInfoComponent implements OnInit {
     id: 1,
     userOwner: null,
     userProfileImage: '',
-    userName: '',
     userStarRating: 1,
     userReviewText: '',
     date: new Date(), 
@@ -142,7 +143,7 @@ export class RecipeInfoComponent implements OnInit {
     if(this.user)
     {
       this.notificationService.getNotifications(this.user.userId).subscribe(
-        (notifications: Notification[]) => {
+        (notifications: Notif[]) => {
           console.log(notifications);
           notifications.forEach(notification => {
             notification.sender.profileImage = 'data:image/jpeg;base64,' + notification.sender.profileImage;
@@ -173,7 +174,6 @@ export class RecipeInfoComponent implements OnInit {
   public addReview() {
     if(this.user && this.recipe) {
       this.reviewModel.userOwner = this.user;
-      this.reviewModel.userName = this.user.userName;
       this.reviewModel.userProfileImage = this.user.profileImage;
       this.reviewModel.date = new Date();
 
@@ -333,7 +333,11 @@ export class RecipeInfoComponent implements OnInit {
     });
 
     return 'data:image/jpeg;base64,' + btoa(bytes.join(''));
-}
+  }
+
+  public formattedDate(date: string): string | null{
+    return this.datePipe.transform(date, 'M/d/yyyy HH:mm');
+  }
 
   public mainPage(): void {
     this.router.navigate([`/${this.userService.getUsername()}/main`]);

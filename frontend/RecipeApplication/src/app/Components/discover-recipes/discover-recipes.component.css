@@ -48,8 +48,8 @@ body {
 }
 
 .navbar #searchRecipe:focus {
-	outline: none;
-	border-color: white;
+    outline: none;
+    border: 2px solid white;
 }
 
 .navbar {
@@ -155,6 +155,7 @@ body {
 }
 
 .sub-menu-link .arrow{
+    margin-bottom: 0.5rem;
     font-size: 22px;
     transition: transform 0.5s;
 }

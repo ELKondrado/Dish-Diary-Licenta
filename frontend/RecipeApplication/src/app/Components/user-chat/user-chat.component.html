@@ -1,0 +1,142 @@
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <a (click)="mainPage()" id="mainPage" class="navbar-brand" style="color: white; font-weight: 800; font-size: x-large">DishDiary</a>
+  
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav mr-auto justify-content-start">
+            <li class="nav-item">
+                <a class="nav-link repository-link" (click)="mainPage()">Repository <span class="sr-only">(current)</span></a>
+            </li>
+    
+            <li class="nav-item">
+                <a class="nav-link discover-recipes-link" (click)="discoverRecipes()">Discover Recipes <span class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+
+        <div class="lil-avatar">
+            <img (click)="toggleMenu()" class="avatar profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
+            <img (click)="toggleMenu()" class="avatar profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
+        </div>
+    
+        <div class="sub-menu-wrap" id="subMenu">
+            <div class="sub-menu">
+                <div class="user-info">
+                    <div class="lil-avatar">
+                    <img *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
+                    <img *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
+                    </div>
+                    <h6>{{user?.userNickname}}</h6>
+                </div>
+    
+                <a (click)="userProfile()" class="sub-menu-link">
+                    <div class="icon-container">
+                        <div class="icon-button">
+                            <span class="material-icons">person</span>
+                        </div>               
+                    </div>
+    
+                    <span class="icon-type">Profile</span>
+                    <span class="arrow">></span>
+                </a>
+    
+                <a (click)="userFriends()" class="sub-menu-link">
+                    <div class="icon-container">
+                        <div class="icon-button">
+                            <span class="material-icons">people</span>
+                        </div>               
+                    </div>
+    
+                    <span class="icon-type">Friends</span>
+                    <span class="arrow">></span>
+                </a>
+                
+                <a class="sub-menu-link">
+                    <div class="icon-container">
+                        <div class="icon-button">
+                            <i class="material-icons">chat</i>
+                            <span *ngIf="notifications?.length !=0 " class="icon-button__badge notifications-number">{{notifications?.length}}</span>
+                        </div>               
+                    </div>
+                    
+                    <span class="icon-type">Chat</span>
+                    <span class="arrow">></span>
+                </a>
+    
+                <a (click)="userNotifications()" class="sub-menu-link">
+                    <div class="icon-container">
+                        <div class="icon-button">
+                            <i class="material-icons">notifications</i>
+                            <span *ngIf="notifications?.length !=0 " class="icon-button__badge notifications-number">{{notifications?.length}}</span>
+                        </div>               
+                    </div>
+                    
+                    <span class="icon-type">Notifications</span>
+                    <span class="arrow">></span>
+                </a>
+    
+                <a (click)="logout()" class="sub-menu-link">
+                    <div class="icon-container">
+                        <div class="icon-button">
+                            <i class="fa fa-sign-out"></i>
+                        </div>
+                    </div>
+                    <span class="icon-type">Logout</span>
+                    <span class="arrow">></span>
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<body>
+    <div class="chat-interface">
+        <div class="chat-user-history">
+            <div class="top">
+                <h2>Conversations</h2>
+            </div>
+
+            <div class="search">
+                <input id="searchConversation" type="text" placeholder="Search for chat...">
+            </div>
+
+            <div class="conversations">
+                <div *ngFor="let conversation of conversations" class="conversation">
+                    <div class="user-avatar">
+                        <img *ngIf="conversation.sender?.userId != user?.userId" src="{{conversation.sender.profileImage}}" alt="User Avatar">
+                        <img *ngIf="conversation.sender?.userId == user?.userId" src="{{conversation.receiver.profileImage}}" alt="User Avatar">
+                    </div>
+
+                    <div class="user-nickname">
+                        <span *ngIf="conversation.sender?.userId != user?.userId">{{conversation.sender.userNickname}}</span>
+                        <span *ngIf="conversation.sender?.userId == user?.userId">{{conversation.receiver.userNickname}}</span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="chat">
+            <div>
+                <div class="friend-header">
+
+                </div>
+
+                <div class="chat-messages-container">
+
+                </div>
+
+                <div id="messages-input">
+                    <div>
+                        <textarea (keypress)="auto_grow($event)" (keyup)="auto_grow($event)" id="chat-box" placeholder="Type your message..."></textarea>
+                    </div>
+                    <div class="send-button">
+                        <i class="material-icons send-icon">send</i>
+                    </div>  
+                </div>
+
+                
+            </div>
+            
+        </div>
+    </div>
+    
+</body>

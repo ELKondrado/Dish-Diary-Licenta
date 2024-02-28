@@ -24,7 +24,7 @@
                   <img *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
                   <img *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
                </div>
-               <h6>{{user?.userName}}</h6>
+               <h6>{{user?.userNickname}}</h6>
             </div>
 
             <a (click)="userProfile()" class="sub-menu-link">
@@ -171,13 +171,13 @@
             </div>
             <div class="review-details">
                <div class="user-info">
-                  <span class="username">{{review.userName}}</span>
+                  <span class="username">{{review.userOwner?.userNickname}}</span>
                   <span class="star-rating">{{review.userStarRating}}</span>
+                  <span class="date">{{formattedDate(review.date.toString())}}</span>
                   <div class="deleteReview">
                      <button (click)="onDeleteReviewModal(review)" *ngIf="user?.userId == review.userOwner?.userId" class="deleteReviewButton">-</button>
                   </div>
                </div>                     
-               <p class="date">{{review.date}}</p>
 
                <p class="review-text">{{review.userReviewText}}</p>
             </div>

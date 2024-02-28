@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { User } from './user';
 import { AuthService } from '../../Security/auth.service';
 import { NgForm } from '@angular/forms';
+import { Notif } from '../Notification/notification';
 
 @Injectable({
   providedIn: 'root'
@@ -57,9 +58,9 @@ export class UserService {
     return this.http.get<User[]>(`${this.apiServerUrl}/user/getFriends/${userId}`, { headers });
   }
 
-  public getNotifications(userId: number): Observable<Notification[]> {
+  public getNotifications(userId: number): Observable<Notif[]> {
     const headers = this.getHeaders();
-    return this.http.get<Notification[]>(`${this.apiServerUrl}/user/getFriends/${userId}`, { headers });
+    return this.http.get<Notif[]>(`${this.apiServerUrl}/user/getFriends/${userId}`, { headers });
   }
 
   public uploadProfileImage(userId: number, formData: FormData) {

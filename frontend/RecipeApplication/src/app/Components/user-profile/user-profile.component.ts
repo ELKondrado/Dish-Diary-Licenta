@@ -7,9 +7,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { User } from '../../Models/User/user';
 import { RecipeService } from '../../Models/Recipe/recipe.service';
 import { NotificationService } from '../../Models/Notification/notification.service';
-import { Notification } from '../../Models/Notification/notification';
+import { Notif } from '../../Models/Notification/notification';
 import { NgForm } from '@angular/forms';
-import { ProfileDto } from '../../Models/User/profileDto';
 
 @Component({
   selector: 'app-user-profile',
@@ -27,7 +26,7 @@ export class UserProfileComponent implements OnInit{
 
   public user: User | null = null;
   public username: string | undefined;
-  public notifications: Notification[] | undefined;
+  public notifications: Notif[] | undefined;
   public avatarUrl: String | undefined;
   public selectedFile: File | undefined;
   public repositoryRecipes: Recipe[] | undefined;
@@ -97,7 +96,7 @@ export class UserProfileComponent implements OnInit{
     if(this.user)
     {
       this.notificationService.getNotifications(this.user.userId).subscribe(
-        (notifications: Notification[]) => {
+        (notifications: Notif[]) => {
           notifications.forEach(notification => {
             notification.sender.profileImage = 'data:image/jpeg;base64,' + notification.sender.profileImage;
           });

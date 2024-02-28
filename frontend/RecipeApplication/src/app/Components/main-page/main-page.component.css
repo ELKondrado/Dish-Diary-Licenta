@@ -59,7 +59,7 @@ body {
 
 .navbar #searchRecipe:focus {
     outline: none;
-    border-color: white;
+    border: 2px solid white;
 }
 
 .navbar a:hover {
@@ -162,6 +162,7 @@ body {
 }
 
 .sub-menu-link .arrow{
+    margin-bottom: 0.5rem;
     font-size: 22px;
     transition: transform 0.5s;
 }
