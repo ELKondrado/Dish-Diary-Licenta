@@ -6,6 +6,7 @@ import { User } from '../../Models/User/user';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NgForm } from '@angular/forms';
 import { NotificationService } from '../../Models/Notification/notification.service';
+import { Notification } from '../../Models/Notification/notification';
 
 @Component({
   selector: 'app-user-friends',
@@ -22,6 +23,14 @@ export class UserFriendsComponent implements OnInit{
 
   public user: User | null = null;
   public username: string | undefined;
+  public friendToAdd: String = "";
+  public friendRequestSent: boolean = false;
+  public usernameAddedNotFound: boolean = false;
+  public friendRequestAlreadySent: boolean = false;
+  public friendRequestAlreadyFriend: boolean = false;
+  public friendRequestCannotAddYourself: boolean = false;
+  public showFriendRequestForm: boolean = false;
+  public notifications: Notification[] | undefined;
   public avatarUrl: String | undefined;
   public friends: User[] | undefined;
 
@@ -39,6 +48,7 @@ export class UserFriendsComponent implements OnInit{
       this.username = this.userService.getUsername();
       this.getFriends();
       this.getProfileImage();
+      this.getNotifications();
     });
   }
 
@@ -70,6 +80,33 @@ export class UserFriendsComponent implements OnInit{
     }
   }
 
+  public toggleFriendRequestForm() {
+    this.showFriendRequestForm = !this.showFriendRequestForm;
+  }
+
+  public toggleMenu(){
+    let subMenu = document.getElementById("subMenu");
+    subMenu?.classList.toggle("open-menu");
+  }
+
+  public getNotifications(): void {
+    if(this.user)
+    {
+      this.notificationService.getNotifications(this.user.userId).subscribe(
+        (notifications: Notification[]) => {
+          console.log(notifications);
+          notifications.forEach(notification => {
+            notification.sender.profileImage = 'data:image/jpeg;base64,' + notification.sender.profileImage;
+          });
+          this.notifications = notifications.filter(notification => notification.status === 'PENDING');
+        },
+        (error: HttpErrorResponse) => {
+          console.error("ERROR getting the notifications: " + error);
+        }
+      );
+    }
+  }
+
   public onAddRecipeModal(): void {
     const container = document.getElementById("main-container");
     const button = document.createElement('button');
@@ -83,16 +120,50 @@ export class UserFriendsComponent implements OnInit{
     button.click();
   }
 
-  public sendFriendRequest(addForm: NgForm): void {
+  public sendFriendRequest(): void {
     if(this.user){
-      const receiverUserName = addForm.value.name;
-      this.notificationService.sendFriendRequest(this.user.userId, receiverUserName).subscribe(
+      this.notificationService.sendFriendRequest(this.user.userId, this.friendToAdd.toString()).subscribe(
         (response: any) => {
-          console.log(response);
-          addForm.reset();
+
+          if(response.status == "SUCCESS"){
+            this.friendRequestSent = true;
+            this.usernameAddedNotFound = false;
+            this.friendRequestAlreadySent = false;
+            this.friendRequestAlreadyFriend = false;
+            this.friendRequestCannotAddYourself = false;
+          }
+          else if(response.status == "USER RECEIVER NOT FOUND"){
+            this.friendRequestSent = false;
+            this.usernameAddedNotFound = true;
+            this.friendRequestAlreadySent = false;
+            this.friendRequestAlreadyFriend = false;
+            this.friendRequestCannotAddYourself = false;
+          }
+          else if(response.status == "FRIEND REQUEST ALREADY SENT"){
+            this.friendRequestSent = false;
+            this.usernameAddedNotFound = false;
+            this.friendRequestAlreadySent = true;
+            this.friendRequestAlreadyFriend = false;
+            this.friendRequestCannotAddYourself = false;
+          }
+          else if(response.status == "RECEIVER ALREADY FRIEND"){
+            this.friendRequestSent = false;
+            this.usernameAddedNotFound = false;
+            this.friendRequestAlreadySent = false;
+            this.friendRequestAlreadyFriend = true;
+            this.friendRequestCannotAddYourself = false;
+          }
+          else if(response.status == "CANNOT ADD YOURSELF"){
+            this.friendRequestSent = false;
+            this.usernameAddedNotFound = false;
+            this.friendRequestAlreadySent = false;
+            this.friendRequestAlreadyFriend = false;
+            this.friendRequestCannotAddYourself = true;
+          }
+
         },
         (error: HttpErrorResponse) => {
-          console.error("ERROR in sending the friend request: " + error)
+          console.error("ERROR: " + error);
         }
       );
     }
@@ -130,6 +201,10 @@ export class UserFriendsComponent implements OnInit{
     this.router.navigate([`/${this.userService.getUsername()}/recipes`]);
   }
 
+  public onOpenFriendProfile(friendUsername: String): void {
+    this.router.navigate([`/${this.userService.getUsername()}/friend-profile/${friendUsername}`]);
+  }
+
   public userProfile(): void {
     this.router.navigate([`/${this.userService.getUsername()}/profile`]);
   }
@@ -146,4 +221,3 @@ export class UserFriendsComponent implements OnInit{
     this.authService.logout();
   }
 }
-

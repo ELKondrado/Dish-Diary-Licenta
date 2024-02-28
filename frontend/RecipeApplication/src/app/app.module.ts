@@ -17,6 +17,7 @@ import { UserProfileComponent } from './Components/user-profile/user-profile.com
 import { IonicModule } from '@ionic/angular';
 import { UserFriendsComponent } from './Components/user-friends/user-friends.component';
 import { UserNotificationsComponent } from './Components/user-notifications/user-notifications.component';
+import { FriendUserProfileComponent } from './friend-user-profile/friend-user-profile.component';
 
 const routes: Routes = [
   {path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -27,7 +28,8 @@ const routes: Routes = [
   {path: ':username/recipe/:recipeId', component: RecipeInfoComponent, canActivate: [AuthGuard]},
   {path: ':username/profile', component: UserProfileComponent, canActivate: [AuthGuard]},
   {path: ':username/friends', component: UserFriendsComponent, canActivate: [AuthGuard]},
-  {path: ':username/notifications', component: UserNotificationsComponent, canActivate: [AuthGuard]}
+  {path: ':username/notifications', component: UserNotificationsComponent, canActivate: [AuthGuard]},
+  {path: ':username/friend-profile/:friendUserName', component: FriendUserProfileComponent, canActivate: [AuthGuard]}
 ];
 
 @NgModule({
@@ -40,7 +42,8 @@ const routes: Routes = [
     RecipeInfoComponent,
     UserProfileComponent,
     UserFriendsComponent,
-    UserNotificationsComponent
+    UserNotificationsComponent,
+    FriendUserProfileComponent
   ],
   imports: [
     BrowserModule,

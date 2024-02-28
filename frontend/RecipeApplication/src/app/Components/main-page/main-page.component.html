@@ -1,36 +1,85 @@
 <nav class="navbar navbar-expand-lg navbar-dark">
    <a id="mainPage" class="navbar-brand" style="color: white; font-weight: 800; font-size: x-large">DishDiary</a>
-   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-   </button>
-
-   <div class="collapse navbar-collapse" id="navbarColor02">
+ 
+   <div class="collapse navbar-collapse">
       <ul class="navbar-nav mr-auto justify-content-start">
-        <li class="nav-item">
-         <a class="nav-link" style="color: red;">Repository <span class="sr-only">(current)</span></a>
-       </li>
-        <li class="nav-item">
-          <a class="nav-link" (click)="discoverRecipes()">Discover Recipes <span class="sr-only">(current)</span></a>
-        </li>
-      </ul>
-      <form class="form-inline my-2 my-lg-0">
-         <div class="search-bar">
-            <input (ngModelChange)="searchRecipe(key.value)" #key="ngModel" ngModel type="search" name="key" id="searchRecipe" class="form-control mr-sm-2" placeholder="Search recipes..." required>
-         </div>
+         <li class="nav-item">
+            <a class="nav-link repository-link">Repository <span class="sr-only">(current)</span></a>
+         </li>
 
-         <div class="dropdown">
-            <div class="lil-avatar">
-               <img class="avatar profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
-               <img class="avatar profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
+         <li class="nav-item">
+            <a class="nav-link discover-recipes-link" (click)="discoverRecipes()">Discover Recipes <span class="sr-only">(current)</span></a>
+         </li>
+      </ul>
+
+      <div class="search-icon">
+         <span class="material-icons" style="cursor: pointer;">search</span>
+      </div>
+
+      <div class="search-bar nav-link">
+         <input (ngModelChange)="searchRecipe(key.value)" #key="ngModel" ngModel type="search" name="key" id="searchRecipe" class="form-control mr-sm-2 search-recipe-box" placeholder="Search recipes..." required>
+      </div>
+
+      <div class="lil-avatar">
+         <img (click)="toggleMenu()" class="avatar profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
+         <img (click)="toggleMenu()" class="avatar profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
+      </div>
+
+      <div class="sub-menu-wrap" id="subMenu">
+         <div class="sub-menu">
+            <div class="user-info">
+               <div class="lil-avatar">
+                  <img *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
+                  <img *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
+               </div>
+               <h6>{{user?.userName}}</h6>
             </div>
-            <ul class="menu">
-               <li (click)="userProfile()">Profile</li>
-               <li (click)="userFriends()">Friends</li>
-               <li (click)="userNotifications()">Notifications</li>
-               <li (click)="logout()">Logout</li>
-            </ul>
+
+            <a (click)="userProfile()" class="sub-menu-link">
+               <div class="icon-container">
+                  <div class="icon-button">
+                     <span class="material-icons">person</span>
+                  </div>               
+               </div>
+
+               <span class="icon-type">Profile</span>
+               <span class="arrow">></span>
+            </a>
+
+            <a (click)="userFriends()" class="sub-menu-link">
+               <div class="icon-container">
+                  <div class="icon-button">
+                     <span class="material-icons">people</span>
+                  </div>               
+               </div>
+
+               <span class="icon-type">Friends</span>
+               <span class="arrow">></span>
+            </a>
+
+            <a (click)="userNotifications()" class="sub-menu-link">
+               <div class="icon-container">
+                  <div class="icon-button">
+                     <i class="material-icons">notifications</i>
+                     <span *ngIf="notifications?.length !=0 " class="icon-button__badge notifications-number">{{notifications?.length}}</span>
+                  </div>               
+               </div>
+               
+               <span class="icon-type">Notifications</span>
+               <span class="arrow">></span>
+            </a>
+
+            <a (click)="logout()" class="sub-menu-link">
+               <div class="icon-container">
+                  <div class="icon-button">
+                     <i class="fa fa-sign-out"></i>
+                  </div>
+               </div>
+               <span class="icon-type">Logout</span>
+               <span class="arrow">></span>
+            </a>
          </div>
-      </form>
+      </div>
    </div>
 </nav>
 
@@ -39,7 +88,7 @@
 
    <div>
       <div class="add-recipe-button-container">
-         <button type="button" class="btn btn-primary add-recipe-button" (click)="onOpenModal(undefined, 'add')">Add New Recipe</button>
+         <button type="button" class="add-recipe-button" (click)="onOpenModal(undefined, 'add')">Add New Recipe</button>
       </div>
 
       <div class="container" id="main-container">

@@ -31,9 +31,13 @@ public class User {
     private String userName;
     @Column(name="password")
     private String userPassword;
+    @Column(name="nickname")
+    private String userNickname;
     @Column(name = "profile_image")
     @Lob
     private byte[] profileImage;
+    @Column(name = "bio", length = 256)
+    private String userBio;
     @Nullable
     @Column(name = "total_recipes")
     private long totalRecipes;

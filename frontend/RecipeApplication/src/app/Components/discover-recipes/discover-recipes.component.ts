@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { Recipe } from '../../Models/Recipe/recipe';
 import { HttpErrorResponse } from '@angular/common/http';
 import { User } from '../../Models/User/user';
+import { NotificationService } from '../../Models/Notification/notification.service';
+import { Notification } from '../../Models/Notification/notification';
 
 @Component({
   selector: 'app-discover-recipes',
@@ -17,11 +19,13 @@ export class DiscoverRecipesComponent implements OnInit{
     private recipeService: RecipeService,
     private authService: AuthService, 
     private userService: UserService,
+    private notificationService: NotificationService,
     private router: Router
   ) {}
 
   public user: User | null = null;
   public recipes: Recipe[] = [];
+  public notifications: Notification[] | undefined;
   public repositoryRecipes: Recipe[] = [];
   public username: string | undefined;
   public addedRecipe: Recipe | undefined;
@@ -40,6 +44,7 @@ export class DiscoverRecipesComponent implements OnInit{
       this.getRecipes();
       this.getRepositoryRecipes();
       this.getProfileImage();
+      this.getNotifications();
     });
   }
 
@@ -67,6 +72,30 @@ export class DiscoverRecipesComponent implements OnInit{
         console.error(error.message);
       }
     );
+  }
+
+  public toggleMenu(){
+    let subMenu = document.getElementById("subMenu");
+    subMenu?.classList.toggle("open-menu");
+  }
+
+  public getNotifications(): void {
+    if(this.user)
+    {
+      this.notificationService.getNotifications(this.user.userId).subscribe(
+        (notifications: Notification[]) => {
+          console.log(notifications);
+          notifications.forEach(notification => {
+            notification.sender.profileImage = 'data:image/jpeg;base64,' + notification.sender.profileImage;
+          });
+          this.notifications = notifications.filter(notification => notification.status === 'PENDING');
+          console.log(this.notifications.length)
+        },
+        (error) => {
+          console.error("ERROR getting the notifications: " + error);
+        }
+      );
+    }
   }
 
   public getRepositoryRecipes(): void {

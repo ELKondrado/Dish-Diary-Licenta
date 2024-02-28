@@ -1,34 +1,79 @@
 <nav class="navbar navbar-expand-lg navbar-dark">
-    <a id="mainPage" class="navbar-brand" (click)="mainPage()" style="color: white; font-weight: 800; font-size: x-large">DishDiary</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
-       <span class="navbar-toggler-icon"></span>
-    </button>
+   <a id="mainPage" class="navbar-brand" (click)="mainPage()" style="color: white; font-weight: 800; font-size: x-large">DishDiary</a>
  
-    <div class="collapse navbar-collapse" id="navbarColor02">
-       <ul class="navbar-nav mr-auto justify-content-start">
-        <li class="nav-item">
+   <div class="collapse navbar-collapse">
+      <ul class="navbar-nav mr-auto justify-content-start">
+         <li class="nav-item">
             <a class="nav-link" (click)="mainPage()">Repository <span class="sr-only">(current)</span></a>
-       </li>
-        <li class="nav-item">
-           <a class="nav-link" (click)="discoverRecipes()">Discover Recipes <span class="sr-only">(current)</span></a>
-        </li>
-       </ul>
-       <form class="form-inline my-2 my-lg-0">
-         <div class="dropdown">
-             <div class="lil-avatar">
-                <img class="avatar profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
-                <img class="avatar profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
-             </div>
-             <ul class="menu">
-                <li>Profile</li>
-                <li (click)="userFriends()">Friends</li>
-                <li (click)="userNotifications()">Notifications</li>
-                <li (click)="logout()">Logout</li>
-             </ul>
+         </li>
+
+         <li class="nav-item">
+            <a class="nav-link" (click)="discoverRecipes()">Discover Recipes <span class="sr-only">(current)</span></a>
+         </li>
+      </ul>
+
+      <div class="lil-avatar">
+         <img (click)="toggleMenu()" class="avatar profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
+         <img (click)="toggleMenu()" class="avatar profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
+      </div>
+
+      <div class="sub-menu-wrap" id="subMenu">
+         <div class="sub-menu">
+            <div class="user-info">
+               <div class="lil-avatar">
+                  <img *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
+                  <img *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
+               </div>
+               <h6>{{user?.userName}}</h6>
+            </div>
+
+            <a class="sub-menu-link">
+               <div class="icon-container">
+                  <div class="icon-button">
+                     <span class="material-icons">person</span>
+                  </div>               
+               </div>
+
+               <span class="icon-type">Profile</span>
+               <span class="arrow">></span>
+            </a>
+
+            <a (click)="userFriends()" class="sub-menu-link">
+               <div class="icon-container">
+                  <div class="icon-button">
+                     <span class="material-icons">people</span>
+                  </div>               
+               </div>
+
+               <span class="icon-type">Friends</span>
+               <span class="arrow">></span>
+            </a>
+
+            <a (click)="userNotifications()" class="sub-menu-link">
+               <div class="icon-container">
+                  <div class="icon-button">
+                     <i class="material-icons">notifications</i>
+                     <span *ngIf="notifications?.length !=0 " class="icon-button__badge notifications-number">{{notifications?.length}}</span>
+                  </div>               
+               </div>
+               
+               <span class="icon-type">Notifications</span>
+               <span class="arrow">></span>
+            </a>
+
+            <a (click)="logout()" class="sub-menu-link">
+               <div class="icon-container">
+                  <div class="icon-button">
+                     <i class="fa fa-sign-out"></i>
+                  </div>
+               </div>
+               <span class="icon-type">Logout</span>
+               <span class="arrow">></span>
+            </a>
          </div>
-       </form>
-    </div>
- </nav>
+      </div>
+   </div>
+</nav>
 
 <body>
   <div class="container" id="main-container">
@@ -39,25 +84,49 @@
             <img class="profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
             <img class="profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
             </div>
+
             <div class="profile-username">
-               <h2>{{this.user?.userName}}</h2>
+               <h2 *ngIf="!this.user?.userNickname">{{this.user?.userName}}</h2>
+               <h2 *ngIf="this.user?.userNickname">{{this.user?.userNickname}}</h2>
             </div>
-            <div class="profile-upload-button">
-               <label for="fileInput" class="upload-button"><input type="file" id="fileInput" (change)="onSelectFile($event)">Upload Image</label>
+
+            <p>{{this.user?.userBio}}</p>
+
+            <button (click)="toggleProfileEdit()" type="button" class="edit-profile-button" >Edit Profile</button>
+
+            <div class="profile-edit-settings" *ngIf="showEditProfile">
+               <div class="profile-upload-button">
+                  <label for="fileInput" class="upload-button"><input type="file" id="fileInput" (change)="onSelectFile($event)">Upload Profile Image</label>
+               </div>
+               <form #editForm="ngForm">
+                  <label>Name</label>
+                  <label *ngIf="nicknameAlreadyUsed" id="nickname-aleady-used">Nickname already used!</label>
+                  <input ngModel="{{user?.userNickname}}" name="userNicknameToChange" maxlength="30">
+
+                  <label>Bio</label>
+                  <textarea ngModel="{{user?.userBio}}" name="userBioToChange" maxlength="255"></textarea>
+
+                  <div class="edit-changes-buttons">
+                     <button (click)="toggleProfileEdit()" type="button" class="edit-close-changes-button">Close</button>
+                     <button (click)="onEditProfile(editForm.value)" type="button" class="edit-save-changes-button">Save Changes</button>
+                  </div>
+                 
+               </form>
             </div>
+          
          </div>
 
          <div class="details">
             <h2>Details</h2>
             <div class="detail-item">
-               <p (click)="onOpenRecipesHistory('total')" style="cursor: pointer;">Total current recipes: {{user?.totalRecipes}}</p>
+               <p (click)="onOpenRecipesHistory('total')" style="cursor: pointer;">Current recipes: {{user?.totalRecipes}}</p>
             </div>
             <div class="detail-item">
-               <p (click)="onOpenRecipesHistory('created')" style="cursor: pointer;">Total recipes created: {{user?.totalRecipesCreated}}</p>
+               <p (click)="onOpenRecipesHistory('created')" style="cursor: pointer;">Recipes created: {{user?.totalRecipesCreated}}</p>
             </div>
             <div class="detail-item">
                <p>Total recipes added: {{user?.totalRecipesAdded}}</p>
-               <p (click)="onOpenRecipesHistory('added')" style="cursor: pointer;">Current added Recipes: {{addedRecipes?.length}}</p>
+               <p (click)="onOpenRecipesHistory('added')" style="cursor: pointer;">Current recipes added: {{addedRecipes?.length}}</p>
             </div>
          </div>
 
