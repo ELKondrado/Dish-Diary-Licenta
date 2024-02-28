@@ -53,7 +53,7 @@
                     <div class="icon-container">
                         <div class="icon-button">
                             <i class="material-icons">chat</i>
-                            <span *ngIf="notifications?.length !=0 " class="icon-button__badge notifications-number">{{notifications?.length}}</span>
+                            <span *ngIf="notifications?.length !=0 " class="icon-button__badge notifications-number">{{notifications.length}}</span>
                         </div>               
                     </div>
                     
@@ -65,7 +65,7 @@
                     <div class="icon-container">
                         <div class="icon-button">
                             <i class="material-icons">notifications</i>
-                            <span *ngIf="notifications?.length !=0 " class="icon-button__badge notifications-number">{{notifications?.length}}</span>
+                            <span *ngIf="notifications?.length !=0 " class="icon-button__badge notifications-number">{{notifications.length}}</span>
                         </div>               
                     </div>
                     
@@ -92,14 +92,14 @@
         <div class="chat-user-history">
             <div class="top">
                 <h2>Conversations</h2>
-            </div>
-
-            <div class="search">
-                <input id="searchConversation" type="text" placeholder="Search for chat...">
+                <div class="search">
+                    <input id="searchConversation" (ngModelChange)="searchConversation(key.value)" #key="ngModel" ngModel type="text" placeholder="Search for chat..." max="255">
+                </div>
             </div>
 
             <div class="conversations">
-                <div *ngFor="let conversation of conversations" class="conversation">
+                <div (click)="changeCurrentFriendConversation(conversation, i)" *ngFor="let conversation of conversations; let i = index"
+                [class.active-conversation]="i === activeConversationIndex" class="conversation">
                     <div class="user-avatar">
                         <img *ngIf="conversation.sender?.userId != user?.userId" src="{{conversation.sender.profileImage}}" alt="User Avatar">
                         <img *ngIf="conversation.sender?.userId == user?.userId" src="{{conversation.receiver.profileImage}}" alt="User Avatar">
@@ -114,26 +114,53 @@
             </div>
         </div>
 
-        <div class="chat">
-            <div>
+        <div class="chat" *ngIf="friendCurrentConversation">
+            <div class="char-wrapper">
                 <div class="friend-header">
-
-                </div>
-
-                <div class="chat-messages-container">
-
-                </div>
-
-                <div id="messages-input">
-                    <div>
-                        <textarea (keypress)="auto_grow($event)" (keyup)="auto_grow($event)" id="chat-box" placeholder="Type your message..."></textarea>
+                    <div class="friend-header-details">
+                        <div class="user-avatar">
+                            <img src="{{friendCurrentConversation.profileImage}}" alt="User Avatar">
+                        </div>
+                        <div class="nickname">
+                            <h4 style="color: white">{{friendCurrentConversation.userNickname}}</h4>
+                        </div>
+                        <div class="info-icon">
+                            <i (click)="onOpenFriendProfile(friendCurrentConversation.userName)" class="material-icons">info</i>
+                        </div>
                     </div>
-                    <div class="send-button">
-                        <i class="material-icons send-icon">send</i>
-                    </div>  
                 </div>
 
-                
+                <div #scrollContainer class="chat-messages-container">
+                    <div class="messages" *ngIf="friendCurrentConversation">
+                      <div *ngFor="let message of messagesFromFriend; let i = index">
+                        <div *ngIf="shouldShowDate(message, i)" class="date">
+                                <span>{{formattedDateDDMMYYYY(message.timestamp.toString())}}</span>
+                            </div>
+                            <div class="message-from-user" *ngIf="message.receiver.userId == user?.userId">
+                                <p (mouseover)="showDateBubbles[i] = true" (mouseleave)="showDateBubbles[i] = false">{{message.content}}</p>
+                                <div class="date-bubble" *ngIf="showDateBubbles[i]">
+                                    <span>{{formattedDateHour(message.timestamp.toString())}}</span>
+                                </div>
+                            </div>
+                            <div class="message-to-user" *ngIf="message.receiver.userId != user?.userId">
+                                <p (mouseover)="showDateBubbles[i] = true" (mouseleave)="showDateBubbles[i] = false">{{message.content}}</p>
+                                <div class="date-bubble" *ngIf="showDateBubbles[i]">
+                                    <span>{{formattedDateHour(message.timestamp.toString())}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="messages-input">
+                    <div>
+                        <textarea [(ngModel)]="messageToSend" (keypress)="auto_grow($event)" (keyup)="auto_grow($event)" id="chat-box" placeholder="Type your message..." maxlength="16383"></textarea>
+                    </div>
+                    <div (click)="sendMessage(); auto_grow($event)" class="send-button">
+                        <i class="material-icons send-icon">send</i>
+                    </div>                     
+                </div>
+
             </div>
             
         </div>

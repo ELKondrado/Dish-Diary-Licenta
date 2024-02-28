@@ -49,6 +49,18 @@
                <span class="arrow">></span>
             </a>
 
+            <a (click)="userChat()" class="sub-menu-link">
+               <div class="icon-container">
+                  <div class="icon-button">
+                     <i class="material-icons">chat</i>
+                     <span *ngIf="notifications?.length !=0 " class="icon-button__badge notifications-number">{{notifications?.length}}</span>
+                  </div>               
+               </div>
+               
+               <span class="icon-type">Chat</span>
+               <span class="arrow">></span>
+            </a>
+
             <a (click)="userNotifications()" class="sub-menu-link">
                <div class="icon-container">
                   <div class="icon-button">

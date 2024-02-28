@@ -202,6 +202,10 @@ export class UserNotificationsComponent {
     this.router.navigate([`/${this.userService.getUsername()}/friends`]);
   }
 
+  public userChat(): void {
+    this.router.navigate([`/${this.userService.getUsername()}/chat`]);
+  }
+
   public logout(): void{   
     this.authService.logout();
   }

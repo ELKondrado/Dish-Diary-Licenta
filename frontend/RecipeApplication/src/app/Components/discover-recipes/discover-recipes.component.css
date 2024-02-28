@@ -263,6 +263,7 @@ body {
 }
 
 .add-recipe-button {
+    z-index: 0;
     border: 1px solid white;
 }
 
@@ -290,6 +291,7 @@ body {
     height: 21.5rem;
     background-color: #262626;
     overflow: hidden;
+    z-index: 0; 
 }
 
 .recipe-card-image-container {
@@ -318,6 +320,7 @@ body {
     height: 100%;
     background-color: 	#03C03C;
     border: 1px solid white;
+    z-index: 1;
 }
 
 .add-area {

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class MessageService {
@@ -30,5 +31,13 @@ public class MessageService {
             return messageRepository.save(message);
         }
        else throw new IllegalStateException("Message content was not found!");
+    }
+
+    public List<Message> getMessages(User user) {
+        return messageRepository.findUserMessages(user.getUserId());
+    }
+
+    public List<Message> getMessagesFromUser(User user1, User user2) {
+        return messageRepository.findUserMessagesFromFriend(user1.getUserId(), user2.getUserId());
     }
 }

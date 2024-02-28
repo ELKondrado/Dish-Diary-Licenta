@@ -355,6 +355,10 @@ export class RecipeInfoComponent implements OnInit {
     this.router.navigate([`/${this.userService.getUsername()}/friends`]);
   }
 
+  public userChat(): void {
+    this.router.navigate([`/${this.userService.getUsername()}/chat`]);
+  }
+
   public userNotifications(): void {
     this.router.navigate([`/${this.userService.getUsername()}/notifications`]);
   }
