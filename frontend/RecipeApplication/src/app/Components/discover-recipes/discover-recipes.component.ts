@@ -7,7 +7,7 @@ import { Recipe } from '../../Models/Recipe/recipe';
 import { HttpErrorResponse } from '@angular/common/http';
 import { User } from '../../Models/User/user';
 import { NotificationService } from '../../Models/Notification/notification.service';
-import { Notification } from '../../Models/Notification/notification';
+import { Notif } from '../../Models/Notification/notification';
 
 @Component({
   selector: 'app-discover-recipes',
@@ -25,7 +25,7 @@ export class DiscoverRecipesComponent implements OnInit{
 
   public user: User | null = null;
   public recipes: Recipe[] = [];
-  public notifications: Notification[] | undefined;
+  public notifications: Notif[] | undefined;
   public repositoryRecipes: Recipe[] = [];
   public username: string | undefined;
   public addedRecipe: Recipe | undefined;
@@ -83,7 +83,7 @@ export class DiscoverRecipesComponent implements OnInit{
     if(this.user)
     {
       this.notificationService.getNotifications(this.user.userId).subscribe(
-        (notifications: Notification[]) => {
+        (notifications: Notif[]) => {
           console.log(notifications);
           notifications.forEach(notification => {
             notification.sender.profileImage = 'data:image/jpeg;base64,' + notification.sender.profileImage;

@@ -6,7 +6,8 @@ import { User } from '../../Models/User/user';
 import { Recipe } from '../../Models/Recipe/recipe';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NotificationService } from '../../Models/Notification/notification.service';
-import { Notification } from '../../Models/Notification/notification';
+import { Notif } from '../../Models/Notification/notification';
+import { FriendsService } from '../../Models/User/friends.service';
 
 @Component({
   selector: 'app-user-notifications',
@@ -18,13 +19,14 @@ export class UserNotificationsComponent {
     private authService: AuthService,
     private userService: UserService,
     private notificationService: NotificationService,
+    private friendsService: FriendsService,
     private router: Router
   ) {}
 
   public user: User | null = null;
   public username: string | undefined;
-  public notifications: Notification[] | undefined;
-  public friendRequestNotification: Notification | undefined;
+  public notifications: Notif[] | undefined;
+  public friendRequestNotification: Notif | undefined;
   public avatarUrl: String | undefined;
   public selectedFile: File | undefined;
   public addedRecipes: Recipe[] | undefined;
@@ -56,7 +58,7 @@ export class UserNotificationsComponent {
     });
   }
 
-  public onResponseFriendRequestModal(friendRequestNotification: Notification | undefined, mode: string): void {
+  public onResponseFriendRequestModal(friendRequestNotification: Notif | undefined, mode: string): void {
 
     const container = document.getElementById("main-container");
     const button = document.createElement('button');
@@ -86,7 +88,7 @@ export class UserNotificationsComponent {
     if(this.user)
     {
       this.notificationService.getNotifications(this.user.userId).subscribe(
-        (notifications: Notification[]) => {
+        (notifications: Notif[]) => {
           console.log(notifications);
           notifications.forEach(notification => {
             notification.sender.profileImage = 'data:image/jpeg;base64,' + notification.sender.profileImage;
@@ -100,9 +102,9 @@ export class UserNotificationsComponent {
     }
   }
 
-  public acceptFriendRequest(notification: Notification): void {
+  public acceptFriendRequest(notification: Notif): void {
     if(notification){
-      this.notificationService.acceptFriendRequest(notification.id).subscribe(
+      this.friendsService.acceptFriendRequest(notification.id).subscribe(
         (response: any) => {
           console.log(response);
           this.getNotifications();
@@ -114,9 +116,9 @@ export class UserNotificationsComponent {
     }
   }
 
-  public rejectFriendRequest(notification: Notification): void {
+  public rejectFriendRequest(notification: Notif): void {
     if(notification){
-      this.notificationService.rejectFriendRequest(notification.id).subscribe(
+      this.friendsService.rejectFriendRequest(notification.id).subscribe(
         (response: any) => {
           console.log(response);
           this.getNotifications();

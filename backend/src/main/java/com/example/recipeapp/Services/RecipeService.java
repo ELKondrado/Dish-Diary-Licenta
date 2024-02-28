@@ -52,8 +52,8 @@ public class RecipeService {
         if(review.getUserReviewText() == null) {
             throw new IllegalStateException("Review Text does not exist!");
         }
-        if(review.getUserName() == null) {
-            throw new IllegalStateException("Review username does not exist!");
+        if(review.getUserOwner().getUserNickname() == null) {
+            throw new IllegalStateException("Review User Nickname does not exist!");
         }
         if(review.getUserStarRating() == null) {
             throw new IllegalStateException("Review Start Rating does not exist!");
@@ -62,13 +62,6 @@ public class RecipeService {
 
     public List<Recipe> getRecipes(){
         return recipeRepository.findAll();
-    }
-
-    public List<Review> getReviewsForRecipe(long recipeId) {
-        Recipe recipe = recipeRepository.findById(recipeId)
-                .orElseThrow(() -> new RecipeNotFoundException("Recipe with id: " + recipeId + " does not exist"));
-
-        return reviewRepository.findReviewsByRecipeId(recipe.getId());
     }
 
     public Recipe findRecipeById(Long id) {
@@ -110,18 +103,6 @@ public class RecipeService {
             throw new RecipeNotFoundException("Recipe with id: " + recipeId + " does not exist");
         }
         recipeRepository.deleteById(recipeId);
-    }
-
-    public void deleteReview(Long recipeId, Long reviewId) {
-        boolean exists = recipeRepository.existsById(recipeId);
-        if (!exists) {
-            throw new RecipeNotFoundException("Recipe with id: " + recipeId + " does not exist");
-        }
-        exists = reviewRepository.existsById(reviewId);
-        if (!exists) {
-            throw new ReviewNotFoundException("Review with id: " + reviewId + " does not exist");
-        }
-        reviewRepository.deleteReviewOfRecipe(recipeId, reviewId);
     }
 
     @Transactional
@@ -175,14 +156,5 @@ public class RecipeService {
 
     public List<Recipe> getRecipesByOwner(Long userId) {
         return recipeRepository.findRecipesByOwner(userId);
-    }
-
-    @Transactional
-    public Review addReviewToRecipe(Review review, Recipe recipe, User user) {
-        checkReviewAttributes(review);
-        review.setUserOwner(user);
-        recipe.getReviews().add(review);
-        recipeRepository.save(recipe);
-        return review;
     }
 }

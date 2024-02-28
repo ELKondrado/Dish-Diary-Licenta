@@ -24,7 +24,7 @@
                    <img *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
                    <img *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
                 </div>
-                <h6>{{user?.userName}}</h6>
+                <h6>{{user?.userNickname}}</h6>
              </div>
  
              <a (click)="userProfile()" class="sub-menu-link">
@@ -90,7 +90,7 @@
                     <div class="user-avatar">
                         <img src="{{notification.sender.profileImage}}" alt="User Avatar">
                      </div>
-                    <h4>{{notification.sender.userName}}</h4>
+                    <h4>{{notification.sender.userNickname}}</h4>
                     <div (click)="onResponseFriendRequestModal(notification, 'accept')" class="accept-icon-container">
                         <div class="accept icon"></div>
                     </div>
@@ -116,7 +116,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Are you sure you want to accept the friend request from {{friendRequestNotification?.sender?.userName}}?</p>
+                    <p>Are you sure you want to accept the friend request from {{friendRequestNotification?.sender?.userNickname}}?</p>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
                         <button *ngIf="friendRequestNotification" (click)="acceptFriendRequest(friendRequestNotification)" class="btn btn-danger" data-dismiss="modal">Yes</button>
@@ -137,7 +137,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Are you sure you want to reject the friend request from {{friendRequestNotification?.sender?.userName}}?</p>
+                    <p>Are you sure you want to reject the friend request from {{friendRequestNotification?.sender?.userNickname}}?</p>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
                         <button *ngIf="friendRequestNotification" (click)="rejectFriendRequest(friendRequestNotification)" class="btn btn-danger" data-dismiss="modal">Yes</button>

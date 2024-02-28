@@ -103,43 +103,6 @@ public class UserService {
         }
     }
 
-    public Short sendFriendRequest(User userSender, User userReceiver){
-        if (notificationRepository.existsBySenderAndReceiver(userSender, userReceiver)) {
-            return -1; //
-        }
-        if (!userSender.equals(userReceiver)) {
-            if (userSender.getFriendships().stream().anyMatch(friendship -> friendship.getFriend().equals(userReceiver))) {
-                return -2;
-            }
-
-        } else {
-            return -3;
-        }
-
-        Notification notification = new Notification();
-        notification.setSender(userSender);
-        notification.setReceiver(userReceiver);
-        notification.setType(NotificationType.FRIEND_REQUEST);
-        notification.setStatus(NotificationStatus.PENDING);
-        notification.setDateCreated(new Date());
-        notificationRepository.save(notification);
-        return 0;
-    }
-
-    public void acceptFriendRequest(Notification notification){
-        notification.setStatus(NotificationStatus.ACCEPTED);
-        notificationRepository.save(notification);
-    }
-
-    public void rejectFriendRequest(Notification notification){
-        notification.setStatus(NotificationStatus.REJECTED);
-        notificationRepository.save(notification);
-    }
-
-    public List<Notification> getNotifications(User user) {
-        return notificationRepository.findNotificationsByUserId(user.getUserId());
-    }
-
     @Transactional
     public void addProfileImage(User user, MultipartFile image) throws IOException {
         byte[] imageData = image.getBytes();

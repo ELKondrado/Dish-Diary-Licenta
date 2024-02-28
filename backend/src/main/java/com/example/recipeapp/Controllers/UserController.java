@@ -23,13 +23,11 @@ import java.util.*;
 public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
-    private final NotificationRepository notificationRepository;
 
     @Autowired
     public UserController(UserService userService, UserRepository userRepository, NotificationRepository notificationRepository) {
         this.userService = userService;
         this.userRepository = userRepository;
-        this.notificationRepository = notificationRepository;
     }
 
     @GetMapping("/details/{username}")
@@ -109,78 +107,6 @@ public class UserController {
         }
     }
 
-    @PostMapping("/sendFriendRequest/{userSenderId}/{receiverUserNickname}")
-    public ResponseEntity<Map<String, String>> sendFriendRequest(
-            @PathVariable Long userSenderId,
-            @PathVariable String receiverUserNickname) {
-
-        Map<String, String> response = new HashMap<>();
-
-        Optional<User> optionalUserSender = userRepository.findUserByUserId(userSenderId);
-
-        if (optionalUserSender.isPresent()) {
-            User userSender = optionalUserSender.get();
-
-            Optional<User> optionalUserReceiver = userRepository.findUserByUserNickname(receiverUserNickname);
-            if (optionalUserReceiver.isPresent()) {
-                User userReceiver = optionalUserReceiver.get();
-                Short status = userService.sendFriendRequest(userSender, userReceiver);
-                if(status == 0) {
-                    response.put("status", "SUCCESS");
-                }
-                else if(status == -1) {
-                    response.put("status", "FRIEND REQUEST ALREADY SENT");
-                }
-                else if(status == -2) {
-                    response.put("status", "RECEIVER ALREADY FRIEND");
-                }
-                else if(status == -3) {
-                    response.put("status", "CANNOT ADD YOURSELF");
-                }
-            } else {
-                response.put("status", "USER RECEIVER NOT FOUND");
-            }
-        } else {
-            response.put("status", "SENDER NOT FOUND");
-        }
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @PostMapping("/acceptFriendRequest/{notificationId}")
-    public ResponseEntity<Notification> acceptFriendRequest(@PathVariable Long notificationId) {
-        Optional<Notification> optionalNotification = notificationRepository.findNotificationById(notificationId);
-
-        if(optionalNotification.isPresent()) {
-            Notification notification = optionalNotification.get();
-            userService.acceptFriendRequest(notification);
-            addFriend(notification.getSender().getUserId(), notification.getReceiver().getUserId());
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @PostMapping("/rejectFriendRequest/{notificationId}")
-    public ResponseEntity<Notification> rejectFriendRequest(@PathVariable Long notificationId) {
-        Optional<Notification> optionalNotification = notificationRepository.findNotificationById(notificationId);
-
-        if(optionalNotification.isPresent()) {
-            Notification notification = optionalNotification.get();
-            userService.rejectFriendRequest(notification);
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/getNotifications/{userId}")
-    public ResponseEntity<List<Notification>> getNotifications(@PathVariable("userId") Long userId) {
-        Optional<User> optionalUser = userRepository.findUserByUserId(userId);
-
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            List<Notification> notifications = userService.getNotifications(user);
-            return new ResponseEntity<>(notifications, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
 
     @PostMapping(value = "/{userId}/uploadImage", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<String> uploadImage(@PathVariable("userId") Long userId,

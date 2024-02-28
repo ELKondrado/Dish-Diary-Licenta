@@ -6,7 +6,8 @@ import { User } from '../../Models/User/user';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NgForm } from '@angular/forms';
 import { NotificationService } from '../../Models/Notification/notification.service';
-import { Notification } from '../../Models/Notification/notification';
+import { Notif } from '../../Models/Notification/notification';
+import { FriendsService } from '../../Models/User/friends.service';
 
 @Component({
   selector: 'app-user-friends',
@@ -18,6 +19,7 @@ export class UserFriendsComponent implements OnInit{
     private authService: AuthService,
     private userService: UserService,
     private notificationService: NotificationService,
+    private friendsService: FriendsService,
     private router: Router
   ) {}
 
@@ -30,7 +32,7 @@ export class UserFriendsComponent implements OnInit{
   public friendRequestAlreadyFriend: boolean = false;
   public friendRequestCannotAddYourself: boolean = false;
   public showFriendRequestForm: boolean = false;
-  public notifications: Notification[] | undefined;
+  public notifications: Notif[] | undefined;
   public avatarUrl: String | undefined;
   public friends: User[] | undefined;
 
@@ -93,7 +95,7 @@ export class UserFriendsComponent implements OnInit{
     if(this.user)
     {
       this.notificationService.getNotifications(this.user.userId).subscribe(
-        (notifications: Notification[]) => {
+        (notifications: Notif[]) => {
           console.log(notifications);
           notifications.forEach(notification => {
             notification.sender.profileImage = 'data:image/jpeg;base64,' + notification.sender.profileImage;
@@ -122,7 +124,7 @@ export class UserFriendsComponent implements OnInit{
 
   public sendFriendRequest(): void {
     if(this.user){
-      this.notificationService.sendFriendRequest(this.user.userId, this.friendToAdd.toString()).subscribe(
+      this.friendsService.sendFriendRequest(this.user.userId, this.friendToAdd.toString()).subscribe(
         (response: any) => {
 
           if(response.status == "SUCCESS"){

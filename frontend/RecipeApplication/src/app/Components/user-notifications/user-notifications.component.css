@@ -37,6 +37,10 @@ body {
     border-bottom: 1px solid grey;
 }
 
+.navbar .nav-link {
+    font-weight: 500;
+}
+
 .navbar button:hover {
     color: red;
 }
@@ -120,6 +124,7 @@ body {
 }
 
 .sub-menu-link .arrow{
+    margin-bottom: 0.5rem;
     font-size: 22px;
     transition: transform 0.5s;
 }

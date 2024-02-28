@@ -24,7 +24,7 @@
                   <img *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
                   <img *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
                </div>
-               <h6>{{user?.userName}}</h6>
+               <h6>{{user?.userNickname}}</h6>
             </div>
 
             <a (click)="userProfile()" class="sub-menu-link">
@@ -92,9 +92,9 @@
          <div class="friend-text-input">
             <div class="form-group mt-3 friend-text-labels">
 
-               <label class="enter-username-label">Enter your friend's username</label>
+               <label class="enter-username-label">Enter your friend's nickname</label>
                <label *ngIf="friendRequestSent" style="color: greenyellow;">Friend Request was sent!</label>
-               <label *ngIf="usernameAddedNotFound" style="color: red;">Username not found!</label>
+               <label *ngIf="usernameAddedNotFound" style="color: red;">Nickname not found!</label>
                <label *ngIf="friendRequestAlreadySent" style="color: red;">Friend Request was already sent!</label>
                <label *ngIf="friendRequestAlreadyFriend" style="color: red;">User is already your friend!</label>
                <label *ngIf="friendRequestCannotAddYourself" style="color: red;">You cannot add yourself as a friend!</label>

@@ -1,6 +1,6 @@
 import { User } from "../User/user";
 
-export interface Notification {
+export interface Notif {
     id: number;
     sender: User; 
     receiver: User; 

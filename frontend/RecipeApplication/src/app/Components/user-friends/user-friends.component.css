@@ -18,6 +18,10 @@ body {
     padding-left: 5rem;
 }
 
+.navbar .nav-link {
+    font-weight: 500;
+}
+
 .navbar button:hover {
     color: red;
 }
@@ -121,6 +125,7 @@ body {
 }
 
 .sub-menu-link .arrow{
+    margin-bottom: 0.5rem;
     font-size: 22px;
     transition: transform 0.5s;
 }
