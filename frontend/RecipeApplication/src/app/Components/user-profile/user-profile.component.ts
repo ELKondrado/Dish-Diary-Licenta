@@ -85,6 +85,7 @@ export class UserProfileComponent implements OnInit{
           }
           else if(response.status == "SUCCESS"){
             this.nicknameAlreadyUsed = false;
+            this.ngOnInit();
             this.toggleProfileEdit();
           }
         },

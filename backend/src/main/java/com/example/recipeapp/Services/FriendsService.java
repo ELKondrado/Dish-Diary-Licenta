@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class FriendsService {
@@ -25,8 +26,12 @@ public class FriendsService {
     }
 
     public Short sendFriendRequest(User userSender, User userReceiver){
-        if (notificationRepository.existsBySenderAndReceiver(userSender, userReceiver)) {
-            return -1;
+        Optional<Notification> optionalNotification = notificationRepository.findNotificationBySenderIdReceiverId(userSender.getUserId(), userReceiver.getUserId());
+        if (optionalNotification.isPresent()) {
+            Notification notification = optionalNotification.get();
+            if(notification.getStatus()==NotificationStatus.PENDING) {
+                return -1;
+            }
         }
         if (!userSender.equals(userReceiver)) {
             if (userSender.getFriendships().stream().anyMatch(friendship -> friendship.getFriend().equals(userReceiver))) {
@@ -48,6 +53,14 @@ public class FriendsService {
     }
 
     public void acceptFriendRequest(Notification notification){
+        Optional<Notification> optionalNotification = notificationRepository.findNotificationBySenderIdReceiverId(
+                notification.getReceiver().getUserId(),
+                notification.getSender().getUserId()
+        );
+        if(optionalNotification.isPresent()) {
+            Notification notificationReversed = optionalNotification.get();
+            notificationReversed.setStatus(NotificationStatus.ACCEPTED);
+        }
         notification.setStatus(NotificationStatus.ACCEPTED);
         notificationRepository.save(notification);
     }

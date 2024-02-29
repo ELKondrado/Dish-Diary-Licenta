@@ -29,7 +29,7 @@ export class UserFriendsComponent implements OnInit{
   public username: string | undefined;
   public friendToAdd: String = "";
   public friendRequestSent: boolean = false;
-  public usernameAddedNotFound: boolean = false;
+  public nicknameAddedNotFound: boolean = false;
   public friendRequestAlreadySent: boolean = false;
   public friendRequestAlreadyFriend: boolean = false;
   public friendRequestCannotAddYourself: boolean = false;
@@ -146,35 +146,35 @@ export class UserFriendsComponent implements OnInit{
 
           if(response.status == "SUCCESS"){
             this.friendRequestSent = true;
-            this.usernameAddedNotFound = false;
+            this.nicknameAddedNotFound = false;
             this.friendRequestAlreadySent = false;
             this.friendRequestAlreadyFriend = false;
             this.friendRequestCannotAddYourself = false;
           }
           else if(response.status == "USER RECEIVER NOT FOUND"){
             this.friendRequestSent = false;
-            this.usernameAddedNotFound = true;
+            this.nicknameAddedNotFound = true;
             this.friendRequestAlreadySent = false;
             this.friendRequestAlreadyFriend = false;
             this.friendRequestCannotAddYourself = false;
           }
           else if(response.status == "FRIEND REQUEST ALREADY SENT"){
             this.friendRequestSent = false;
-            this.usernameAddedNotFound = false;
+            this.nicknameAddedNotFound = false;
             this.friendRequestAlreadySent = true;
             this.friendRequestAlreadyFriend = false;
             this.friendRequestCannotAddYourself = false;
           }
           else if(response.status == "RECEIVER ALREADY FRIEND"){
             this.friendRequestSent = false;
-            this.usernameAddedNotFound = false;
+            this.nicknameAddedNotFound = false;
             this.friendRequestAlreadySent = false;
             this.friendRequestAlreadyFriend = true;
             this.friendRequestCannotAddYourself = false;
           }
           else if(response.status == "CANNOT ADD YOURSELF"){
             this.friendRequestSent = false;
-            this.usernameAddedNotFound = false;
+            this.nicknameAddedNotFound = false;
             this.friendRequestAlreadySent = false;
             this.friendRequestAlreadyFriend = false;
             this.friendRequestCannotAddYourself = true;

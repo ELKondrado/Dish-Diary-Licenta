@@ -219,11 +219,7 @@ body {
     padding-bottom: 1rem;
 }
 
-.profile-username
-{
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.profile-nickname{
     margin-bottom: 0.5rem;
 }
 
@@ -234,6 +230,7 @@ body {
 }
 
 .profile h2{
+    text-align: center;
     color: white;
 }
 

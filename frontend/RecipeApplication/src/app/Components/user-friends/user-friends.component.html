@@ -104,14 +104,14 @@
          <div class="friend-text-input">
             <div class="form-group mt-3 friend-text-labels">
 
-               <label class="enter-username-label">Enter your friend's nickname</label>
+               <label class="enter-nickname-label">Enter your friend's nickname</label>
                <label *ngIf="friendRequestSent" style="color: greenyellow;">Friend Request was sent!</label>
-               <label *ngIf="usernameAddedNotFound" style="color: red;">Nickname not found!</label>
+               <label *ngIf="nicknameAddedNotFound" style="color: red;">Nickname not found!</label>
                <label *ngIf="friendRequestAlreadySent" style="color: red;">Friend Request was already sent!</label>
                <label *ngIf="friendRequestAlreadyFriend" style="color: red;">User is already your friend!</label>
                <label *ngIf="friendRequestCannotAddYourself" style="color: red;">You cannot add yourself as a friend!</label>
 
-               <input id="friend-to-add-username" class="form-control" rows="4" [(ngModel)]="friendToAdd" maxlength="255">
+               <input id="friend-to-add-nickname" class="form-control" rows="4" [(ngModel)]="friendToAdd" maxlength="255">
                <div class="send-friend-request-container">
                   <button type="button" [disabled]="friendToAdd.length == 0" class="add-friend-button" (click)="sendFriendRequest()">Send Friend Request</button>
                </div>
@@ -127,7 +127,7 @@
                   <img (click)="onOpenFriendProfile(friend.userName)" class="friend-profile-avatar" *ngIf="friend.profileImage" src="{{friend.profileImage}}" alt="Friend Profile Image">
                   <img (click)="onOpenFriendProfile(friend.userName)" class="friend-profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Friend Profile Image">
             </div>
-            <div class="friend-username">
+            <div class="friend-nickname">
                <h2 (click)="onOpenFriendProfile(friend.userName)">{{friend?.userNickname}}</h2>
             </div>
          </div>

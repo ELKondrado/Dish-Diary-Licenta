@@ -218,48 +218,71 @@ body {
 }
 
 .notifications-title {
+    position: relative;
+    display: flex;
+    flex-direction: row;
     margin-top: 1rem;
-    margin-left: 5rem;
-    color: white;
+    margin-left: 3rem;
+    margin-right: 3rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid white;
 }
 
 .notifications-title h2{
-    font-size: 60px;
+    width: 100%;
+    color: white;
+    text-align: center;
+    font-size: 70px;
 }
 
 .notifications-container {
     margin-top: 1rem;
-    margin-left: 5rem;
-    width: 40rem;
+    padding-left: 15rem;
+    padding-right: 15rem;
+    width: 100%;
     color: white;
 }
 
-.friend-request {
-    padding: 0.75rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
-    margin-bottom: 1rem;
-    border: 4px solid green;
+.horizontal-line {
+    background-color: white;
+    height: 1px;
 }
 
-.friend-request .elements {
+.notifications-container h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.friend-request {
+    padding: 0.75rem 1rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+}
+
+.friend-request {
     display: flex;
     flex-direction: row;
     align-items: center;
 }
 
+.friend-request h4 {
+    cursor: pointer;
+}
+
 .user-avatar {
-    width: 60px;
-    height: 60px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     overflow: hidden;
     margin-right: 1rem;
+    border: 0.1rem solid white;
 }
 
 .user-avatar img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    cursor: pointer;
 }
 
 .accept-icon-container {
@@ -281,7 +304,7 @@ body {
 }
   
 .accept-icon-container:hover {
-    background-color: green;
+    background-color: rgb(36, 162, 36);
 }
 
 .reject-icon-container {
@@ -293,7 +316,7 @@ body {
 }
 
 .reject-icon-container:hover {
-    background-color: #EF0107;
+    background-color: #c8060c;
 }
 
 .reject.icon {

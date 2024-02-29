@@ -6,8 +6,7 @@ import com.sun.istack.Nullable;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name="users")
@@ -48,18 +47,46 @@ public class User {
     private long totalRecipesAdded;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
+    )
     private List<Role> roles = new ArrayList<>();
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "user_recipes", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "recipe_id", referencedColumnName = "id"))
+    @JoinTable(
+            name = "user_recipes",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "recipe_id", referencedColumnName = "id")
+    )
     private List<Recipe> recipes = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Friendship> friendships = new ArrayList<>();
+
+    @JsonIgnore
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "review_likes_users",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "review_id")
+    )
+    private Set<Review> likedReviews = new HashSet<>();
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        User user = (User) obj;
+        return Objects.equals(userId, user.userId);
+    }
 }
 

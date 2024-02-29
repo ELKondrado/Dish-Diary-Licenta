@@ -214,6 +214,7 @@ body {
 /* END NAVBAR */
 
 .friends-title {
+    position: relative;
     display: flex;
     flex-direction: row;
     margin-top: 1rem;
@@ -231,17 +232,19 @@ body {
 }
 
 .friends-title h2{
+    width: 100%;
     color: white;
     font-size: 70px;
     text-align: center;
 }
 
 .friends-title span{
-    margin-left: auto;
+    position: absolute;
     font-weight: 600;
     color: #45a049;
     font-size: 70px;
-    text-align: center;
+    right: 0%;
+    bottom: -10%;
 }
 
 .add-friend-button-container {
@@ -277,16 +280,17 @@ body {
     justify-content: center;
 }
 
-.enter-username-label{
+.enter-nickname-label{
     font-size: 20px;
     font-weight: 500;
 }
 
-#friend-to-add-username {
+#friend-to-add-nickname {
     border: 1px solid grey;
     font-size: 20px;
     font-weight: 500;
     width: 20rem;
+    border-radius: 6px;
 }
 
 .send-friend-request-container {
@@ -296,11 +300,13 @@ body {
 }
 
 .friends-container {
+    width: 100%;
     display: flex;
     flex-direction: row;
+    justify-content: center;
+    align-items: center;
     flex-wrap: wrap;
-    margin-left: 5rem;
-    margin-left: 5rem;
+    margin-right: 2rem;
     margin-top: 1rem;
     margin-bottom: 10rem;
 }
@@ -318,7 +324,7 @@ body {
     border: 0.1em solid #ddd;
 }
 
-.friend-username {
+.friend-nickname {
     max-width: 250px;
     color: white;
     text-align: center;

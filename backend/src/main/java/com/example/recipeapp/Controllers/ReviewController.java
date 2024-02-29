@@ -1,5 +1,6 @@
 package com.example.recipeapp.Controllers;
 
+import com.example.recipeapp.Model.Message;
 import com.example.recipeapp.Model.Recipe;
 import com.example.recipeapp.Model.Review;
 import com.example.recipeapp.Model.User;
@@ -20,14 +21,12 @@ import java.util.Optional;
 @RequestMapping(path = "/recipe/review")
 public class ReviewController {
     private final ReviewService reviewService;
-    private final ReviewRepository reviewRepository;
     private final RecipeService recipeService;
     private final UserService userService;
 
     @Autowired
-    public ReviewController(ReviewService reviewService, ReviewRepository reviewRepository, RecipeService recipeService, UserService userService) {
+    public ReviewController(ReviewService reviewService, RecipeService recipeService, UserService userService) {
         this.reviewService = reviewService;
-        this.reviewRepository = reviewRepository;
         this.recipeService = recipeService;
         this.userService = userService;
     }
@@ -53,10 +52,64 @@ public class ReviewController {
         return new ResponseEntity<>(reviews, HttpStatus.OK);
     }
 
+    @PutMapping("/likeReview/{reviewId}/{userId}")
+    public ResponseEntity<Review> likeReview(@PathVariable("reviewId") Long reviewId,
+                                             @PathVariable("userId") Long userId) {
+        Optional<User> optionalUser = userService.findUserByUserId(userId);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            Optional<Review> optionalReview = reviewService.findReviewById(reviewId);
+            if (optionalReview.isPresent()) {
+                Review review = optionalReview.get();
+                review = reviewService.likeReview(review, user);
+                return new ResponseEntity<Review>(review, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/dislikeReview/{reviewId}/{userId}")
+    public ResponseEntity<Review> dislikeReview(@PathVariable("reviewId") Long reviewId,
+                                                @PathVariable("userId") Long userId) {
+        Optional<User> optionalUser = userService.findUserByUserId(userId);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            Optional<Review> optionalReview = reviewService.findReviewById(reviewId);
+            if (optionalReview.isPresent()) {
+                Review review = optionalReview.get();
+                review = reviewService.dislikeReview(review, user);
+                return new ResponseEntity<Review>(review, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/getLikedReviews/{userId}")
+    public ResponseEntity<List<Review>> getLikedReviews(@PathVariable("userId") Long userId) {
+        Optional<User> optionalUser = userService.findUserByUserId(userId);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            List<Review> likedReviews = reviewService.getLikedReviews(user.getUserId());
+            return new ResponseEntity<>(likedReviews, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @DeleteMapping("/deleteReview/{recipeId}/{reviewId}")
     public ResponseEntity<Review> deleteReview(@PathVariable("recipeId") Long recipeId,
                                                @PathVariable("reviewId") Long reviewId){
         reviewService.deleteReview(recipeId, reviewId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 }
