@@ -8,6 +8,7 @@ import { NgForm } from '@angular/forms';
 import { NotificationService } from '../../Models/Notification/notification.service';
 import { Notif } from '../../Models/Notification/notification';
 import { FriendsService } from '../../Models/User/friends.service';
+import { MessageService } from '../../Models/Message/message.service';
 
 @Component({
   selector: 'app-user-friends',
@@ -20,6 +21,7 @@ export class UserFriendsComponent implements OnInit{
     private userService: UserService,
     private notificationService: NotificationService,
     private friendsService: FriendsService,
+    private messageService: MessageService,
     private router: Router
   ) {}
 
@@ -33,6 +35,7 @@ export class UserFriendsComponent implements OnInit{
   public friendRequestCannotAddYourself: boolean = false;
   public showFriendRequestForm: boolean = false;
   public notifications: Notif[] | undefined;
+  public unseenConversations: number = 0;
   public avatarUrl: String | undefined;
   public friends: User[] | undefined;
 
@@ -51,6 +54,7 @@ export class UserFriendsComponent implements OnInit{
       this.getFriends();
       this.getProfileImage();
       this.getNotifications();
+      this.getUnseenConversations();
     });
   }
 
@@ -104,6 +108,19 @@ export class UserFriendsComponent implements OnInit{
         },
         (error: HttpErrorResponse) => {
           console.error("ERROR getting the notifications: " + error);
+        }
+      );
+    }
+  }
+
+  public getUnseenConversations(): void {
+    if(this.user){
+      this.messageService.getUnseenConversations(this.user.userId).subscribe(
+        (unseenConversations: number) => {
+          this.unseenConversations = unseenConversations;
+        },
+        (error: HttpErrorResponse) => {
+          console.error(error);
         }
       );
     }

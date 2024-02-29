@@ -1,5 +1,6 @@
 package com.example.recipeapp.Services;
 
+import com.example.recipeapp.Model.Friendship;
 import com.example.recipeapp.Model.Notification.Notification;
 import com.example.recipeapp.Model.Notification.NotificationStatus;
 import com.example.recipeapp.Model.Notification.NotificationType;
@@ -9,6 +10,7 @@ import com.example.recipeapp.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Date;
 
 @Service
@@ -53,5 +55,25 @@ public class FriendsService {
     public void rejectFriendRequest(Notification notification){
         notification.setStatus(NotificationStatus.REJECTED);
         notificationRepository.save(notification);
+    }
+
+    @Transactional
+    public void addFriend(User user, User friend) {
+        if (!user.equals(friend)) {
+            if (user.getFriendships().stream().noneMatch(friendship -> friendship.getFriend().equals(friend))) {
+                Friendship userFriendship = new Friendship(user, friend);
+                Friendship friendFriendship = new Friendship(friend, user);
+
+                user.getFriendships().add(userFriendship);
+                friend.getFriendships().add(friendFriendship);
+
+                userRepository.save(user);
+                userRepository.save(friend);
+            } else {
+                throw new IllegalStateException("Users are already friends.");
+            }
+        } else {
+            throw new IllegalStateException("Cannot add yourself as a friend.");
+        }
     }
 }

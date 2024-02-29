@@ -2,13 +2,15 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
 import { AuthService } from '../../Security/auth.service';
 import { UserService } from '../../Models/User/user.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../../Models/User/user';
 import { NotificationService } from '../../Models/Notification/notification.service';
 import { Notif } from '../../Models/Notification/notification';
 import { MessageService } from '../../Models/Message/message.service';
 import { Message } from '../../Models/Message/message';
 import { DatePipe } from '@angular/common';
+import { interval } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-user-chat',
@@ -19,7 +21,7 @@ export class UserChatComponent {
   @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
 
   constructor(
-    private renderer: Renderer2,
+    private route: ActivatedRoute,
     private datePipe: DatePipe,
     private authService: AuthService,
     private userService: UserService,
@@ -31,6 +33,7 @@ export class UserChatComponent {
   public username: string | undefined;
   public conversations: Message[] = [];
   public notifications: Notif[] = [];
+  public unseenConversations: number = 0;
   public friendRequestNotification: Notif | undefined;
   public avatarUrl: String | undefined;
   public selectedFile: File | undefined;
@@ -44,7 +47,17 @@ export class UserChatComponent {
   ngOnInit(): void {
     this.fetchData();
     this.fetchUser();
+
+    if(this.conversations.length != 0)
+      interval(1000)
+      .pipe(take(10)) 
+      .subscribe(() => {
+        this.conversations.forEach(conversation => {
+          conversation.timestamp = this.currentTimeDifferenceFormattedDate(conversation.timestamp.toString());
+        });
+      });
   }
+  
 
   private fetchData(): void{
     this.authService.initializeApp().subscribe(
@@ -54,6 +67,8 @@ export class UserChatComponent {
       this.getProfileImage();
       this.getNotifications();
       this.getMessages();
+      this.fetchFriendCurrentConversation();
+      this.getUnseenConversations();
     });
   }
 
@@ -64,6 +79,24 @@ export class UserChatComponent {
   
     avatar?.addEventListener('click', () => {
       menu?.classList.toggle('menu-open');
+    });
+  }
+
+  public fetchFriendCurrentConversation(): void{
+    this.route.params.subscribe((params) => {
+      const friendUserName = params['friendUserName'];
+      if(friendUserName)
+      {
+        this.userService.getUserDetails(friendUserName).subscribe(
+        (friend: User) => {
+          this.friendCurrentConversation = friend;
+          this.friendCurrentConversation.profileImage = 'data:image/jpeg;base64,' + this.friendCurrentConversation.profileImage;
+          this.getMessagesFromUser();
+        },
+        (error: HttpErrorResponse) => {
+          console.error(error);
+        });
+      }
     });
   }
 
@@ -83,16 +116,42 @@ export class UserChatComponent {
   }
 
   public changeCurrentFriendConversation(conversation: Message, index: number): void {
-    if(conversation.receiver.userId != this.user?.userId){
-      this.friendCurrentConversation = conversation.receiver;
-      this.activeConversationIndex = index;
-      this.getMessagesFromUser();
+    if(this.user){
+      if(conversation.receiver.userId != this.user?.userId){
+        this.friendCurrentConversation = conversation.receiver;
+        this.activeConversationIndex = index;
+        this.getMessagesFromUser();
+        this.messageService.setWasSeenConversation(this.user?.userId, this.friendCurrentConversation.userId).subscribe(
+          (response: any) => {
+            console.log(response)
+          },
+          (error : HttpErrorResponse) =>
+          {
+            console.error(error);
+          }
+        )
+        this.getMessages();
+        this.getUnseenConversations()
+      }
+      else{
+        this.friendCurrentConversation = conversation.sender;
+        this.activeConversationIndex = index;
+        this.getMessagesFromUser();
+        this.messageService.setWasSeenConversation(this.user?.userId, this.friendCurrentConversation.userId).subscribe(
+          (response: any) => {
+            console.log(response)
+          },
+          (error : HttpErrorResponse) =>
+          {
+            console.error("ERROR setting the conversation to was seen: ");
+            console.error(error)
+          }
+        );
+        this.getMessages();
+        this.getUnseenConversations()
+      }
     }
-    else{
-      this.friendCurrentConversation = conversation.sender;
-      this.activeConversationIndex = index;
-      this.getMessagesFromUser();
-    }
+   
   }
 
   public getMessages(): void {
@@ -108,10 +167,9 @@ export class UserChatComponent {
               });
               this.conversations = this.removeDuplicateMessages(this.conversations)
               this.fetchChatUserProfiles();
-              this.changeCurrentFriendConversation(this.conversations[0], 0);
             },
             (error: HttpErrorResponse) => {
-                console.error("ERROR getting the messages :" + error);
+                console.error(error);
             }
         );
     }
@@ -122,14 +180,15 @@ export class UserChatComponent {
       const uniqueMessages: Message[] = [];
 
       messages.forEach(message => {
-          const combination1 = `${message.sender.userId}-${message.receiver.userId}`;
-          const combination2 = `${message.receiver.userId}-${message.sender.userId}`;
 
-          if (!uniqueCombinations.has(combination1) && !uniqueCombinations.has(combination2)) {
-              uniqueCombinations.add(combination1);
-              uniqueCombinations.add(combination2);
-              uniqueMessages.push(message);
-          }
+        const combination1 = `${message.sender.userId}-${message.receiver.userId}`;
+        const combination2 = `${message.receiver.userId}-${message.sender.userId}`;
+
+        if (!uniqueCombinations.has(combination1) && !uniqueCombinations.has(combination2)) {
+            uniqueCombinations.add(combination1);
+            uniqueCombinations.add(combination2);
+            uniqueMessages.push(message);
+        }
       });
 
       return uniqueMessages;
@@ -151,7 +210,7 @@ export class UserChatComponent {
           this.showDateBubbles = new Array(this.messagesFromFriend.length).fill(false);
         },
         (error: HttpErrorResponse) => {
-          console.error("ERROR getting the messages :" + error);
+          console.error(error);
         }
       );
     }
@@ -177,7 +236,7 @@ export class UserChatComponent {
           this.resetTextareaHeight();
         },
         (error: HttpErrorResponse) => {
-          console.error("ERROR sending the message: " + error); 
+          console.error(error); 
         }
       );
     }
@@ -239,7 +298,20 @@ export class UserChatComponent {
           this.notifications = notifications.filter(notification => notification.status === 'PENDING');
         },
         (error) => {
-          console.error("ERROR getting the notifications: " + error);
+          console.error(error);
+        }
+      );
+    }
+  }
+ 
+  public getUnseenConversations(): void {
+    if(this.user){
+      this.messageService.getUnseenConversations(this.user.userId).subscribe(
+        (unseenConversations: number) => {
+          this.unseenConversations = unseenConversations;
+        },
+        (error) => {
+          console.error(error);
         }
       );
     }
@@ -271,7 +343,7 @@ export class UserChatComponent {
           this.getProfileImage();
         },
         (error: HttpErrorResponse) => {
-          console.error("ERROR uploading profile image: ", error);
+          console.error(error);
         }
       );
     }
@@ -313,6 +385,34 @@ export class UserChatComponent {
   public formattedDate(date: string): string | null{
     return this.datePipe.transform(date, 'M/d/yyyy HH:mm');
   }
+
+  public currentTimeDifferenceFormattedDate(date: string | null): string {
+    if (!date) {
+      return ''; // Handle null or empty date strings
+    }
+  
+    const parsedDate = Date.parse(date);
+    if (isNaN(parsedDate)) {
+      return 'Invalid Date'; // Handle invalid date strings
+    }
+  
+    const now = new Date();
+    const diffMs = now.getTime() - parsedDate;
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffMinutes = Math.floor(diffMs / (1000 * 60));
+    const diffSeconds = Math.floor(diffMs / 1000);
+  
+    if (diffDays >= 1) {
+      return `${diffDays}d`;
+    } else if (diffHours >= 1) {
+      return `${diffHours}h`;
+    } else if (diffMinutes >= 1) {
+      return `${diffMinutes}m`;
+    } else
+      return `now`;
+  }
+  
 
   public onOpenFriendProfile(friendUsername: String): void {
     this.router.navigate([`/${this.userService.getUsername()}/friend-profile/${friendUsername}`]);

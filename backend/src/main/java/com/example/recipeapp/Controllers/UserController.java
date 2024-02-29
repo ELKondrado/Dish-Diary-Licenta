@@ -1,7 +1,6 @@
 package com.example.recipeapp.Controllers;
 
 import com.example.recipeapp.Model.Friendship;
-import com.example.recipeapp.Model.Notification.Notification;
 import com.example.recipeapp.Model.User;
 import com.example.recipeapp.Repositories.NotificationRepository;
 import com.example.recipeapp.Repositories.UserRepository;
@@ -77,7 +76,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/getFriends/{userId}")
-    public ResponseEntity<List<User>> addFriend(@PathVariable("userId") Long userId) {
+    public ResponseEntity<List<User>> getFriends(@PathVariable("userId") Long userId) {
         Optional<User> optionalUser = userRepository.findUserByUserId(userId);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
@@ -87,26 +86,6 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
-    @PostMapping(value = "/addFriend/{userId}/{friendId}")
-    public ResponseEntity<Friendship> addFriend(@PathVariable("userId") Long userId,
-                                                @PathVariable("friendId") Long friendId) {
-        Optional<User> optionalUser = userRepository.findUserByUserId(userId);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            Optional<User> optionalFriend = userRepository.findUserByUserId(friendId);
-            if (optionalFriend.isPresent()) {
-                User friend = optionalFriend.get();
-                userService.addFriend(user, friend);
-                return new ResponseEntity<>(HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
 
     @PostMapping(value = "/{userId}/uploadImage", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<String> uploadImage(@PathVariable("userId") Long userId,

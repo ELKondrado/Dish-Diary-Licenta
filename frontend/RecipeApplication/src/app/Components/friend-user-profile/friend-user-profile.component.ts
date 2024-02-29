@@ -8,6 +8,7 @@ import { UserService } from '../../Models/User/user.service';
 import { AuthService } from '../../Security/auth.service';
 import { Recipe } from '../../Models/Recipe/recipe';
 import { RecipeService } from '../../Models/Recipe/recipe.service';
+import { MessageService } from '../../Models/Message/message.service';
 
 @Component({
   selector: 'app-friend-user-profile',
@@ -21,6 +22,7 @@ export class FriendUserProfileComponent {
     private userService: UserService,
     private recipeService: RecipeService,
     private notificationService: NotificationService,
+    private messageService: MessageService,
     private router: Router
   ) {}
 
@@ -28,6 +30,7 @@ export class FriendUserProfileComponent {
   public username: string | undefined;
   public friend: User | undefined;
   public notifications: Notif[] | undefined;
+  public unseenConversations: number = 0;
   public avatarUrl: String | undefined;
   public friendAvatarUrl: String | undefined;
   public selectedFile: File | undefined;
@@ -48,6 +51,7 @@ export class FriendUserProfileComponent {
       this.fetchFriend();
       this.getProfileImage();
       this.getNotifications();
+      this.getUnseenConversations();
     });
   }
 
@@ -95,6 +99,19 @@ export class FriendUserProfileComponent {
         },
         (error) => {
           console.error("ERROR getting the notifications: " + error);
+        }
+      );
+    }
+  }
+
+  public getUnseenConversations(): void {
+    if(this.user){
+      this.messageService.getUnseenConversations(this.user.userId).subscribe(
+        (unseenConversations: number) => {
+          this.unseenConversations = unseenConversations;
+        },
+        (error: HttpErrorResponse) => {
+          console.error(error);
         }
       );
     }
@@ -238,6 +255,10 @@ export class FriendUserProfileComponent {
 
   public userChat(): void {
     this.router.navigate([`/${this.userService.getUsername()}/chat`]);
+  }
+
+  public userChatFriend(friendUserName: string): void {
+    this.router.navigate([`/${this.userService.getUsername()}/chat/${friendUserName}`]);
   }
  
   public userNotifications(): void {

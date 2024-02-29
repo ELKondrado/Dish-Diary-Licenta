@@ -394,6 +394,7 @@ body {
 
 .review-text {
     margin-bottom: 1rem;
+    white-space: pre-wrap;
 }
 
 .date {
@@ -409,13 +410,53 @@ body {
 }
 
 .review-text-input {
-    padding-left: 18rem;
-    padding-right: 18rem;
+    color: white;
 }
 
-.review-text-input textarea, select{
+.review-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#rating{
+    color: blue;
+    background-color: rgba(25,28,34,255);
+    border-radius: 6px;
+    width: 9vw;
+    border: 2px solid grey;
+}
+
+#rating:focus{
+    border: 2px solid #2a62d4;
+}
+
+#reviewText{
+    color: white;
+    background-color: rgba(25,28,34,255);
     border-radius: 7.5px;
-    height: 150px;
+    width: 50vw;
+    height: 10rem;
+    border-radius: 6px;
+    border: 2px solid grey;
+    outline: none;
+}
+
+#reviewText:focus{
+    border: 2px solid #2a62d4;
+}
+
+#reviewText::-webkit-scrollbar {
+    width: 12px;
+}
+  
+#reviewText::-webkit-scrollbar-thumb {
+    background-color: black; 
+}
+  
+#reviewText::-webkit-scrollbar-track {
+    background-color: #303030;
 }
 
 #rating, option {
@@ -430,23 +471,37 @@ body {
     font-size: medium;
     font-weight: 600;
 }
-/* 
-.review{
-    border-bottom: 0.5px solid #777;
-} */
 
-/* .review-details .date {
-    margin-left: auto;
-} */
 
-.create-review-button {
+.create-review-button, .add-review-button, .cancel-review-button {
+    color: white;
+    background: #2a62d4;
+    width: 12rem;
+    height: 2.25rem;
+    border: 2px solid grey;
+    border-radius: 6px;
     margin-bottom: 2rem;
-    
 }
 
-.add-review-button { 
-    display: grid;
-    place-items: center;
+.add-review-button {
+    margin-right: 18rem;
+    margin-left: 2rem;
+}
+
+.cancel-review-button {
+    background-color: red;
+    margin-left: 18rem;
+    margin-right: 2rem;
+}
+
+.create-review-button:hover, .add-review-button:hover, .cancel-review-button:hover {
+    border: 2px solid white;
+}
+
+.add-cancel-review-button-container{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .fill-fields-error {

@@ -9,6 +9,7 @@ import { NgForm } from '@angular/forms';
 import { User } from '../../Models/User/user';
 import { NotificationService } from '../../Models/Notification/notification.service';
 import { Notif } from '../../Models/Notification/notification';
+import { MessageService } from '../../Models/Message/message.service';
 
 @Component({
   selector: 'app-main-page',
@@ -21,12 +22,14 @@ export class MainPageComponent implements OnInit{
     private authService: AuthService, 
     private userService: UserService,
     private notificationService: NotificationService,
+    private messageService: MessageService,
     private router: Router
   ) {}
 
   public user: User | null = null;
   public recipes: Recipe[] = [];
   public notifications: Notif[] | undefined;
+  public unseenConversations: number = 0;
   public editRecipe: Recipe | undefined;
   public deletedRecipe: Recipe | undefined;
   public username: string | undefined;
@@ -45,6 +48,7 @@ export class MainPageComponent implements OnInit{
       this.getUserRecipes();
       this.getProfileImage();
       this.getNotifications();
+      this.getUnseenConversations();
     });
   }
 
@@ -97,6 +101,19 @@ export class MainPageComponent implements OnInit{
         },
         (error) => {
           console.error("ERROR getting the notifications: " + error);
+        }
+      );
+    }
+  }
+
+  public getUnseenConversations(): void {
+    if(this.user){
+      this.messageService.getUnseenConversations(this.user.userId).subscribe(
+        (unseenConversations: number) => {
+          this.unseenConversations = unseenConversations;
+        },
+        (error: HttpErrorResponse) => {
+          console.error(error);
         }
       );
     }
