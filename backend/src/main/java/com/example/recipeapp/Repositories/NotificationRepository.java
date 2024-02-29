@@ -10,11 +10,14 @@ import java.util.Optional;
 
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
     Optional<Notification> findNotificationById(Long id);
-    boolean existsBySenderAndReceiver(User sender, User receiver);
 
     @Query(value = "SELECT * " +
                    "FROM notifications n " +
                    "WHERE n.receiver_id = :userId", nativeQuery = true)
-    List<Notification> findNotificationsByUserId(long userId);
+    List<Notification> findNotificationsByUserId(Long userId);
 
+    @Query(value = "SELECT * " +
+                   "FROM notifications n " +
+                   "WHERE n.sender_id = :senderId AND n.receiver_id = :receiverId", nativeQuery = true)
+    Optional<Notification> findNotificationBySenderIdReceiverId(Long senderId, Long receiverId);
 }

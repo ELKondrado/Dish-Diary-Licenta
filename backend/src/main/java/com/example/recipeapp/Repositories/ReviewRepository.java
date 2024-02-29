@@ -18,6 +18,12 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
                    "WHERE rr.recipe_id = :recipeId", nativeQuery = true)
     List<Review> findReviewsByRecipeId(Long recipeId);
 
+    @Query(value = "SELECT * " +
+                   "FROM review r " +
+                   "JOIN review_likes_users rls ON r.id = rls.review_id " +
+                   "WHERE rls.user_id = :userId", nativeQuery = true)
+    List<Review> getLikedReviewsByUser(Long userId);
+
     @Modifying
     @Transactional
     @Query(value = "DELETE " +

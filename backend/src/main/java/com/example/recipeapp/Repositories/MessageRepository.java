@@ -28,8 +28,8 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     void setWasSeenConversation(@Param("user1Id") Long user1Id, @Param("user2Id") Long user2Id);
 
     @Query("SELECT COUNT(DISTINCT CONCAT(m.sender.id, '_', m.receiver.id)) " +
-            "FROM Message m " +
-            "WHERE (m.sender.id = :userId OR m.receiver.id = :userId) " +
-            "AND m.wasSeen = false")
+           "FROM Message m " +
+           "WHERE m.receiver.id = :userId " +
+           "AND m.wasSeen = false")
     Integer getUnseenMessages(@Param("userId") Long userId);
 }

@@ -1,10 +1,14 @@
 package com.example.recipeapp.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 @Table
 @Entity
@@ -25,13 +29,28 @@ public class Review {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private User userOwner;
     @NotNull
-    @Lob
-    private byte[] userProfileImage;
-    @NotNull
     private Byte userStarRating;
     @NotNull
     @Column(length = 2056)
     private String userReviewText;
+    @Column(name = "likes")
+    private long likes;
     @NotNull
     private Date date;
+    @JsonIgnore
+    @ManyToMany(mappedBy = "likedReviews", cascade = CascadeType.ALL)
+    private Set<User> likedByUsers = new HashSet<>();
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id); // Assuming id is a unique identifier for Review
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Review review = (Review) obj;
+        return Objects.equals(id, review.id);
+    }
 }

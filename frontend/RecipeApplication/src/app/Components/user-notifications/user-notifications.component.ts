@@ -27,9 +27,10 @@ export class UserNotificationsComponent {
 
   public user: User | null = null;
   public username: string | undefined;
-  public notifications: Notif[] | undefined;
-  public unseenConversations: number = 0;
+  public notifications: Notif[] = [];
+  public friendRequests: Notif[] = [];
   public friendRequestNotification: Notif | undefined;
+  public unseenConversations: number = 0;
   public avatarUrl: String | undefined;
   public selectedFile: File | undefined;
   public addedRecipes: Recipe[] | undefined;
@@ -91,16 +92,22 @@ export class UserNotificationsComponent {
   public getNotifications(): void {
     if(this.user)
     {
+      this.friendRequests = [];
       this.notificationService.getNotifications(this.user.userId).subscribe(
         (notifications: Notif[]) => {
-          console.log(notifications);
           notifications.forEach(notification => {
             notification.sender.profileImage = 'data:image/jpeg;base64,' + notification.sender.profileImage;
           });
           this.notifications = notifications.filter(notification => notification.status === 'PENDING');
+          notifications.forEach(notification => {
+            if(notification.type == 'FRIEND_REQUEST' && notification.status == 'PENDING') {
+              this.friendRequests.push(notification);
+              console.log(this.friendRequests)
+            }
+          });
         },
         (error) => {
-          console.error("ERROR getting the notifications: " + error);
+          console.error(error);
         }
       );
     }
@@ -123,11 +130,10 @@ export class UserNotificationsComponent {
     if(notification){
       this.friendsService.acceptFriendRequest(notification.id).subscribe(
         (response: any) => {
-          console.log(response);
-          this.getNotifications();
+          this.ngOnInit();
         },
         (error: HttpErrorResponse) => {
-          console.error("ERROR accepting the friend request: " + error);
+          console.error(error);
         }
       );
     }
@@ -137,11 +143,10 @@ export class UserNotificationsComponent {
     if(notification){
       this.friendsService.rejectFriendRequest(notification.id).subscribe(
         (response: any) => {
-          console.log(response);
-          this.getNotifications();
+          this.ngOnInit();
         },
         (error: HttpErrorResponse) => {
-          console.error("ERROR rejecting the friend request: " + error);
+          console.error(error);
         }
       );
     }
@@ -173,7 +178,7 @@ export class UserNotificationsComponent {
           this.getProfileImage();
         },
         (error: HttpErrorResponse) => {
-          console.error("ERROR uploading profile image: ", error);
+          console.error(error);
         }
       );
     }
@@ -186,7 +191,7 @@ export class UserNotificationsComponent {
           this.avatarUrl = this.arrayBufferToBase64(data);
         },
         (error: HttpErrorResponse) => {
-          console.error("ERROR getting profile image: ", error);
+          console.error(error);
         }
       );
     }
@@ -201,6 +206,10 @@ export class UserNotificationsComponent {
     });
 
     return 'data:image/jpeg;base64,' + btoa(bytes.join(''));
+  }
+
+  public onOpenFriendProfile(friendUsername: String): void {
+    this.router.navigate([`/${this.userService.getUsername()}/friend-profile/${friendUsername}`]);
   }
 
   public mainPage(): void {

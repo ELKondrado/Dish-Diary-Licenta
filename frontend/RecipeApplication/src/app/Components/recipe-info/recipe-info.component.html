@@ -125,7 +125,7 @@
          
             <div class="recipe-buttons">
                <div *ngIf="recipe?.userOwner?.userId == user?.userId" class="recipe-upload-button">
-                  <label class="upload-button"><input type="file" id="fileInput" (change)="onSelectFile($event)">Upload Image</label>
+                  <label for="fileInput" class="upload-button"><input type="file" id="fileInput" (change)="onSelectFile($event)">Upload Profile Image</label>
                </div>
                
                <div *ngIf="recipe && userRecipes && isRecipeInUserRecipes == false" class="recipe-add-button">
@@ -163,12 +163,12 @@
             </div>
 
             <div class="review-text-input">
-               <div class="form-group mt-3">
-                  <label for="reviewText">Review:</label>
+               <div>
+                  <label>Review:</label>
                   <textarea id="reviewText" class="form-control" rows="4" [(ngModel)]="reviewModel.userReviewText" maxlength="2055"></textarea>
                </div>
             </div>
-            
+
             <div class="add-cancel-review-button-container">
                <button type="button" class="cancel-review-button" (click)="toggleReviewForm()">Cancel</button>
                <button type="button" class="add-review-button" (click)="addReview()" [disabled]="reviewModel.userReviewText.trim().length == 0">Add Review</button>
@@ -180,13 +180,16 @@
          <button *ngIf="!showReviewForm" type="button" class="create-review-button" (click)="toggleReviewForm()">Create New Review</button>
          <div *ngFor="let review of reviews" class="review">
             <div class="user-avatar">
-               <img src="{{review.userProfileImage}}" alt="User Avatar">
+               <img src="{{review.userOwner?.profileImage}}" alt="User Avatar">
             </div>
             <div class="review-details">
                <div class="user-info">
                   <span class="username">{{review.userOwner?.userNickname}}</span>
                   <span class="star-rating">{{review.userStarRating}}</span>
                   <span class="date">{{formattedDate(review.date.toString())}}</span>
+                  <span class="material-icons like-button-liked" *ngIf="isReviewLiked(review)" (click)="dislikeReview(review.id)">thumb_up</span>
+                  <span class="material-icons like-button" *ngIf="!isReviewLiked(review)" (click)="likeReview(review.id)">thumb_up</span>
+                  <span class="like-score">{{review.likes}}</span>
                   <div class="deleteReview">
                      <button (click)="onDeleteReviewModal(review)" *ngIf="user?.userId == review.userOwner?.userId" class="deleteReviewButton">-</button>
                   </div>

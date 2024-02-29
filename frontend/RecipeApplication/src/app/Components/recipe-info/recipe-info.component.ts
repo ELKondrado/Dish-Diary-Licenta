@@ -43,15 +43,16 @@ export class RecipeInfoComponent implements OnInit {
   public selectedFile: File | undefined;
   public reviews: Review[] | undefined;
   public showReviewForm: boolean = false;
+  public likedReviewsByUser: Review[] = [];
   public averageRating: number = 0;
   public deletedReview: Review | undefined;
   public addedRecipe: Recipe | undefined;
   public reviewModel: Review = { 
     id: 1,
     userOwner: null,
-    userProfileImage: '',
     userStarRating: 1,
     userReviewText: '',
+    likes: 0,
     date: new Date(), 
   };
 
@@ -69,6 +70,7 @@ export class RecipeInfoComponent implements OnInit {
       this.getUserRecipes();
       this.getNotifications();
       this.getUnseenConversations();
+      this.getLikedReviewsByUser();
     });
   }
 
@@ -105,10 +107,9 @@ export class RecipeInfoComponent implements OnInit {
     {
       this.reviewService.getReviewsForRecipe(this.recipe.id).subscribe(
         (reviews: Review[]) => {
-          this.reviews = reviews;
+          this.reviews = reviews.sort((a, b) => b.likes - a.likes);
           this.fetchUserProfilesForReviews();
           this.fetchAverageRating();
-          console.log(reviews);
         },
         (error: HttpErrorResponse) => {
           console.error('Error getting the reviews:', error);
@@ -120,7 +121,9 @@ export class RecipeInfoComponent implements OnInit {
   public fetchUserProfilesForReviews() {
     if(this.reviews){
       this.reviews.forEach(review => {
-        review.userProfileImage = 'data:image/jpeg;base64,' + review.userProfileImage;
+        if(review.userOwner){
+          review.userOwner.profileImage = 'data:image/jpeg;base64,' + review.userOwner.profileImage;
+        }
       });
     }
   }
@@ -134,6 +137,30 @@ export class RecipeInfoComponent implements OnInit {
     }
   }
 
+  public getLikedReviewsByUser(): void {
+    if(this.user) {
+      this.reviewService.getLikedReviews(this.user.userId).subscribe(
+        (likedReviews: Review[]) => {
+          this.likedReviewsByUser = likedReviews;
+          console.log(likedReviews);
+        },
+        (error: HttpErrorResponse) => {
+          console.error(error);
+        }
+      )
+    }
+  }
+
+  public isReviewLiked(review: Review): boolean {
+    console.log('Liked Reviews By User:', this.likedReviewsByUser);
+    console.log('Review ID:', review.id);
+    const likedReviewIds = this.likedReviewsByUser.map(likedReview => likedReview.id);
+    console.log('Liked Review IDs:', likedReviewIds);
+    console.log( likedReviewIds.includes(review.id))
+    console.log("\n")
+    return likedReviewIds.includes(review.id);
+  }
+  
   public toggleReviewForm() {
     this.showReviewForm = !this.showReviewForm;
   }
@@ -148,7 +175,6 @@ export class RecipeInfoComponent implements OnInit {
     {
       this.notificationService.getNotifications(this.user.userId).subscribe(
         (notifications: Notif[]) => {
-          console.log(notifications);
           notifications.forEach(notification => {
             notification.sender.profileImage = 'data:image/jpeg;base64,' + notification.sender.profileImage;
           });
@@ -188,15 +214,42 @@ export class RecipeInfoComponent implements OnInit {
     button.click();
   }
 
-  public addReview() {
+  public likeReview(reviewId: number): void {
+    if (this.user) {
+      this.reviewService.likeReview(reviewId, this.user.userId).subscribe(
+        (response: any) => {
+          this.getLikedReviewsByUser();
+          this.fetchReviewsForRecipe();
+        },
+        (error: HttpErrorResponse) => {
+          console.error(error);
+        }
+      );
+    }
+  }
+
+  public dislikeReview(reviewId: number): void {
+    if (this.user) {
+      this.reviewService.dislikeReview(reviewId, this.user.userId).subscribe(
+        (response: any) => {
+          this.getLikedReviewsByUser();
+          this.fetchReviewsForRecipe();
+        },
+        (error: HttpErrorResponse) => {
+          console.error(error);
+        }
+      );
+    }
+  }
+
+  public addReview(): void {
     if(this.user && this.recipe) {
       this.reviewModel.userOwner = this.user;
-      this.reviewModel.userProfileImage = this.user.profileImage;
       this.reviewModel.date = new Date();
+      this.reviewModel.likes = 0;
 
       this.reviewService.addReviewToRecipe(this.recipe.id, this.user.userName, this.reviewModel).subscribe(
         (response: Review) => {
-          console.log(response)
           this.fetchReviewsForRecipe();
         },
         (error: HttpErrorResponse) => {
@@ -270,6 +323,7 @@ export class RecipeInfoComponent implements OnInit {
     this.recipeService.addUserRecipe(username, recipeId).subscribe(
       (response: any) => {
         if (response) {
+          this.ngOnInit();
           button.setAttribute('data-target', '#recipeSuccesModal');
           button.click();
         }

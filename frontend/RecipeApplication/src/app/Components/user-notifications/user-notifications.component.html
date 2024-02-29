@@ -65,7 +65,7 @@
                 <div class="icon-container">
                    <div class="icon-button">
                       <i class="material-icons">notifications</i>
-                      <span *ngIf="notifications?.length !=0 " class="icon-button__badge notifications-number">{{notifications?.length}}</span>
+                      <span *ngIf="notifications?.length !=0 " class="icon-button__badge notifications-number">{{notifications.length}}</span>
                    </div>               
                 </div>
                 
@@ -95,25 +95,55 @@
             <h2>Notifications</h2>
         </div>
         
-        <div class="notifications-container">
-            <h2>Friend Requests</h2>
-            <div *ngFor="let notification of notifications" class="friend-request">
-                <div class="elements">
-                    <div class="user-avatar">
-                        <img src="{{notification.sender.profileImage}}" alt="User Avatar">
+         <div class="notifications-container">
+            <div *ngIf="friendRequests.length != 0">
+               <h2>Friend Requests</h2>
+               <hr class="horizontal-line">
+               <div *ngFor="let friendRequest of friendRequests">
+                  <div class="friend-request" *ngIf="friendRequest.status == 'PENDING'">
+                     <div class="user-avatar">
+                        <img (click)="onOpenFriendProfile(friendRequest.sender.userName)" src="{{friendRequest.sender.profileImage}}" alt="User Avatar">
                      </div>
-                    <h4>{{notification.sender.userNickname}}</h4>
-                    <div (click)="onResponseFriendRequestModal(notification, 'accept')" class="accept-icon-container">
+                     <h4 (click)="onOpenFriendProfile(friendRequest.sender.userName)">{{friendRequest.sender.userNickname}}</h4>
+                     <div (click)="onResponseFriendRequestModal(friendRequest, 'accept')" class="accept-icon-container">
                         <div class="accept icon"></div>
-                    </div>
-                    <div (click)="onResponseFriendRequestModal(notification, 'reject')" class="reject-icon-container">
+                     </div>
+                     <div (click)="onResponseFriendRequestModal(friendRequest, 'reject')" class="reject-icon-container">
                         <div class="reject icon"></div>
-                    </div>
-                </div>
-                
+                     </div>
+                  </div>
+               </div>
+               <hr class="horizontal-line">
             </div>
 
-        </div>
+            <!-- NOTIFICATION TYPE -->
+            
+            <!-- <div *ngIf="friendRequests.length != 0">
+               <h2>Friend Requests</h2>
+               <hr class="horizontal-line">
+               <div *ngFor="let friendRequest of friendRequests">
+                  <div class="friend-request" *ngIf="friendRequest.status == 'PENDING'">
+                     <div class="user-avatar">
+                        <img (click)="onOpenFriendProfile(friendRequest.sender.userName)" src="{{friendRequest.sender.profileImage}}" alt="User Avatar">
+                     </div>
+                     <h4 (click)="onOpenFriendProfile(friendRequest.sender.userName)">{{friendRequest.sender.userNickname}}</h4>
+                     <div (click)="onResponseFriendRequestModal(friendRequest, 'accept')" class="accept-icon-container">
+                        <div class="accept icon"></div>
+                     </div>
+                     <div (click)="onResponseFriendRequestModal(friendRequest, 'reject')" class="reject-icon-container">
+                        <div class="reject icon"></div>
+                     </div>
+                  </div>
+               </div>
+               <hr class="horizontal-line">
+            </div> -->
+
+
+            <div *ngIf="notifications.length == 0">
+               <h2>NO NOTIFICATIONS YET</h2>
+            </div>
+            
+         </div>
 
     </div>
 
