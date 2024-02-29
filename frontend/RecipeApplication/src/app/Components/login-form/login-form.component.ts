@@ -18,6 +18,8 @@ export class LoginFormComponent implements OnInit {
     private router: Router
   ) {}
 
+  public badCredentials: boolean = false;
+
   ngOnInit(): void {
 
   }
@@ -26,14 +28,13 @@ export class LoginFormComponent implements OnInit {
     this.userService.login(loginForm.value).subscribe(
       (response: any) => {
         console.log(response);
-
         this.userService.setUsername(loginForm.value.username)
         this.authService.setAccessToken(response.token);
         localStorage.setItem('access_token', response.token);
         this.router.navigate([`/${this.userService.getUsername()}/main`]);
-        
       },
       (error: HttpErrorResponse) => {
+        this.badCredentials = true;
         console.error(error.error.error);
       }
     );

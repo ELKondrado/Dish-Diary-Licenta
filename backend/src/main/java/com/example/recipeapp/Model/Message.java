@@ -1,5 +1,6 @@
 package com.example.recipeapp.Model;
 
+import com.example.recipeapp.Model.User;
 import com.sun.istack.NotNull;
 import lombok.Data;
 

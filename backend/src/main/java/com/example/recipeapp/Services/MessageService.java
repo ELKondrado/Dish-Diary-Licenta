@@ -5,6 +5,10 @@ import com.example.recipeapp.Model.User;
 import com.example.recipeapp.Repositories.MessageRepository;
 import com.example.recipeapp.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +18,10 @@ import java.util.List;
 
 @Service
 public class MessageService {
-    private final UserRepository userRepository;
     private final MessageRepository messageRepository;
 
     @Autowired
-    public MessageService(UserRepository userRepository, MessageRepository messageRepository) {
-        this.userRepository = userRepository;
+    public MessageService(MessageRepository messageRepository) {
         this.messageRepository = messageRepository;
     }
 
@@ -36,8 +38,9 @@ public class MessageService {
        else throw new IllegalStateException("Message content was not found!");
     }
 
-    public List<Message> getMessages(User user) {
-        return messageRepository.findUserMessages(user.getUserId());
+    public Page<Message> getMessages(User user, Integer page, Integer pageSize) {
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("timestamp").descending());
+        return messageRepository.findUserMessagesPaginated(user.getUserId(), pageable);
     }
 
     public List<Message> getMessagesFromUser(User user1, User user2) {

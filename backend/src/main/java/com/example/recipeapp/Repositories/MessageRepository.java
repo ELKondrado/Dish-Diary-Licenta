@@ -1,6 +1,8 @@
 package com.example.recipeapp.Repositories;
 
 import com.example.recipeapp.Model.Message;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +16,11 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
            "FROM Message m " +
            "WHERE m.sender.id = :userId OR m.receiver.id = :userId")
     List<Message> findUserMessages(@Param("userId") Long userId);
+
+    @Query("SELECT m " +
+           "FROM Message m " +
+           "WHERE m.sender.userId = :userId OR m.receiver.userId = :userId ORDER BY m.timestamp DESC")
+    Page<Message> findUserMessagesPaginated(@Param("userId") Long userId, Pageable pageable);
 
     @Query("SELECT m " +
            "FROM Message m " +

@@ -1,15 +1,17 @@
-<div class="loginBox"> <img class="user" src="https://i.ibb.co/yVGxFPR/2.png" height="100px" width="100px">
-    <h3>Sign in here</h3>
-    <form #loginForm="ngForm" (ngSubmit)="onLoginUser(loginForm)">
-        <div class="inputBox"> 
-            <input id="uname" ngModel type="text" name="username" placeholder="Username" required="">
-            <input id="pass" ngModel type="password" name="password" placeholder="Password" required=""> 
-        </div> 
-        <button type="submit" name="">Login</button>
-    </form> 
-    <a href="#">Forget Password<br> </a>
-    <div class="text-center">
-        <a routerLink="../register" style="color: #59238F;">Sign-Up</a>
+<body>
+    <div class="loginBox">
+        <h2>Sign In</h2>
+        <label *ngIf="badCredentials" class="bad-credentials">Bad Credentials</label>
+        <form #loginForm="ngForm" (ngSubmit)="onLoginUser(loginForm)">
+            <div class="inputBox">
+                <input id="username" ngModel type="text" name="username" placeholder="Username" required>
+                <input id="password" ngModel type="password" name="password" placeholder="Password" required>
+            </div> 
+            <button [disabled]="loginForm.invalid" type="submit" name="">Sign In</button>
+            <a routerLink="../register" id="already-account">Don't have an account?<br></a>
+            <div class="text-center">
+                <a routerLink="../register" style="color: #2a62d4;">Create new account</a>
+            </div>
+        </form> 
     </div>
-    
-</div>
+</body>

@@ -98,47 +98,38 @@
 <body class="main-body">
    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 
-   <div>
       <div class="add-recipe-button-container">
          <button type="button" class="add-recipe-button" (click)="onOpenModal(undefined, 'add')">Add New Recipe</button>
       </div>
 
       <div class="container" id="main-container">
-         
          <div class="recipe-cards-container">
-
-            <div *ngFor="let recipe of recipes">
-               <div class="recipe-card">
-                  
-                  <div class="recipe-card-body recipe-card-title">
-                     <h6 (click)="onOpenRecipe(recipe)" style="cursor: pointer;">{{recipe?.name}}</h6>
+            <div *ngFor="let recipe of recipes" class="recipe-card">
+               <div class="recipe-card-title">
+                  <h6 (click)="onOpenRecipe(recipe)" style="cursor: pointer;">{{recipe?.name}}</h6>
+               </div>
+      
+               <ul (click)="onOpenRecipe(recipe)" class="list-group recipe-card-image-container" style="cursor: pointer;">
+                  <img *ngIf="recipe.image" [src]="recipe.image">
+               </ul>
+      
+               <div class="recipe-card-buttons">
+                  <div *ngIf="recipe.userOwner.userId == user?.userId" class="edit-area">
+                     <button (click)="onOpenModal(recipe, 'edit')" class="edit-button">
+                        <span class="text">Edit</span>
+                     </button>
                   </div>
-
-                  <div>
-                     <ul (click)="onOpenRecipe(recipe)" class="list-group recipe-card-image-container" style="cursor: pointer;">
-                        <img *ngIf="recipe.image" [src]="recipe.image">
-                     </ul>
+      
+                  <div class="delete-area">
+                     <button (click)="onOpenModal(recipe, 'delete')" class="delete-button">
+                        <span class="text">Delete</span>
+                     </button>
                   </div>
-
-                  <div class="recipe-card-buttons">
-
-                     <div *ngIf="recipe.userOwner.userId == user?.userId" class="edit-area">
-                        <button (click)="onOpenModal(recipe, 'edit')" class="edit-button"><span class="text">Edit</span></button>
-                     </div>
-
-                     <div class="delete-area">
-                        <button (click)="onOpenModal(recipe, 'delete')" class="delete-button"><span class="text">Delete</span></button>
-                     </div>
-
-                   </div>
-
                </div>
             </div>
-
          </div>
       </div>
-
-   </div>
+      
 
    <!-- Add Recipe Modal -->
    <div class="modal fade" id="addRecipeModal" tabindex="-1" role="dialog" aria-labelledby="addRecipeModalLabel" aria-hidden="true">

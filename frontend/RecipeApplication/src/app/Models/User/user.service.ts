@@ -39,7 +39,7 @@ export class UserService {
     return this.http.post<User>(`${this.apiServerUrl}/auth/login`, user);
   }
 
-  public register(user: User): Observable<User>{ 
+  public register(user: NgForm): Observable<User>{ 
     return this.http.post<User>(`${this.apiServerUrl}/auth/register`, user);
   }
 
