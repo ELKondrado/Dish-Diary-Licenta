@@ -27,9 +27,10 @@ export class MessageService {
     const headers = this.getHeaders();
     return this.http.post<Message>(`${this.apiServerUrl}/user/chat/sendMessage/${senderId}/${receiverId}`, requestedBody, { headers });
   }
-  public getMessages(userId: number): Observable<Message[]> {
+
+  public getMessages(userId: number, page: number , pageSize: number): Observable<Message[]> {
       const headers = this.getHeaders();
-      return this.http.get<Message[]>(`${this.apiServerUrl}/user/chat/getMessages/${userId}`, { headers });
+      return this.http.get<Message[]>(`${this.apiServerUrl}/user/chat/getMessages/?userId=${userId}&page=${page}&pageSize=${pageSize}`, { headers });
   }
 
   public getMessagesFromUser(user1Id: number, user2Id: number): Observable<Message[]> {

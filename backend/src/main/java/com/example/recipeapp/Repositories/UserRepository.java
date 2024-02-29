@@ -10,6 +10,11 @@ import javax.transaction.Transactional;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
+
+    boolean existsByUserNickname(String nickname);
+
+    boolean existsByUserEmail(String email);
+
     @Query("SELECT u " +
            "FROM User u " +
            "WHERE u.userName = ?1")

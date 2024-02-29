@@ -6,6 +6,7 @@ export interface User{
     userName: string;
     userPassword: string;
     userNickname: String;
+    userEmail: String;
     profileImage: string;
     userBio: string;
     totalRecipes: number;

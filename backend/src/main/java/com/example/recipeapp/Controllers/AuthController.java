@@ -63,27 +63,44 @@ public class AuthController {
     }
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>> register(@RequestBody RegisterDto registerDto) {
+        Map<String, String> response = new HashMap<>();
         if (userRepository.existsByUserName(registerDto.getUsername())) {
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("error", "Username is taken!");
-            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+            response.put("statusUsername", "USERNAME IS TAKEN");
         }
+        if(registerDto.getPassword().length() < 8) {
+            response.put("statusPassword", "PASSWORD IS NOT STRONG ENOUGH");
+        }
+        if(!registerDto.getPassword().equals(registerDto.getConfirmPassword())) {
+            response.put("statusConfirmPassword", "PASSWORD DOES NOT MATCH");
+        }
+        if (userRepository.existsByUserNickname(registerDto.getNickname())) {
+            response.put("statusNickname", "NICKNAME IS TAKEN");
+        }
+        if (userRepository.existsByUserEmail(registerDto.getEmail())) {
+            response.put("statusEmail", "EMAIL IS TAKEN");
+        }
+        if (!response.containsKey("statusUsername") &&
+                !response.containsKey("statusNickname") &&
+                !response.containsKey("statusEmail") &&
+                !response.containsKey("statusPassword")) {
 
-        Role userRole = roleRepository.findByName("USER")
-                .orElseThrow(() -> new RoleNotFoundException("Role 'USER' not found"));
+            Role userRole = roleRepository.findByName("USER")
+                    .orElseThrow(() -> new RoleNotFoundException("Role 'USER' not found"));
 
-        User user = new User();
-        user.setUserName(registerDto.getUsername());
-        user.setUserPassword(passwordEncoder.encode(registerDto.getPassword()));
-        user.setRoles(Collections.singletonList(userRole));
-        user.setTotalRecipes(0);
-        user.setTotalRecipesCreated(0);
-        user.setTotalRecipesAdded(0);
+            User user = new User();
+            user.setUserName(registerDto.getUsername());
+            user.setUserPassword(passwordEncoder.encode(registerDto.getPassword()));
+            user.setUserNickname(registerDto.getNickname());
+            user.setUserEmail(registerDto.getEmail());
+            user.setRoles(Collections.singletonList(userRole));
+            user.setTotalRecipes(0);
+            user.setTotalRecipesCreated(0);
+            user.setTotalRecipesAdded(0);
 
-        userRepository.save(user);
+            userRepository.save(user);
 
-        Map<String, String> successResponse = new HashMap<>();
-        successResponse.put("message", "User registered successfully!");
-        return new ResponseEntity<>(successResponse, HttpStatus.OK);
+            response.put("status", "SUCCESS");
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

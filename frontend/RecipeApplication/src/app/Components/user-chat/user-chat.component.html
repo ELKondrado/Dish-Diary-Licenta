@@ -101,24 +101,24 @@
                 <div (click)="changeCurrentFriendConversation(conversation, i)" *ngFor="let conversation of conversations; let i = index"
                 [class.active-conversation]="i === activeConversationIndex" class="conversation">
                     <div class="user-avatar">
-                        <img *ngIf="conversation.sender?.userId != user?.userId" src="{{conversation.sender.profileImage}}" alt="User Avatar">
-                        <img *ngIf="conversation.sender?.userId == user?.userId" src="{{conversation.receiver.profileImage}}" alt="User Avatar">
+                        <img *ngIf="conversation.lastMessage.sender.userId != user?.userId" src="{{conversation.lastMessage.sender.profileImage}}" alt="User Avatar">
+                        <img *ngIf="conversation.lastMessage.sender.userId == user?.userId" src="{{conversation.lastMessage.receiver.profileImage}}" alt="User Avatar">
                     </div>
 
                     <div class="user-nickname-last-message-container">
                         <div class="user-nickname">
-                            <span *ngIf="conversation.sender?.userId != user?.userId">{{conversation.sender.userNickname}}</span>
-                            <span *ngIf="conversation.sender?.userId == user?.userId">{{conversation.receiver.userNickname}}</span>
+                            <span *ngIf="conversation.user1?.userId != user?.userId">{{conversation.user1.userNickname}}</span>
+                            <span *ngIf="conversation.user1?.userId == user?.userId">{{conversation.user2.userNickname}}</span>
                         </div>
                         <div class="last-message">
-                            <div class="sent-message" *ngIf="conversation.sender.userId == user?.userId">
-                                <span class="content">You: {{conversation.content}}</span>
-                                <span class="date">∙{{currentTimeDifferenceFormattedDate(conversation.timestamp.toString())}}</span>
+                            <div class="sent-message" *ngIf="conversation.lastMessage.sender.userId == user?.userId">
+                                <span class="content">You: {{conversation.lastMessage.content}}</span>
+                                <span class="date">∙{{currentTimeDifferenceFormattedDate(conversation.lastMessage.timestamp.toString())}}</span>
                             </div>
-                            <div class="received-message" *ngIf="conversation.receiver.userId == user?.userId">
-                                <span class="content" *ngIf="conversation.wasSeen == true">{{conversation.content}}</span>
-                                <span class="content-not-seen" *ngIf="conversation.wasSeen == false">{{conversation.content}}</span>
-                                <span class="date">∙{{currentTimeDifferenceFormattedDate(conversation.timestamp.toString())}}</span>
+                            <div class="received-message" *ngIf="conversation.lastMessage.receiver.userId == user?.userId">
+                                <span class="content" *ngIf="conversation.lastMessage.wasSeen == true">{{conversation.lastMessage.content}}</span>
+                                <span class="content-not-seen" *ngIf="conversation.lastMessage.wasSeen == false">{{conversation.lastMessage.content}}</span>
+                                <span class="date">∙{{currentTimeDifferenceFormattedDate(conversation.lastMessage.timestamp.toString())}}</span>
                             </div>
                         </div>
                     </div>

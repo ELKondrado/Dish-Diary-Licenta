@@ -1,14 +1,35 @@
-<div class="loginBox"> <img class="user" src="https://i.ibb.co/yVGxFPR/2.png" height="100px" width="100px">
-    <h3>Register here</h3>
-    <form #registerForm="ngForm" (ngSubmit)="onRegisterUser(registerForm)">
-        <div class="inputBox"> 
-            <input id="uname" ngModel type="text" name="username" placeholder="Username" required>
-            <input id="pass" ngModel type="password" name="password" placeholder="Password" required> 
-        </div> 
-        <button [disabled]="registerForm.invalid" type="submit" name="">Register</button>
-        <a href="#">Already have an account?<br> </a>
-        <div class="text-center">
-            <a routerLink="../login" style="color: #59238F;">Sign-In</a>
-        </div>
-    </form> 
-</div>
+<body>
+    <div class="registerBox">
+        <h2>Create New Account</h2>
+        <label *ngIf="fillAllFields" class="fill-fields-constraint">Please fill all of the fields</label>
+        <form #registerForm="ngForm" (ngSubmit)="onRegisterUser(registerForm)">
+            <div class="inputBox">
+                <div class="input-container">
+                    <label *ngIf="usernameTaken">Username already taken!</label>
+                    <input id="username" ngModel type="text" name="username" placeholder="Username" maxlength="30" required>
+                </div>
+                <div class="input-container">
+                    <label *ngIf="passwordCondition">Password requires at least 8 characters!</label>
+                    <input id="password" ngModel type="password" name="password" placeholder="Password" maxlength="50" required>
+                </div>
+                <div class="input-container">
+                    <label *ngIf="passwordsNotMatch">Passwords do not match!</label>
+                    <input id="confirmPassword" ngModel type="password" name="confirmPassword" placeholder="Re-enter password" maxlength="50" required>
+                </div>
+                <div class="input-container">
+                    <label *ngIf="nickanameTaken">Nickname already taken!</label>
+                    <input id="nickname" ngModel type="text" name="nickname" placeholder="Nickname" maxlength="30" required>
+                </div>
+                <div class="input-container">
+                    <label *ngIf="emailTaken">Email already taken!</label>
+                    <input id="email" ngModel type="text" name="email" placeholder="Email" maxlength="50" required> 
+                </div>
+            </div> 
+            <button [disabled]="registerForm.invalid" type="submit" name="">Register</button>
+            <a routerLink="../login" id="already-account">Already have an account?<br></a>
+            <div class="text-center">
+                <a routerLink="../login" style="color: #2a62d4;">Sign-In</a>
+            </div>
+        </form> 
+    </div>
+</body>

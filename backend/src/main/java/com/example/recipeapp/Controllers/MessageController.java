@@ -1,11 +1,14 @@
 package com.example.recipeapp.Controllers;
 
+import com.example.recipeapp.Model.Conversation;
 import com.example.recipeapp.Model.Message;
 import com.example.recipeapp.Model.User;
 import com.example.recipeapp.Repositories.MessageRepository;
 import com.example.recipeapp.Repositories.UserRepository;
+import com.example.recipeapp.Services.ConversationService;
 import com.example.recipeapp.Services.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,13 +21,13 @@ import java.util.Optional;
 @RequestMapping(path = "/user/chat")
 public class MessageController {
     private final MessageService messageService;
-    private final MessageRepository messageRepository;
+    private final ConversationService conversationService;
     private final UserRepository userRepository;
 
     @Autowired
-    public MessageController(MessageService messageService, MessageRepository messageRepository, UserRepository userRepository) {
+    public MessageController(MessageService messageService, ConversationService conversationService, UserRepository userRepository) {
         this.messageService = messageService;
-        this.messageRepository = messageRepository;
+        this.conversationService = conversationService;
         this.userRepository = userRepository;
     }
 
@@ -39,6 +42,14 @@ public class MessageController {
             if (optionalReceiver.isPresent()) {
                 User receiver = optionalReceiver.get();
                 Message message = messageService.sendMessage(sender, receiver, content);
+
+                Conversation conversationBetweenUsers = conversationService.getConversationBetweenUsers(sender, receiver);
+                if(conversationBetweenUsers == null){
+                    conversationService.createConversation(sender, receiver, message);
+                }
+                else {
+                    conversationService.saveLastMessage(conversationBetweenUsers, message);
+                }
                 return new ResponseEntity<>(message, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -48,12 +59,15 @@ public class MessageController {
         }
     }
 
-    @GetMapping("/getMessages/{userId}")
-    public ResponseEntity<List<Message>> getMessages(@PathVariable("userId") long userId){
+    @GetMapping("/getMessages")
+    public ResponseEntity<List<Message>> getMessages(@RequestParam("userId") Long userId,
+                                                     @RequestParam("page") Integer page,
+                                                     @RequestParam("pageSize") Integer pageSize){
         Optional<User> optionalUser = userRepository.findUserByUserId(userId);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            List<Message> messages = messageService.getMessages(user);
+            Page<Message> messagePage = messageService.getMessages(user, page, pageSize);
+            List<Message> messages = messagePage.getContent();
             return new ResponseEntity<>(messages, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

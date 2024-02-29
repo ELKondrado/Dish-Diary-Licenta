@@ -1,35 +1,40 @@
 body {
+	height: 100vh;
 	margin: 0;
 	padding: 0;
-	height: 100vh;
-	font-family: -serif;
+	display: grid;
+	place-items: center;
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: center;
 	overflow: hidden;
 }
   
-@media screen and (max-width: 600px) {
-	body {
-		background-size: cover;
-	}
+@media screen and (max-width: 786px) {
+    .registerBox {
+        width: 90%; /* Adjust the width for smaller screens */
+        max-width: none; /* Remove max-width constraint */
+    }
+
+    .inputBox input {
+        font-size: 14px; /* Decrease font size for smaller screens */
+        height: 30px; /* Adjust input height for smaller screens */
+    }
+
+    .registerBox button {
+        height: 30px; /* Adjust button height for smaller screens */
+        font-size: 14px; /* Decrease font size for smaller screens */
+    }
 }
 
-#particles-js {
+.registerBox {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
 	height: 100%;
-}
-
-.loginBox {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	width: 80%; 
-	max-width: 350px; 
-	min-height: 200px;
 	background: #000000;
-	border-radius: 10px;
-	padding: 40px;
 	box-sizing: border-box;
 }
 
@@ -39,56 +44,86 @@ body {
 	margin-bottom: 20px;
 }
 
-h3 {
-	margin: 0;
-	padding: 0 0 20px;
-	color: #59238F;
+h2 {
+	margin-bottom: 0.5rem;
+	color: #2a62d4;
 	text-align: center;
+	font-weight: 700;
+	margin-bottom: 1rem;
 }
 
 .inputBox {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-top: 3rem;
+}
+
+.input-container {
+	width: 100%;
 	position: relative;
 }
 
+.inputBox label {
+	position: absolute;
+	top: 20%;
+	right: 105%;
+	width: 18rem;
+	text-align: end;
+	font-size: 14px;
+	font-weight: 600;
+	margin: 0;
+	color: red;
+}
+
 .inputBox input {
-	width: 100%;
 	border: none;
-	border-bottom: 2px solid #262626;
+	border: 2px solid #262626;
 	outline: none;
-	height: 40px;
+	height: 2.5rem;
+	width: 20rem;
 	color: #fff;
 	background: transparent;
 	font-size: 16px;
 	box-sizing: border-box;
+	margin-bottom: 0.5rem;
+	padding: 0 0.5rem;
+	font-weight: 600;
 }
 
 .inputBox input:hover {
-	color: #42F3FA;
-	border: 1px solid #42F3FA;
-	box-shadow: 0 0 5px rgba(0, 255, 0, 0.3), 0 0 10px rgba(0, 255, 0, 0.2),
-				0 0 15px rgba(0, 255, 0, 0.1), 0 2px 0 black;
+	border: 2px solid #2a62d4;
 }
 
 .inputBox input:focus {
-	border-bottom: 2px solid #42F3FA;
+	border-bottom: 2px solid #2a62d4;
 }
 
-.loginBox button {
-	width: 100%;
+.registerBox button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 20rem;
+	height: 4rem;
 	margin-top: 1rem;
-	margin-bottom: 1rem;
+	margin-bottom: 0.5rem;
 	border: none;
 	outline: none;
-	height: 40px;
+	height: 35px;
 	font-size: 16px;
-	background: #59238F;
+	background: #2a62d4;
 	color: #fff;
-	border-radius: 20px;
+	border-radius: 8px;
 	cursor: pointer;
+	font-weight: 700;
 }
 
-.loginBox a {
-	color: #262626;
+.registerBox button:hover{
+	border: 2px solid white;
+}
+
+.registerBox a {
+	color: #aba4a4;
 	font-size: 14px;
 	font-weight: bold;
 	text-decoration: none;
@@ -96,10 +131,6 @@ h3 {
 	display: block;
 }
 
-a:hover {
-	color: #00ffff;
-}
-
-p {
-	color: #0000ff;
+#already-account:hover {
+	color: white;
 }

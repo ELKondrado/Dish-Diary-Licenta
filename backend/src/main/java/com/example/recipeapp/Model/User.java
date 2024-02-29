@@ -24,24 +24,35 @@ public class User {
     )
     @Column(name="id")
     private long userId;
+
     @Column(name="username")
     @NotNull
     private String userName;
+
     @Column(name="password")
     private String userPassword;
+
     @Column(name="nickname")
     private String userNickname;
+
+    @Column(name="email")
+    private String userEmail;
+
     @Column(name = "profile_image")
     @Lob
     private byte[] profileImage;
+
     @Column(name = "bio", length = 256)
     private String userBio;
+
     @Nullable
     @Column(name = "total_recipes")
     private long totalRecipes;
+
     @Nullable
     @Column(name = "recipes_created")
     private long totalRecipesCreated;
+
     @Nullable
     @Column(name = "recipes_added")
     private long totalRecipesAdded;

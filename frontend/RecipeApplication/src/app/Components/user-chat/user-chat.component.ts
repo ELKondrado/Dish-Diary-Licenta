@@ -11,6 +11,8 @@ import { Message } from '../../Models/Message/message';
 import { DatePipe } from '@angular/common';
 import { interval } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { Conversation } from '../../Models/Conversation/conversation';
+import { ConversationService } from '../../Models/Conversation/conversation.service';
 
 @Component({
   selector: 'app-user-chat',
@@ -27,11 +29,12 @@ export class UserChatComponent {
     private userService: UserService,
     private notificationService: NotificationService,
     private messageService: MessageService,
+    private conversationService: ConversationService,
     private router: Router
   ) {}
   public user: User | null = null;
   public username: string | undefined;
-  public conversations: Message[] = [];
+  public conversations: Conversation[] = [];
   public notifications: Notif[] = [];
   public unseenConversations: number = 0;
   public friendRequestNotification: Notif | undefined;
@@ -53,12 +56,11 @@ export class UserChatComponent {
       .pipe(take(10)) 
       .subscribe(() => {
         this.conversations.forEach(conversation => {
-          conversation.timestamp = this.currentTimeDifferenceFormattedDate(conversation.timestamp.toString());
+          conversation.lastMessage.timestamp = this.currentTimeDifferenceFormattedDate(conversation.lastMessage.timestamp.toString());
         });
       });
   }
   
-
   private fetchData(): void{
     this.authService.initializeApp().subscribe(
       () => {
@@ -66,7 +68,7 @@ export class UserChatComponent {
       this.username = this.userService.getUsername();
       this.getProfileImage();
       this.getNotifications();
-      this.getMessages();
+      this.getConversations();
       this.fetchFriendCurrentConversation();
       this.getUnseenConversations();
     });
@@ -115,10 +117,10 @@ export class UserChatComponent {
     return currentMessageDate !== previousMessageDate;
   }
 
-  public changeCurrentFriendConversation(conversation: Message, index: number): void {
+  public changeCurrentFriendConversation(conversation: Conversation, index: number): void {
     if(this.user){
-      if(conversation.receiver.userId != this.user?.userId){
-        this.friendCurrentConversation = conversation.receiver;
+      if(conversation.user1.userId != this.user?.userId){
+        this.friendCurrentConversation = conversation.user1;
         this.activeConversationIndex = index;
         this.getMessagesFromUser();
         this.messageService.setWasSeenConversation(this.user?.userId, this.friendCurrentConversation.userId).subscribe(
@@ -130,11 +132,11 @@ export class UserChatComponent {
             console.error(error);
           }
         )
-        this.getMessages();
+        this.getConversations();
         this.getUnseenConversations()
       }
       else{
-        this.friendCurrentConversation = conversation.sender;
+        this.friendCurrentConversation = conversation.user2;
         this.activeConversationIndex = index;
         this.getMessagesFromUser();
         this.messageService.setWasSeenConversation(this.user?.userId, this.friendCurrentConversation.userId).subscribe(
@@ -147,53 +149,57 @@ export class UserChatComponent {
             console.error(error)
           }
         );
-        this.getMessages();
+        this.getConversations();
         this.getUnseenConversations()
       }
     }
    
   }
 
-  public getMessages(): void {
+  public getConversations(): void {
     if (this.user) {
-        this.messageService.getMessages(this.user.userId).subscribe(
-            (conversations: Message[]) => {
+          this.conversationService.getConversations(this.user.userId).subscribe(
+            (conversations: Conversation[]) => {
+              console.log(conversations);
               this.conversations = conversations;
               this.conversations.sort((a, b) => {
-                const timestampA = new Date(a.timestamp);
-                const timestampB = new Date(b.timestamp);
+                const timestampA = new Date(a.lastMessage.timestamp);
+                const timestampB = new Date(b.lastMessage.timestamp);
             
                 return timestampB.getTime() - timestampA.getTime();
               });
-              this.conversations = this.removeDuplicateMessages(this.conversations)
-              this.fetchChatUserProfiles();
+              this.fetchConversationUserProfiles();
             },
             (error: HttpErrorResponse) => {
                 console.error(error);
             }
         );
-    }
+      }
   }
 
-  private removeDuplicateMessages(messages: Message[]) {
-      const uniqueCombinations = new Set<string>();
-      const uniqueMessages: Message[] = [];
+  public getMessages(): void {
+    // if (this.user) {
+    //   const page = 1;
+    //   const pageSize = 100;
 
-      messages.forEach(message => {
-
-        const combination1 = `${message.sender.userId}-${message.receiver.userId}`;
-        const combination2 = `${message.receiver.userId}-${message.sender.userId}`;
-
-        if (!uniqueCombinations.has(combination1) && !uniqueCombinations.has(combination2)) {
-            uniqueCombinations.add(combination1);
-            uniqueCombinations.add(combination2);
-            uniqueMessages.push(message);
-        }
-      });
-
-      return uniqueMessages;
+    //   this.messageService.getMessages(this.user.userId, page, pageSize).subscribe(
+    //       (conversations: Message[]) => {
+    //         this.conversations = conversations;
+    //         this.conversations.sort((a, b) => {
+    //           const timestampA = new Date(a.timestamp);
+    //           const timestampB = new Date(b.timestamp);
+          
+    //           return timestampB.getTime() - timestampA.getTime();
+    //         });
+    //         this.conversations = this.removeDuplicateMessages(this.conversations)
+    //         this.fetchChatUserProfiles();
+    //       },
+    //       (error: HttpErrorResponse) => {
+    //           console.error(error);
+    //       }
+    //   );
+    // }
   }
-
 
   public getMessagesFromUser(): void {
     if(this.user && this.friendCurrentConversation){
@@ -226,11 +232,11 @@ export class UserChatComponent {
   }
 
   public sendMessage(): void {
-    if(this.user && this.friendCurrentConversation && this.messageToSend.trim().length != 0){
+    if(this.user && this.friendCurrentConversation && this.messageToSend.trim().length != 0) {
       this.messageService.sendMessage(this.user?.userId, this.friendCurrentConversation?.userId, this.messageToSend).subscribe(
         (response: any) => {
           console.log(response);
-          this.getMessages();
+          this.getConversations();
           this.getMessagesFromUser();
           this.messageToSend = "";
           this.resetTextareaHeight();
@@ -243,22 +249,22 @@ export class UserChatComponent {
   }
 
   public searchConversation(key: string): void {
-    const resultConversations: Message[] = [];
+    const resultConversations: Conversation[] = [];
     for (const conversation of this.conversations) {
-      if(conversation.receiver.userId != this.user?.userId) {
-        if(conversation.receiver.userNickname.toLowerCase().indexOf(key.toLowerCase()) !== -1) {
-        resultConversations.push(conversation);
+      if(conversation.user1.userId != this.user?.userId) {
+        if(conversation.user1.userNickname.toLowerCase().indexOf(key.toLowerCase()) !== -1) {
+          resultConversations.push(conversation);
         }
       }
-      else if(conversation.sender.userId != this.user?.userId) {
-        if(conversation.sender.userNickname.toLowerCase().indexOf(key.toLowerCase()) !== -1) {
+      else if(conversation.user2.userId != this.user?.userId) {
+        if(conversation.user2.userNickname.toLowerCase().indexOf(key.toLowerCase()) !== -1) {
         resultConversations.push(conversation);
         }
       }
     } 
     this.conversations = resultConversations;
     if (resultConversations.length === 0 || !key){
-      this.getMessages();
+      this.getConversations();
     }
   }
 
@@ -279,11 +285,26 @@ export class UserChatComponent {
     textarea.style.height = '5.7vh'; 
   }
 
-  public fetchChatUserProfiles() {
+  public fetchConversationUserProfiles() {
     if(this.conversations){
       this.conversations.forEach(conversation => {
-        conversation.sender.profileImage = 'data:image/jpeg;base64,' + conversation.sender?.profileImage;
-        conversation.receiver.profileImage = 'data:image/jpeg;base64,' + conversation.receiver?.profileImage;
+        conversation.lastMessage.sender.profileImage = 'data:image/jpeg;base64,' + conversation.lastMessage.sender.profileImage;
+        conversation.lastMessage.receiver.profileImage = 'data:image/jpeg;base64,' + conversation.lastMessage.receiver.profileImage;
+
+        if(conversation.user1.userId == conversation.lastMessage.sender.userId) {
+          conversation.user1.profileImage = conversation.lastMessage.sender.profileImage;
+        }
+        else if(conversation.user1.userId == conversation.lastMessage.receiver.userId) {
+          conversation.user1.profileImage = conversation.lastMessage.receiver.profileImage;
+        }
+
+        if(conversation.user2.userId == conversation.lastMessage.sender.userId) {
+          conversation.user2.profileImage = conversation.lastMessage.sender.profileImage;
+        }
+        else if(conversation.user2.userId == conversation.lastMessage.receiver.userId) {
+          conversation.user2.profileImage = conversation.lastMessage.receiver.profileImage;
+        }
+
       });
     }
   }
