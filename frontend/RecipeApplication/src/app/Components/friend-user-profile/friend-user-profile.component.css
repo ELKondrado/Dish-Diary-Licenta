@@ -246,6 +246,24 @@ body {
     color: #666;
 }
 
+.chat-button-container {
+    display: grid;
+    place-items: center;
+}
+
+.chat-button {
+    color: white;
+    background: #2a62d4;
+    width: 12rem;
+    height: 2.25rem;
+    border: 2px solid grey;
+    border-radius: 6px;
+}
+
+.chat-button:hover {
+    border: 2px solid white;
+}
+
 .details {
     flex: 1;
     color: white;

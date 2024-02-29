@@ -6,4 +6,5 @@ export interface Message {
     receiver: User;
     content: String;
     timestamp: Date | string;
+    wasSeen: boolean;
 }

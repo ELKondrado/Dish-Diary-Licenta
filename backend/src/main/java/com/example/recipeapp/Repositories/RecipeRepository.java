@@ -11,12 +11,16 @@ import java.util.Optional;
 
 @Repository
 public interface RecipeRepository extends JpaRepository<Recipe, Long> {
-    @Query("SELECT r FROM Recipe r WHERE r.name = ?1")
+    @Query("SELECT r " +
+            "FROM Recipe r " +
+            "WHERE r.name = ?1")
     Optional<Recipe> findRecipeByName(String name);
 
     Optional<Recipe> findRecipeById(Long id);
 
-    @Query("SELECT r FROM Recipe r WHERE r.userOwner.id = :userId")
+    @Query("SELECT r " +
+            "FROM Recipe r " +
+            "WHERE r.userOwner.id = :userId")
     List<Recipe> findRecipesByOwner(@Param("userId") Long userId);
 
     List<Recipe> findByUsers_UserId(Long userId);

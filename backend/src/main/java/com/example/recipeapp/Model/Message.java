@@ -36,4 +36,7 @@ public class Message {
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date timestamp;
+
+    @Column(name = "was_seen")
+    private boolean wasSeen;
 }

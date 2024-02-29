@@ -9,6 +9,7 @@ import { RecipeService } from '../../Models/Recipe/recipe.service';
 import { NotificationService } from '../../Models/Notification/notification.service';
 import { Notif } from '../../Models/Notification/notification';
 import { NgForm } from '@angular/forms';
+import { MessageService } from '../../Models/Message/message.service';
 
 @Component({
   selector: 'app-user-profile',
@@ -21,12 +22,14 @@ export class UserProfileComponent implements OnInit{
     private userService: UserService,
     private recipeService: RecipeService,
     private notificationService: NotificationService,
+    private messageService: MessageService,
     private router: Router
   ) {}
 
   public user: User | null = null;
   public username: string | undefined;
   public notifications: Notif[] | undefined;
+  public unseenConversations: number = 0;
   public avatarUrl: String | undefined;
   public selectedFile: File | undefined;
   public repositoryRecipes: Recipe[] | undefined;
@@ -49,6 +52,7 @@ export class UserProfileComponent implements OnInit{
       this.getCreatedRecipes()
       this.getProfileImage();
       this.getNotifications();
+      this.getUnseenConversations();
     });
   }
 
@@ -105,6 +109,19 @@ export class UserProfileComponent implements OnInit{
         },
         (error) => {
           console.error("ERROR getting the notifications: " + error);
+        }
+      );
+    }
+  }
+
+  public getUnseenConversations(): void {
+    if(this.user){
+      this.messageService.getUnseenConversations(this.user.userId).subscribe(
+        (unseenConversations: number) => {
+          this.unseenConversations = unseenConversations;
+        },
+        (error) => {
+          console.error(error);
         }
       );
     }

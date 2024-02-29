@@ -53,7 +53,7 @@
                     <div class="icon-container">
                         <div class="icon-button">
                             <i class="material-icons">chat</i>
-                            <span *ngIf="notifications?.length !=0 " class="icon-button__badge notifications-number">{{notifications.length}}</span>
+                            <span *ngIf="unseenConversations != 0 " class="icon-button__badge notifications-number">{{unseenConversations}}</span>
                         </div>               
                     </div>
                     
@@ -105,9 +105,22 @@
                         <img *ngIf="conversation.sender?.userId == user?.userId" src="{{conversation.receiver.profileImage}}" alt="User Avatar">
                     </div>
 
-                    <div class="user-nickname">
-                        <span *ngIf="conversation.sender?.userId != user?.userId">{{conversation.sender.userNickname}}</span>
-                        <span *ngIf="conversation.sender?.userId == user?.userId">{{conversation.receiver.userNickname}}</span>
+                    <div class="user-nickname-last-message-container">
+                        <div class="user-nickname">
+                            <span *ngIf="conversation.sender?.userId != user?.userId">{{conversation.sender.userNickname}}</span>
+                            <span *ngIf="conversation.sender?.userId == user?.userId">{{conversation.receiver.userNickname}}</span>
+                        </div>
+                        <div class="last-message">
+                            <div class="sent-message" *ngIf="conversation.sender.userId == user?.userId">
+                                <span class="content">You: {{conversation.content}}</span>
+                                <span class="date">∙{{currentTimeDifferenceFormattedDate(conversation.timestamp.toString())}}</span>
+                            </div>
+                            <div class="received-message" *ngIf="conversation.receiver.userId == user?.userId">
+                                <span class="content" *ngIf="conversation.wasSeen == true">{{conversation.content}}</span>
+                                <span class="content-not-seen" *ngIf="conversation.wasSeen == false">{{conversation.content}}</span>
+                                <span class="date">∙{{currentTimeDifferenceFormattedDate(conversation.timestamp.toString())}}</span>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
@@ -136,14 +149,14 @@
                         <div *ngIf="shouldShowDate(message, i)" class="date">
                                 <span>{{formattedDateDDMMYYYY(message.timestamp.toString())}}</span>
                             </div>
-                            <div class="message-from-user" *ngIf="message.receiver.userId == user?.userId">
-                                <p (mouseover)="showDateBubbles[i] = true" (mouseleave)="showDateBubbles[i] = false">{{message.content}}</p>
+                            <div class="message-from-user" *ngIf="message.receiver.userId == user?.userId"  (mouseover)="showDateBubbles[i] = true" (mouseleave)="showDateBubbles[i] = false">
+                                <p>{{message.content}}</p>
                                 <div class="date-bubble" *ngIf="showDateBubbles[i]">
                                     <span>{{formattedDateHour(message.timestamp.toString())}}</span>
                                 </div>
                             </div>
-                            <div class="message-to-user" *ngIf="message.receiver.userId != user?.userId">
-                                <p (mouseover)="showDateBubbles[i] = true" (mouseleave)="showDateBubbles[i] = false">{{message.content}}</p>
+                            <div class="message-to-user" *ngIf="message.receiver.userId != user?.userId" (mouseover)="showDateBubbles[i] = true" (mouseleave)="showDateBubbles[i] = false">
+                                <p>{{message.content}}</p>
                                 <div class="date-bubble" *ngIf="showDateBubbles[i]">
                                     <span>{{formattedDateHour(message.timestamp.toString())}}</span>
                                 </div>
@@ -156,7 +169,7 @@
                     <div>
                         <textarea [(ngModel)]="messageToSend" (keypress)="auto_grow($event)" (keyup)="auto_grow($event)" id="chat-box" placeholder="Type your message..." maxlength="16383"></textarea>
                     </div>
-                    <div (click)="sendMessage(); auto_grow($event)" class="send-button">
+                    <div (click)="sendMessage()" class="send-button">
                         <i class="material-icons send-icon">send</i>
                     </div>                     
                 </div>

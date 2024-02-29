@@ -8,6 +8,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { User } from '../../Models/User/user';
 import { NotificationService } from '../../Models/Notification/notification.service';
 import { Notif } from '../../Models/Notification/notification';
+import { MessageService } from '../../Models/Message/message.service';
 
 @Component({
   selector: 'app-discover-recipes',
@@ -20,12 +21,14 @@ export class DiscoverRecipesComponent implements OnInit{
     private authService: AuthService, 
     private userService: UserService,
     private notificationService: NotificationService,
+    private messageService: MessageService,
     private router: Router
   ) {}
 
   public user: User | null = null;
   public recipes: Recipe[] = [];
   public notifications: Notif[] | undefined;
+  public unseenConversations: number = 0;
   public repositoryRecipes: Recipe[] = [];
   public username: string | undefined;
   public addedRecipe: Recipe | undefined;
@@ -45,6 +48,7 @@ export class DiscoverRecipesComponent implements OnInit{
       this.getRepositoryRecipes();
       this.getProfileImage();
       this.getNotifications();
+      this.getUnseenConversations();
     });
   }
 
@@ -93,6 +97,19 @@ export class DiscoverRecipesComponent implements OnInit{
         },
         (error) => {
           console.error("ERROR getting the notifications: " + error);
+        }
+      );
+    }
+  }
+
+  public getUnseenConversations(): void {
+    if(this.user){
+      this.messageService.getUnseenConversations(this.user.userId).subscribe(
+        (unseenConversations: number) => {
+          this.unseenConversations = unseenConversations;
+        },
+        (error: HttpErrorResponse) => {
+          console.error(error);
         }
       );
     }

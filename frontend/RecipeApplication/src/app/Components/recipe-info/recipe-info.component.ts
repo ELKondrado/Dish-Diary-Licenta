@@ -11,6 +11,7 @@ import { ReviewService } from '../../Models/Review/review.service';
 import { NotificationService } from '../../Models/Notification/notification.service';
 import { Notif } from '../../Models/Notification/notification';
 import { DatePipe } from '@angular/common';
+import { MessageService } from '../../Models/Message/message.service';
 
 @Component({
   selector: 'app-recipe-info',
@@ -26,12 +27,14 @@ export class RecipeInfoComponent implements OnInit {
     private recipeService: RecipeService,
     private reviewService: ReviewService,
     private notificationService: NotificationService,
+    private messageService: MessageService,
     private router: Router
   ) {}
 
   public user: User | null = null;
   public username: string | undefined;
   public notifications: Notif[] | undefined;
+  public unseenConversations: number = 0;
   public userRecipes: Recipe[] | undefined;
   public recipe: Recipe | undefined;
   public isRecipeInUserRecipes: boolean = false;
@@ -65,6 +68,7 @@ export class RecipeInfoComponent implements OnInit {
       this.getProfileImage();
       this.getUserRecipes();
       this.getNotifications();
+      this.getUnseenConversations();
     });
   }
 
@@ -152,6 +156,19 @@ export class RecipeInfoComponent implements OnInit {
         },
         (error) => {
           console.error("ERROR getting the notifications: " + error);
+        }
+      );
+    }
+  }
+
+  public getUnseenConversations(): void {
+    if(this.user){
+      this.messageService.getUnseenConversations(this.user.userId).subscribe(
+        (unseenConversations: number) => {
+          this.unseenConversations = unseenConversations;
+        },
+        (error: HttpErrorResponse) => {
+          console.error(error);
         }
       );
     }

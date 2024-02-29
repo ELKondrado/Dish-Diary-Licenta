@@ -277,6 +277,7 @@ body {
     width: 100%;
     height: 87%;
     overflow-y: scroll;
+    overflow-x: hidden;
     scrollbar-width: thin;
     scrollbar-color: white transparent;
 }
@@ -301,7 +302,6 @@ body {
     padding-left: 0.5rem;
     border-bottom: 0.5px solid grey;
     width: 100%;
-    max-width: 30vw;
     height: 12vh;
     max-height: 12vh;
 }
@@ -323,8 +323,8 @@ body {
     max-height: 60px;
     border-radius: 50%;
     overflow: hidden;
-    margin-right: 1rem;
-    margin-left: 0.5rem;
+    margin-right: 0.7rem;
+    margin-left: 0.25rem;
     border: 0.1rem solid white;
 }
 
@@ -340,7 +340,6 @@ body {
     display: flex;
     flex-grow: 1; 
     align-items: center;
-    padding: 0 1rem;
     min-width: 0;
     max-width: calc(100% - 6rem);
 }
@@ -352,6 +351,53 @@ body {
     text-overflow: ellipsis;
     overflow: hidden; 
     white-space: nowrap; 
+}
+
+.chat-user-history .conversation .last-message {
+    flex-grow: 1;
+    width: 25vw;
+    display: flex;
+    flex-grow: 1; 
+    align-items: center;
+    padding-right: 1rem;
+    min-width: 0;
+}
+
+.chat-user-history .conversation .last-message .content {
+    font-size: 14px;
+    font-weight: 600;
+    color: grey;
+    max-width: 83%;
+    margin-right: 0.25rem;
+    text-overflow: ellipsis;
+    overflow: hidden; 
+    white-space: nowrap; 
+}
+
+.chat-user-history .conversation .last-message .content-not-seen {
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+    max-width: 83%;
+    margin-right: 0.25rem;
+    text-overflow: ellipsis;
+    overflow: hidden; 
+    white-space: nowrap; 
+}
+
+.chat-user-history .conversation .last-message .date {
+    font-size: 14px;
+    font-weight: 600;
+    color: grey;
+    text-overflow: ellipsis;
+    overflow: hidden; 
+    white-space: nowrap; 
+}
+
+.chat-user-history .conversation .last-message .sent-message {
+    display: flex;
+    flex-direction: row;
+    overflow: auto;
 }
 
 .chat {
@@ -410,6 +456,7 @@ body {
     padding: 1rem 0;
     border-bottom: 0.5px solid white;
     overflow-y: scroll;
+    overflow-x: hidden;
     scrollbar-width: thin;
     scrollbar-color: grey transparent;
 }
@@ -440,9 +487,9 @@ body {
     border-radius: 8px;
     box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, .3), 0 0.0625rem 0.125rem rgba(0, 0, 0, .2);
     padding: 0.5rem 0.75rem;
-    margin: 0.1rem 2rem;
+    margin: 0.25rem 2rem;
     width: fit-content;
-    max-width: 35rem; /* Limiting the width of the message */
+    max-width: 40rem; /* Limiting the width of the message */
     display: flex;
     flex-direction: column;
     word-wrap: break-word; /* Enable word wrapping for long messages */
@@ -453,8 +500,8 @@ body {
     justify-content: center;
     align-items: center;
     color: white;
-    margin-top: 0.25rem;
-    margin-bottom: 0.25rem;
+    margin-top: 0.4rem;
+    margin-bottom: 0.4rem;
 }
 
 .chat .chat-messages-container .message-from-user .date-bubble {
@@ -479,7 +526,7 @@ body {
     align-items: center;
     justify-content: center;
     background-color: grey;
-    padding: 0.5rem 0.75rem;
+    padding: 0.4rem 0.5rem;
     border-radius: 8px;
     z-index: 1;
     right: calc(100% + 4.25rem); /* Position the bubble to the left of the message */
@@ -508,14 +555,14 @@ body {
     margin-bottom: 0px;
     margin-left: auto;
     padding: 0px;
-    font-size: 11px;
-    font-weight: 700;
+    font-size: 13px;
+    font-weight: 600;
     color: rgb(0, 0, 0);
     white-space: pre-wrap;
 }
 
 .chat .chat-messages-container .message-from-user {
-    background-color: grey;
+    background-color: #303030;
 }
 
 .messages-input {
@@ -569,4 +616,8 @@ body {
     color: white;
     margin-right: 3vw;
     z-index: 1;
+}
+
+.chat .messages-input .send-button .send-icon:hover {
+    background-color: #1a4fba;
 }

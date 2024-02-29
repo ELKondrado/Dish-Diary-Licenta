@@ -1,14 +1,10 @@
 package com.example.recipeapp.Controllers;
 
-import com.example.recipeapp.Model.Friendship;
 import com.example.recipeapp.Model.Message;
-import com.example.recipeapp.Model.Review;
 import com.example.recipeapp.Model.User;
 import com.example.recipeapp.Repositories.MessageRepository;
-import com.example.recipeapp.Repositories.NotificationRepository;
 import com.example.recipeapp.Repositories.UserRepository;
 import com.example.recipeapp.Services.MessageService;
-import com.example.recipeapp.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,8 +30,8 @@ public class MessageController {
 
     @PostMapping("/sendMessage/{senderId}/{receiverId}")
     public ResponseEntity<Message> sendMessage(@RequestBody String content,
-                                               @PathVariable("senderId") Long senderId,
-                                               @PathVariable("receiverId") Long receiverId){
+                                               @PathVariable("senderId") long senderId,
+                                               @PathVariable("receiverId") long receiverId){
         Optional<User> optionalSender = userRepository.findUserByUserId(senderId);
         if (optionalSender.isPresent()) {
             User sender = optionalSender.get();
@@ -79,6 +75,37 @@ public class MessageController {
             else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/setWasSeenConversation/{senderId}/{receiverId}")
+    public ResponseEntity<Message> setWasSeenConversation(@PathVariable("senderId") long senderId,
+                                                          @PathVariable("receiverId") long receiverId){
+        Optional<User> optionalSender = userRepository.findUserByUserId(senderId);
+        if (optionalSender.isPresent()) {
+            User sender = optionalSender.get();
+            Optional<User> optionalReceiver = userRepository.findUserByUserId(receiverId);
+            if (optionalReceiver.isPresent()) {
+                User receiver = optionalReceiver.get();
+                messageService.setWasSeenConversation(sender, receiver);
+                return new ResponseEntity<>(HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/getUnseenMessages/{userId}")
+    public ResponseEntity<Integer> getUnseenMessages(@PathVariable("userId") long userId){
+        Optional<User> optionalUser = userRepository.findUserByUserId(userId);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            Integer unseenConversations = messageService.getUnseenMessages(user);
+            return new ResponseEntity<>(unseenConversations, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

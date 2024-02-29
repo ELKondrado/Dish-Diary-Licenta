@@ -53,7 +53,7 @@
                <div class="icon-container">
                   <div class="icon-button">
                      <i class="material-icons">chat</i>
-                     <span *ngIf="notifications?.length !=0 " class="icon-button__badge notifications-number">{{notifications?.length}}</span>
+                     <span *ngIf="unseenConversations !=0 " class="icon-button__badge notifications-number">{{unseenConversations}}</span>
                   </div>               
                </div>
                
@@ -147,18 +147,18 @@
          <!-- Review Form -->
          <div *ngIf="showReviewForm" class="review-form">
             <div class="review-rating-input">
-               <label for="rating">Select the Rating</label>
-               <select id="rating" class="form-control" [(ngModel)]="reviewModel.userStarRating">
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                  <option value="7">7</option>
-                  <option value="8">8</option>
-                  <option value="9">9</option>
-                  <option value="10">10</option>
+               <label>Select the Rating</label>
+               <select id="rating" class="form-control" style="color: white;" [(ngModel)]="reviewModel.userStarRating">
+                  <option value="1" style="color: white;">1 - Appaling</option>
+                  <option value="2" style="color: white;">2 - Horrible</option>
+                  <option value="3" style="color: white;">3 - Very Bad</option>
+                  <option value="4" style="color: white;">4 - Bad</option>
+                  <option value="5" style="color: white;">5 - Average</option>
+                  <option value="6" style="color: white;">6 - Fine</option>
+                  <option value="7" style="color: white;">7 - Good</option>
+                  <option value="8" style="color: white;">8 - Very Good</option>
+                  <option value="9" style="color: white;">9 - Great</option>
+                  <option value="10" style="color: white;">10 - Perfect</option>
                </select>
             </div>
 
@@ -169,14 +169,15 @@
                </div>
             </div>
             
-            <div class="add-review-button">
-               <button type="button" class="btn btn-primary" (click)="addReview()" [disabled]="reviewModel.userReviewText.trim().length == 0">Add Review</button>
+            <div class="add-cancel-review-button-container">
+               <button type="button" class="cancel-review-button" (click)="toggleReviewForm()">Cancel</button>
+               <button type="button" class="add-review-button" (click)="addReview()" [disabled]="reviewModel.userReviewText.trim().length == 0">Add Review</button>
             </div>
          </div>
 
          <h2 *ngIf="reviews?.length == 0">No Reviews Yet!</h2>
 
-         <button *ngIf="!showReviewForm" type="button" class="btn btn-primary create-review-button" (click)="toggleReviewForm()">Create New Review</button>
+         <button *ngIf="!showReviewForm" type="button" class="create-review-button" (click)="toggleReviewForm()">Create New Review</button>
          <div *ngFor="let review of reviews" class="review">
             <div class="user-avatar">
                <img src="{{review.userProfileImage}}" alt="User Avatar">

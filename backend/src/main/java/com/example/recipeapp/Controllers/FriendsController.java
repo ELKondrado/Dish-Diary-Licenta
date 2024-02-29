@@ -1,11 +1,11 @@
 package com.example.recipeapp.Controllers;
 
+import com.example.recipeapp.Model.Friendship;
 import com.example.recipeapp.Model.Notification.Notification;
 import com.example.recipeapp.Model.User;
 import com.example.recipeapp.Repositories.NotificationRepository;
 import com.example.recipeapp.Repositories.UserRepository;
 import com.example.recipeapp.Services.FriendsService;
-import com.example.recipeapp.Services.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -75,7 +75,7 @@ public class FriendsController {
         if(optionalNotification.isPresent()) {
             Notification notification = optionalNotification.get();
             friendsService.acceptFriendRequest(notification);
-            //addFriend(notification.getSender().getUserId(), notification.getReceiver().getUserId());
+            addFriend(notification.getSender().getUserId(), notification.getReceiver().getUserId());
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -91,4 +91,22 @@ public class FriendsController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PostMapping(value = "/addFriend/{userId}/{friendId}")
+    public ResponseEntity<Friendship> addFriend(@PathVariable("userId") Long userId,
+                                                @PathVariable("friendId") Long friendId) {
+        Optional<User> optionalUser = userRepository.findUserByUserId(userId);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            Optional<User> optionalFriend = userRepository.findUserByUserId(friendId);
+            if (optionalFriend.isPresent()) {
+                User friend = optionalFriend.get();
+                friendsService.addFriend(user, friend);
+                return new ResponseEntity<>(HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }
