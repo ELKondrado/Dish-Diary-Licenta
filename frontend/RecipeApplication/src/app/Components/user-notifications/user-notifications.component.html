@@ -115,28 +115,26 @@
                </div>
                <hr class="horizontal-line">
             </div>
-
-            <!-- NOTIFICATION TYPE -->
-            
-            <!-- <div *ngIf="friendRequests.length != 0">
-               <h2>Friend Requests</h2>
+ 
+            <div *ngIf="friendRequests.length != 0">
+               <h2>Recipes Shared</h2>
                <hr class="horizontal-line">
-               <div *ngFor="let friendRequest of friendRequests">
-                  <div class="friend-request" *ngIf="friendRequest.status == 'PENDING'">
+               <div *ngFor="let recipeShared of recipesShared">
+                  <div class="friend-request" *ngIf="recipeShared.status == 'SHARED'">
                      <div class="user-avatar">
-                        <img (click)="onOpenFriendProfile(friendRequest.sender.userName)" src="{{friendRequest.sender.profileImage}}" alt="User Avatar">
+                        <img (click)="onOpenRecipe(recipeShared.sharedRecipe)" src="{{recipeShared.sharedRecipe.image}}" alt="User Avatar">
                      </div>
-                     <h4 (click)="onOpenFriendProfile(friendRequest.sender.userName)">{{friendRequest.sender.userNickname}}</h4>
-                     <div (click)="onResponseFriendRequestModal(friendRequest, 'accept')" class="accept-icon-container">
+                     <h4 (click)="onOpenRecipe(recipeShared.sharedRecipe)">{{recipeShared.sharedRecipe.name}}</h4>
+                     <div  class="accept-icon-container">
                         <div class="accept icon"></div>
                      </div>
-                     <div (click)="onResponseFriendRequestModal(friendRequest, 'reject')" class="reject-icon-container">
+                     <div class="reject-icon-container">
                         <div class="reject icon"></div>
                      </div>
                   </div>
                </div>
                <hr class="horizontal-line">
-            </div> -->
+            </div>
 
 
             <div *ngIf="notifications.length == 0">

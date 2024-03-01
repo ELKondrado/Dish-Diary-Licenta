@@ -1,8 +1,10 @@
 package com.example.recipeapp.Controllers;
 
 import com.example.recipeapp.Exceptions.RecipeNotFoundException;
+import com.example.recipeapp.Model.Notification.Notification;
 import com.example.recipeapp.Model.Recipe;
 import com.example.recipeapp.Model.User;
+import com.example.recipeapp.Services.NotificationService;
 import com.example.recipeapp.Services.RecipeService;
 import com.example.recipeapp.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +26,13 @@ import java.util.Optional;
 public class RecipeController {
     private final RecipeService recipeService;
     private final UserService userService;
+    private final NotificationService notificationService;
 
     @Autowired
-    public RecipeController(RecipeService recipeService, UserService userService) {
+    public RecipeController(RecipeService recipeService, UserService userService, NotificationService notificationService) {
         this.recipeService = recipeService;
         this.userService = userService;
+        this.notificationService = notificationService;
     }
 
     @GetMapping("/all")
@@ -147,6 +151,36 @@ public class RecipeController {
 
             return new ResponseEntity<>(recipe.getImage(), headers, HttpStatus.OK);
         } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/share")
+    public ResponseEntity<Notification> shareRecipe(@RequestParam long userId,
+                                                    @RequestParam long recipeId,
+                                                    @RequestParam long friendId) {
+        Recipe recipe = recipeService.getRecipeById(recipeId);
+        Optional<User> optionalUser = userService.findUserByUserId(userId);
+        if(optionalUser.isPresent())
+        {
+            User user = optionalUser.get();
+
+            Optional<User> optionalFriend = userService.findUserByUserId(friendId);
+            if (optionalFriend.isPresent())
+            {
+                User friend = optionalFriend.get();
+
+                if (recipe != null) {
+                    Notification notification = notificationService.shareRecipeToFriend(user, recipe, friend);
+                    return new ResponseEntity<>(notification, HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                }
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        }
+        else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

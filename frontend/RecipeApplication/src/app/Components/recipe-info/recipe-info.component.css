@@ -538,6 +538,67 @@ body {
     color: red;
 }
 
+.modal-content {
+    background-color: rgb(30, 28, 28);
+    color: white;
+    font-weight: 600;
+}
+
+.close {
+    color: white;
+}
+
+.modal-title {
+    width: 100%;
+    text-align: center;
+}
+
+.modal-body .list-group {
+    max-height: 550px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: grey transparent;
+}
+
+.friend-item {
+    margin-bottom: 0.25rem;
+ }
+
+.share-button {
+    margin: 0 0.5rem;
+    color: white;
+    background: #2a62d4;
+    width: 6rem;
+    height: 2.25rem;
+    border: 2px solid grey;
+    border-radius: 6px;
+}
+
+.share-button:hover {
+    border-color: white;
+}
+
+.sent-share-button {
+    margin: 0 0.5rem;
+    color: white;
+    background: rgb(44, 43, 43);
+    width: 6rem;
+    height: 2.25rem;
+    border-radius: 6px;
+    cursor: default;
+}
+
+.cancel-button {
+    background-color: rgb(44, 43, 43);
+    border: 1px solid grey;
+    color: white;
+}
+
+.cancel-button:hover {
+    border-color: white;
+}
+
 /* END REVIEW */
 
 @media (max-width: 768px) {

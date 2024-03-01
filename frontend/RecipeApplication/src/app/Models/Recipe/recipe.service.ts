@@ -4,6 +4,7 @@ import { Recipe } from './recipe';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../Security/auth.service';
 import { Review } from '../Review/review';
+import { Notif } from '../Notification/notification';
 
 @Injectable({
   providedIn: 'root'
@@ -99,5 +100,10 @@ export class RecipeService {
   public getImage(recipeId: number) {
     const headers = this.getHeaders();
     return this.http.get(`${this.apiServerUrl}/recipe/${recipeId}/image`, { headers, responseType: 'arraybuffer' });
+  }
+
+  public shareRecipe(userId: number, recipeId: number, friendId: number): Observable<Notif> {
+    const headers = this.getHeaders();
+    return this.http.post<Notif>(`${this.apiServerUrl}/recipe/share/?userId=${userId}&recipeId=${recipeId}&friendId=${friendId}`, null, { headers });
   }
 }

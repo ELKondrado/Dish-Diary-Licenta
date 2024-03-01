@@ -30,7 +30,7 @@ public class UserService {
         return userRepository.findUserByUserName(username);
     }
 
-    public Optional<User> findUserByUserId(Long userId) {
+    public Optional<User> findUserByUserId(long userId) {
         return userRepository.findUserByUserId(userId);
     }
 

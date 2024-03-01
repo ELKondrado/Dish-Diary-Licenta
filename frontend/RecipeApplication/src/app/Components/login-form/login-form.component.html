@@ -1,5 +1,6 @@
 <body>
     <div class="loginBox">
+        <h2 class="dish-diary-title">DishDiary</h2>
         <h2>Sign In</h2>
         <label *ngIf="badCredentials" class="bad-credentials">Bad Credentials</label>
         <form #loginForm="ngForm" (ngSubmit)="onLoginUser(loginForm)">

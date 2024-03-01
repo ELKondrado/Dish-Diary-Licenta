@@ -33,6 +33,7 @@ export class RecipeInfoComponent implements OnInit {
 
   public user: User | null = null;
   public username: string | undefined;
+  public friends: User[] = [];
   public notifications: Notif[] | undefined;
   public unseenConversations: number = 0;
   public userRecipes: Recipe[] | undefined;
@@ -69,6 +70,7 @@ export class RecipeInfoComponent implements OnInit {
       this.getProfileImage();
       this.getUserRecipes();
       this.getNotifications();
+      this.getFriends();
       this.getUnseenConversations();
       this.getLikedReviewsByUser();
     });
@@ -152,12 +154,7 @@ export class RecipeInfoComponent implements OnInit {
   }
 
   public isReviewLiked(review: Review): boolean {
-    console.log('Liked Reviews By User:', this.likedReviewsByUser);
-    console.log('Review ID:', review.id);
     const likedReviewIds = this.likedReviewsByUser.map(likedReview => likedReview.id);
-    console.log('Liked Review IDs:', likedReviewIds);
-    console.log( likedReviewIds.includes(review.id))
-    console.log("\n")
     return likedReviewIds.includes(review.id);
   }
   
@@ -187,6 +184,24 @@ export class RecipeInfoComponent implements OnInit {
     }
   }
 
+  public getFriends(): void {
+    if(this.user)
+    {
+      this.userService.getFriends(this.user.userId).subscribe(
+        (response: User[]) => {
+          this.friends = response;
+          this.friends.forEach(friend => {
+            friend.profileImage = 'data:image/jpeg;base64,' + friend.profileImage;
+          });
+          console.log(this.friends);
+        },
+        (error: HttpErrorResponse) => {
+          console.log("ERROR getting user friends: ", error);
+        }
+      );
+    }
+  }
+
   public getUnseenConversations(): void {
     if(this.user){
       this.messageService.getUnseenConversations(this.user.userId).subscribe(
@@ -200,7 +215,7 @@ export class RecipeInfoComponent implements OnInit {
     }
   }
 
-  public onAddRecipeModal(recipe: Recipe | undefined): void {
+  public onOpenModal(recipe: Recipe | undefined, mode: string): void {
     const container = document.getElementById("main-container");
     const button = document.createElement('button');
     this.addedRecipe = recipe;
@@ -208,10 +223,28 @@ export class RecipeInfoComponent implements OnInit {
     button.type = 'button';
     button.style.display = 'none';
     button.setAttribute('data-toggle', 'modal');
-    button.setAttribute('data-target', '#addRecipeToUserModal');
-
+    if(mode == 'add'){
+      button.setAttribute('data-target', '#addRecipeToUserModal');
+    }
+    else if(mode == 'share') {
+      button.setAttribute('data-target', '#shareRecipeToFriendModal');
+    }
     container?.appendChild(button);
     button.click();
+  }
+
+  public shareRecipe(friend: User): void {
+    if(this.user && this.recipe) {
+      this.recipeService.shareRecipe(this.user.userId, this.recipe.id, friend.userId).subscribe(
+        (response: Notif) => {
+          console.log(response);
+          friend.recipeSent = true;
+        },
+        (error: HttpErrorResponse) => {
+          console.error(error);
+        }
+      );
+    }
   }
 
   public likeReview(reviewId: number): void {

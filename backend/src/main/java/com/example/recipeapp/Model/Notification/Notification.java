@@ -1,5 +1,6 @@
 package com.example.recipeapp.Model.Notification;
 
+import com.example.recipeapp.Model.Recipe;
 import com.example.recipeapp.Model.User;
 import lombok.Data;
 
@@ -38,4 +39,8 @@ public class Notification {
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateCreated;
+
+    @ManyToOne
+    @JoinColumn(name = "shared_recipe_id")
+    private Recipe sharedRecipe;
 }

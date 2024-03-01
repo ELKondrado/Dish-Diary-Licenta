@@ -19,14 +19,12 @@ import java.util.Optional;
 @RequestMapping(path = "/user/notifications")
 public class NotificationController {
     private final NotificationService notificationService;
-    private final UserService userService;
     private final UserRepository userRepository;
     private final NotificationRepository notificationRepository;
 
     @Autowired
-    public NotificationController(NotificationService notificationService, UserService userService, UserRepository userRepository, NotificationRepository notificationRepository) {
+    public NotificationController(NotificationService notificationService, UserRepository userRepository, NotificationRepository notificationRepository) {
         this.notificationService = notificationService;
-        this.userService = userService;
         this.userRepository = userRepository;
         this.notificationRepository = notificationRepository;
     }
