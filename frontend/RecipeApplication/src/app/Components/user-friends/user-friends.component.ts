@@ -28,6 +28,7 @@ export class UserFriendsComponent implements OnInit{
   public user: User | null = null;
   public username: string | undefined;
   public friendToAdd: String = "";
+  public removedFriend: User | undefined;
   public friendRequestSent: boolean = false;
   public nicknameAddedNotFound: boolean = false;
   public friendRequestAlreadySent: boolean = false;
@@ -188,8 +189,34 @@ export class UserFriendsComponent implements OnInit{
     }
   }
 
+  public onRemoveFriendModal(friend: User): void {
+    const container = document.getElementById("main-container");
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.style.display = 'none';
+    button.setAttribute('data-toggle', 'modal');
+    button.setAttribute('data-target', '#removeFriendModal');
+    this.removedFriend = friend;
+    container?.appendChild(button);
+    button.click();
+  }
+
+  public removeFriend(): void {
+    if(this.user && this.removedFriend) {
+      this.friendsService.removeFriend(this.user.userId, this.removedFriend.userId).subscribe(
+        (response: any) => {
+          this.getFriends();
+          console.log(response)
+        },
+        (error: HttpErrorResponse) => {
+          console.error(error);
+        }
+      )
+    }
+  }
+
   public getProfileImage(): void {
-    if (this.user?.userId) {
+    if (this.user) {
       this.userService.getProfileImage(this.user.userId).subscribe(
         (data: any) => {
           this.avatarUrl = this.arrayBufferToBase64(data);

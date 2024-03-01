@@ -116,7 +116,7 @@
                <hr class="horizontal-line">
             </div>
  
-            <div *ngIf="friendRequests.length != 0">
+            <div *ngIf="recipesShared.length != 0">
                <h2>Recipes Shared</h2>
                <hr class="horizontal-line">
                <div *ngFor="let recipeShared of recipesShared">
@@ -135,7 +135,6 @@
                </div>
                <hr class="horizontal-line">
             </div>
-
 
             <div *ngIf="notifications.length == 0">
                <h2>NO NOTIFICATIONS YET</h2>

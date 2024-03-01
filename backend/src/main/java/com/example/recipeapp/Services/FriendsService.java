@@ -5,6 +5,7 @@ import com.example.recipeapp.Model.Notification.Notification;
 import com.example.recipeapp.Model.Notification.NotificationStatus;
 import com.example.recipeapp.Model.Notification.NotificationType;
 import com.example.recipeapp.Model.User;
+import com.example.recipeapp.Repositories.FriendshipRepository;
 import com.example.recipeapp.Repositories.NotificationRepository;
 import com.example.recipeapp.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +17,13 @@ import java.util.Optional;
 
 @Service
 public class FriendsService {
+    private final FriendshipRepository friendshipRepository;
     private final UserRepository userRepository;
     private final NotificationRepository notificationRepository;
 
     @Autowired
-    public FriendsService(UserRepository userRepository, NotificationRepository notificationRepository) {
+    public FriendsService(FriendshipRepository friendshipRepository, UserRepository userRepository, NotificationRepository notificationRepository) {
+        this.friendshipRepository = friendshipRepository;
         this.userRepository = userRepository;
         this.notificationRepository = notificationRepository;
     }
@@ -88,5 +91,10 @@ public class FriendsService {
         } else {
             throw new IllegalStateException("Cannot add yourself as a friend.");
         }
+    }
+
+    @Transactional
+    public void removeFriend(User user, User removedFriend) {
+        friendshipRepository.deleteFriendship(user.getUserId(), removedFriend.getUserId());
     }
 }

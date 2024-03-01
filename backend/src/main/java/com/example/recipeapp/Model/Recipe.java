@@ -6,6 +6,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Table
@@ -23,17 +24,24 @@ public class Recipe {
             generator = "recipe_sequence"
     )
     private long id;
+
     @NotNull
     @Column(name = "name")
     private String name;
+
     @NotNull
     @Column(name = "ingredients", length = 4096)
     private String ingredients;
+
     @NotNull
     @Column(name = "steps_of_preparation", length = 8192)
     private String stepsOfPreparation;
+
     @Lob
     private byte[] image;
+
+    @Column(name = "date_created")
+    private Date dateCreated;
 
     @ManyToMany(mappedBy = "recipes", fetch = FetchType.LAZY)
     private List<User> users = new ArrayList<>();

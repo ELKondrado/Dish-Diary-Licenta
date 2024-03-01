@@ -22,6 +22,7 @@ export class RegisterFormComponent implements OnInit {
   public passwordCondition: boolean = false;
   public passwordsNotMatch: boolean = false;
   public nickanameTaken: boolean = false;
+  public emailNotValid: boolean = false;
   public emailTaken: boolean = false;
   public fillAllFields: boolean = false;
 
@@ -47,8 +48,9 @@ export class RegisterFormComponent implements OnInit {
           this.usernameTaken = response.statusUsername === "USERNAME IS TAKEN";
           this.passwordCondition = response.statusPassword === "PASSWORD IS NOT STRONG ENOUGH";
           this.passwordsNotMatch = response.statusConfirmPassword === "PASSWORD DOES NOT MATCH";
-          this.nickanameTaken = response.statusNickname === "NICKNAME IS TAKEN";
+          this.emailNotValid = response.statusConfirmPassword === "EMAIL IS NOT VALID";
           this.emailTaken = response.statusEmail === "EMAIL IS TAKEN";
+          this.nickanameTaken = response.statusNickname === "NICKNAME IS TAKEN";
         }
       },
       (error: HttpErrorResponse) => {

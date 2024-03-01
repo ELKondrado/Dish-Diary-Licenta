@@ -14,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -78,6 +79,7 @@ public class RecipeService {
         recipe.setUserOwner(user);
         user.getRecipes().add(recipe);
         recipe.getUsers().add(user);
+        recipe.setDateCreated(new Date());
         return recipeRepository.save(recipe);
     }
 
