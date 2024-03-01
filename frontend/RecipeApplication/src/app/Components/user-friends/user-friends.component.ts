@@ -37,7 +37,7 @@ export class UserFriendsComponent implements OnInit{
   public notifications: Notif[] | undefined;
   public unseenConversations: number = 0;
   public avatarUrl: String | undefined;
-  public friends: User[] | undefined;
+  public friends: User[] = [];
 
   ngOnInit(): void {
     this.fetchData();

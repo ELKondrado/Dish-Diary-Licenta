@@ -29,6 +29,7 @@ export class UserNotificationsComponent {
   public username: string | undefined;
   public notifications: Notif[] = [];
   public friendRequests: Notif[] = [];
+  public recipesShared: Notif[] = [];
   public friendRequestNotification: Notif | undefined;
   public unseenConversations: number = 0;
   public avatarUrl: String | undefined;
@@ -93,6 +94,7 @@ export class UserNotificationsComponent {
     if(this.user)
     {
       this.friendRequests = [];
+      this.recipesShared = [];
       this.notificationService.getNotifications(this.user.userId).subscribe(
         (notifications: Notif[]) => {
           notifications.forEach(notification => {
@@ -102,7 +104,10 @@ export class UserNotificationsComponent {
           notifications.forEach(notification => {
             if(notification.type == 'FRIEND_REQUEST' && notification.status == 'PENDING') {
               this.friendRequests.push(notification);
-              console.log(this.friendRequests)
+            }
+            if(notification.type == 'RECIPE_SHARE' && notification.status == 'SHARED') {
+              notification.sharedRecipe.image = 'data:image/jpeg;base64,' + notification.sharedRecipe.image;
+              this.recipesShared.push(notification);
             }
           });
         },
@@ -210,6 +215,10 @@ export class UserNotificationsComponent {
 
   public onOpenFriendProfile(friendUsername: String): void {
     this.router.navigate([`/${this.userService.getUsername()}/friend-profile/${friendUsername}`]);
+  }
+
+  public onOpenRecipe(recipe: Recipe): void {
+    this.router.navigate([`/${this.userService.getUsername()}/recipe/${recipe.id}`]);
   }
 
   public mainPage(): void {

@@ -9,6 +9,14 @@ body {
 	background-position: center;
 	overflow: hidden;
 }
+
+.dish-diary-title {
+	position: absolute;
+	top: 5%;
+	color: white;
+	font-size: 60px;
+	font-weight: 700;
+}
   
 @media screen and (max-width: 786px) {
     .loginBox {

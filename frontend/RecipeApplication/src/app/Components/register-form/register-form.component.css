@@ -27,6 +27,14 @@ body {
     }
 }
 
+.dish-diary-title {
+	position: absolute;
+	top: 5%;
+	color: white;
+	font-size: 60px;
+	font-weight: 700;
+}
+
 .registerBox {
 	display: flex;
 	flex-direction: column;

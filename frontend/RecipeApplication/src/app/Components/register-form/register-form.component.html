@@ -1,5 +1,6 @@
 <body>
     <div class="registerBox">
+        <h2 class="dish-diary-title">DishDiary</h2>
         <h2>Create New Account</h2>
         <label *ngIf="fillAllFields" class="fill-fields-constraint">Please fill all of the fields</label>
         <form #registerForm="ngForm" (ngSubmit)="onRegisterUser(registerForm)">

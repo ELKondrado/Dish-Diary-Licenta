@@ -1,3 +1,4 @@
+import { Recipe } from "../Recipe/recipe";
 import { User } from "../User/user";
 
 export interface Notif {
@@ -7,4 +8,5 @@ export interface Notif {
     type: string;
     status: string; 
     dateCreated: Date;
+    sharedRecipe: Recipe;
   }
