@@ -76,7 +76,10 @@ public class AuthController {
         if (userRepository.existsByUserNickname(registerDto.getNickname())) {
             response.put("statusNickname", "NICKNAME IS TAKEN");
         }
-        if (userRepository.existsByUserEmail(registerDto.getEmail())) {
+        if ( registerDto.getEmail().contains("@") ) {
+            response.put("statusEmail", "EMAIL IS NOT VALID");
+        }
+        else if (userRepository.existsByUserEmail(registerDto.getEmail())) {
             response.put("statusEmail", "EMAIL IS TAKEN");
         }
         if (!response.containsKey("statusUsername") &&

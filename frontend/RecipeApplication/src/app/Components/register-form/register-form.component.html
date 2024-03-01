@@ -22,6 +22,7 @@
                     <input id="nickname" ngModel type="text" name="nickname" placeholder="Nickname" maxlength="30" required>
                 </div>
                 <div class="input-container">
+                    <label *ngIf="emailNotValid">Email is not valid!</label>
                     <label *ngIf="emailTaken">Email already taken!</label>
                     <input id="email" ngModel type="text" name="email" placeholder="Email" maxlength="50" required> 
                 </div>

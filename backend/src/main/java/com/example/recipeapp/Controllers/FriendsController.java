@@ -32,7 +32,7 @@ public class FriendsController {
 
     @PostMapping("/sendFriendRequest/{userSenderId}/{receiverUserNickname}")
     public ResponseEntity<Map<String, String>> sendFriendRequest(
-            @PathVariable Long userSenderId,
+            @PathVariable long userSenderId,
             @PathVariable String receiverUserNickname) {
 
         Map<String, String> response = new HashMap<>();
@@ -69,7 +69,7 @@ public class FriendsController {
 
 
     @PostMapping("/acceptFriendRequest/{notificationId}")
-    public ResponseEntity<Notification> acceptFriendRequest(@PathVariable Long notificationId) {
+    public ResponseEntity<Notification> acceptFriendRequest(@PathVariable long notificationId) {
         Optional<Notification> optionalNotification = notificationRepository.findNotificationById(notificationId);
 
         if(optionalNotification.isPresent()) {
@@ -81,7 +81,7 @@ public class FriendsController {
     }
 
     @PostMapping("/rejectFriendRequest/{notificationId}")
-    public ResponseEntity<Notification> rejectFriendRequest(@PathVariable Long notificationId) {
+    public ResponseEntity<Notification> rejectFriendRequest(@PathVariable long notificationId) {
         Optional<Notification> optionalNotification = notificationRepository.findNotificationById(notificationId);
 
         if(optionalNotification.isPresent()) {
@@ -92,8 +92,8 @@ public class FriendsController {
     }
 
     @PostMapping(value = "/addFriend/{userId}/{friendId}")
-    public ResponseEntity<Friendship> addFriend(@PathVariable("userId") Long userId,
-                                                @PathVariable("friendId") Long friendId) {
+    public ResponseEntity<Friendship> addFriend(@PathVariable("userId") long userId,
+                                                @PathVariable("friendId") long friendId) {
         Optional<User> optionalUser = userRepository.findUserByUserId(userId);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
@@ -106,6 +106,28 @@ public class FriendsController {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
         } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping(value = "/removeFriend/{userId}/{removedFriendId}")
+    public ResponseEntity<Friendship> removeFriend(@PathVariable("userId") long userId,
+                                                   @PathVariable("removedFriendId") long removedFriendId) {
+        Optional<User> optionalUser = userRepository.findUserByUserId(userId);
+        if(optionalUser.isPresent()) {
+            User user = optionalUser.get();
+
+            Optional<User> optionalRemovedFriendUser = userRepository.findUserByUserId(removedFriendId);
+            if(optionalRemovedFriendUser.isPresent()) {
+                User removedFriend = optionalRemovedFriendUser.get();
+                friendsService.removeFriend(user, removedFriend);
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+            else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        }
+        else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

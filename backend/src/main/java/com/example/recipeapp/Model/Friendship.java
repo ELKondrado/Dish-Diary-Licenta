@@ -3,6 +3,7 @@ package com.example.recipeapp.Model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "friends")
@@ -28,11 +29,15 @@ public class Friendship {
     @JoinColumn(name = "friend_id", nullable = false)
     private User friend;
 
+    @Column(name = "friends_since")
+    private Date date;
+
     public Friendship() {
     }
 
     public Friendship(User user, User friend) {
         this.user = user;
         this.friend = friend;
+        this.date = new Date();
     }
 }

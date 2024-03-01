@@ -106,7 +106,6 @@ export class UserProfileComponent implements OnInit{
             notification.sender.profileImage = 'data:image/jpeg;base64,' + notification.sender.profileImage;
           });
           this.notifications = notifications.filter(notification => notification.status === 'PENDING');
-          console.log(this.notifications.length);
         },
         (error) => {
           console.error("ERROR getting the notifications: " + error);

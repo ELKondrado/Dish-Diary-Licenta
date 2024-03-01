@@ -337,8 +337,10 @@ body {
     font-size: 30px;
 }
 
-.friend p {
+.friend .remove-friend {
+    font-size: 14px;
     color: #666;
+    cursor: pointer;
 }
 
 .modal-body input {
