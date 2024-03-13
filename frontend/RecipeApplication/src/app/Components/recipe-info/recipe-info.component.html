@@ -21,8 +21,8 @@
          <div class="sub-menu">
             <div class="user-info">
                <div class="lil-avatar">
-                  <img *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
-                  <img *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
+                  <img class="avatar profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
+                  <img class="avatar profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
                </div>
                <h6>{{user?.userNickname}}</h6>
             </div>
@@ -65,7 +65,7 @@
                <div class="icon-container">
                   <div class="icon-button">
                      <i class="material-icons">notifications</i>
-                     <span *ngIf="notifications?.length !=0 " class="icon-button__badge notifications-number">{{notifications?.length}}</span>
+                     <span *ngIf="notifications !=0 " class="icon-button__badge notifications-number">{{notifications}}</span>
                   </div>               
                </div>
                
@@ -123,6 +123,12 @@
                <img class="recipe-image" *ngIf="recipeUrl" [src]="recipeUrl" alt="Recipe Image">
             </div>
          
+            <div class="recipe-tags">
+               <div *ngFor="let tag of this.recipe?.tags" class="tag">
+                  <label>{{tag.toLowerCase()}}</label>
+               </div>
+            </div>
+
             <div class="recipe-buttons">
                <div *ngIf="recipe?.userOwner?.userId == user?.userId" class="recipe-upload-button">
                   <label for="fileInput" class="upload-button"><input type="file" id="fileInput" (change)="onSelectFile($event)">Upload Profile Image</label>
@@ -149,7 +155,7 @@
          <!-- Review Form -->
          <div *ngIf="showReviewForm" class="review-form">
             <div class="review-rating-input">
-               <label>Select the Rating</label>
+               <label id="select-rating-label">Select the Rating</label>
                <select id="rating" class="form-control" style="color: white;" [(ngModel)]="reviewModel.userStarRating">
                   <option value="1" style="color: white;">1 - Appaling</option>
                   <option value="2" style="color: white;">2 - Horrible</option>

@@ -28,13 +28,23 @@ export class MainPageComponent implements OnInit{
 
   public user: User | null = null;
   public recipes: Recipe[] = [];
-  public notifications: Notif[] | undefined;
+  public notifications: number = 0;
   public unseenConversations: number = 0;
   public editRecipe: Recipe | undefined;
   public deletedRecipe: Recipe | undefined;
   public username: string | undefined;
   public avatarUrl: String | undefined;
   public selectedFile: File | undefined;
+  public tags: String[] = [
+    "APPETIZER","AVOCADO","BBQ","BEVERAGE","BITTER","BREAKFAST","CELEBRATION","CHICKEN","CHINESE","COMFORT_FOOD",
+    "DATE_NIGHT","DAIRY_FREE","DESSERT","DIABETIC_FRIENDLY","DINNER","EGG_FREE","FAMILY_MEAL","FINGER_FOOD","FRENCH",
+    "FRIENDLY","FALL","FRIED","GARLICKY","GLUTEN_FREE","GRILLED","HEART_HEALTHY","HIGH_PROTEIN","HOLIDAY","HOLIDAY_SPECIAL",
+    "INDIAN","ITALIAN","JAPANESE","KETO","LACTOSE_FREE","LOW_CALORIE","LOW_CARB","LOW_FAT","LUNCH","MAIN_COURSE","MEDITERRANEAN",
+    "MEATLESS_MONDAY","MEXICAN","NUTRITIOUS","NUT_FREE","ORGANIC","PASTA","PARTY","PARTY_APPETIZER","PALEO","PESCATARIAN","PICNIC",
+    "PLANT_BASED","PORK","QUICK_AND_EASY","QUICK_EASY","QUINOA","RICE","ROASTED","SALAD","SALTY","SEAFOOD","SEAFOOD_FREE",
+    "SIDE_DISH","SMOKY","SOUP","SOUR","SPICY","SPRING","SUGAR_FREE","SUMMER","SWEET","TANGY","THAI","TOFU","VEGAN","VEGETARIAN",
+    "VEGGIE_PASTA","WINTER","WHOLE30"]
+  public addedRecipeTags: String[] = [];
 
   ngOnInit(): void {
     this.fetchData();
@@ -47,7 +57,7 @@ export class MainPageComponent implements OnInit{
       this.username = this.userService.getUsername();
       this.getUserRecipes();
       this.getProfileImage();
-      this.getNotifications();
+      this.getNotificationsCount();
       this.getUnseenConversations();
     });
   }
@@ -88,19 +98,20 @@ export class MainPageComponent implements OnInit{
     subMenu?.classList.toggle("open-menu");
   }
 
-  public getNotifications(): void {
+  public getNotificationsCount(): void {
     if(this.user)
     {
       this.notificationService.getNotifications(this.user.userId).subscribe(
         (notifications: Notif[]) => {
-          console.log(notifications);
           notifications.forEach(notification => {
             notification.sender.profileImage = 'data:image/jpeg;base64,' + notification.sender.profileImage;
+            if(notification.status === 'PENDING' || notification.status === 'SHARED') {
+              this.notifications = this.notifications + 1;
+            }
           });
-          this.notifications = notifications.filter(notification => notification.status === 'PENDING');
         },
         (error) => {
-          console.error("ERROR getting the notifications: " + error);
+          console.error(error);
         }
       );
     }
@@ -154,7 +165,7 @@ export class MainPageComponent implements OnInit{
     button.setAttribute('data-toggle', 'modal');
 
     if( mode === 'add') {
-      button.setAttribute('data-target', '#addRecipeModal');
+      button.setAttribute('data-target', '#createRecipeModal');
     }
     if( mode === 'edit') {
       this.editRecipe = recipe;
@@ -169,11 +180,13 @@ export class MainPageComponent implements OnInit{
     button.click();
   }
 
-  public onAddRecipe(addForm: NgForm): void {
-    const button = document.getElementById('add-recipe-form');
+  public onCreateRecipe(addForm: NgForm): void {
+    const button = document.getElementById('create-recipe-form');
     const username = this.authService.getUsernameFromToken();
    
     button?.click()
+
+    addForm.value["tags"] = this.addedRecipeTags;
     this.recipeService.addUserNewRecipe(addForm.value, username).subscribe(
       (response: Recipe) => {
         console.log(response);
@@ -185,6 +198,22 @@ export class MainPageComponent implements OnInit{
         addForm.reset();
       }
     );
+  }
+
+  public addTagToForm(tagValue: String): void {
+    if (tagValue) {
+      if(!this.addedRecipeTags.includes(tagValue)){
+        this.addedRecipeTags.push(tagValue);
+      }
+    }
+  }
+
+  public removeTagFromForm(tagValue: String): void {
+    if (tagValue) {
+      if(this.addedRecipeTags.includes(tagValue)){
+        this.addedRecipeTags = this.addedRecipeTags.filter(tag => tag !== tagValue);
+      }
+    }
   }
 
   public onUpdateRecipe(recipe: Recipe): void {

@@ -35,7 +35,7 @@ export class UserChatComponent {
   public user: User | null = null;
   public username: string | undefined;
   public conversations: Conversation[] = [];
-  public notifications: Notif[] = [];
+  public notifications: number = 0;
   public unseenConversations: number = 0;
   public friendRequestNotification: Notif | undefined;
   public avatarUrl: String | undefined;
@@ -67,7 +67,7 @@ export class UserChatComponent {
       this.user = this.authService.getUser();
       this.username = this.userService.getUsername();
       this.getProfileImage();
-      this.getNotifications();
+      this.getNotificationsCount();
       this.getConversations();
       this.fetchFriendCurrentConversation();
       this.getUnseenConversations();
@@ -309,14 +309,17 @@ export class UserChatComponent {
     }
   }
 
-  public getNotifications(): void {
-    if(this.user){
+  public getNotificationsCount(): void {
+    if(this.user)
+    {
       this.notificationService.getNotifications(this.user.userId).subscribe(
         (notifications: Notif[]) => {
           notifications.forEach(notification => {
             notification.sender.profileImage = 'data:image/jpeg;base64,' + notification.sender.profileImage;
+            if(notification.status === 'PENDING' || notification.status === 'SHARED') {
+              this.notifications = this.notifications + 1;
+            }
           });
-          this.notifications = notifications.filter(notification => notification.status === 'PENDING');
         },
         (error) => {
           console.error(error);

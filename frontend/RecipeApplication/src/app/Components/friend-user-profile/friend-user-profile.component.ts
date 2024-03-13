@@ -29,7 +29,7 @@ export class FriendUserProfileComponent {
   public user: User | null = null;
   public username: string | undefined;
   public friend: User | undefined;
-  public notifications: Notif[] | undefined;
+  public notifications: number = 0;
   public unseenConversations: number = 0;
   public avatarUrl: String | undefined;
   public friendAvatarUrl: String | undefined;
@@ -50,7 +50,7 @@ export class FriendUserProfileComponent {
       this.username = this.userService.getUsername();
       this.fetchFriend();
       this.getProfileImage();
-      this.getNotifications();
+      this.getNotificationsCount();
       this.getUnseenConversations();
     });
   }
@@ -87,18 +87,20 @@ export class FriendUserProfileComponent {
     subMenu?.classList.toggle("open-menu");
   }
 
-  public getNotifications(): void {
+  public getNotificationsCount(): void {
     if(this.user)
     {
       this.notificationService.getNotifications(this.user.userId).subscribe(
         (notifications: Notif[]) => {
           notifications.forEach(notification => {
             notification.sender.profileImage = 'data:image/jpeg;base64,' + notification.sender.profileImage;
+            if(notification.status === 'PENDING' || notification.status === 'SHARED') {
+              this.notifications = this.notifications + 1;
+            }
           });
-          this.notifications = notifications.filter(notification => notification.status === 'PENDING');
         },
         (error) => {
-          console.error("ERROR getting the notifications: " + error);
+          console.error(error);
         }
       );
     }

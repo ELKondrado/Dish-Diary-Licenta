@@ -21,8 +21,8 @@
             <div class="sub-menu">
                 <div class="user-info">
                     <div class="lil-avatar">
-                    <img *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
-                    <img *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
+                    <img class="avatar profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
+                    <img class="avatar profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
                     </div>
                     <h6>{{user?.userNickname}}</h6>
                 </div>
@@ -65,7 +65,7 @@
                     <div class="icon-container">
                         <div class="icon-button">
                             <i class="material-icons">notifications</i>
-                            <span *ngIf="notifications?.length !=0 " class="icon-button__badge notifications-number">{{notifications.length}}</span>
+                            <span *ngIf="notifications !=0 " class="icon-button__badge notifications-number">{{notifications}}</span>
                         </div>               
                     </div>
                     
@@ -150,13 +150,13 @@
                                 <span>{{formattedDateDDMMYYYY(message.timestamp.toString())}}</span>
                             </div>
                             <div class="message-from-user" *ngIf="message.receiver.userId == user?.userId"  (mouseover)="showDateBubbles[i] = true" (mouseleave)="showDateBubbles[i] = false">
-                                <p>{{message.content}}</p>
+                                <p class="content">{{message.content}}</p>
                                 <div class="date-bubble" *ngIf="showDateBubbles[i]">
                                     <span>{{formattedDateHour(message.timestamp.toString())}}</span>
                                 </div>
                             </div>
                             <div class="message-to-user" *ngIf="message.receiver.userId != user?.userId" (mouseover)="showDateBubbles[i] = true" (mouseleave)="showDateBubbles[i] = false">
-                                <p>{{message.content}}</p>
+                                <p class="content">{{message.content}}</p>
                                 <div class="date-bubble" *ngIf="showDateBubbles[i]">
                                     <span>{{formattedDateHour(message.timestamp.toString())}}</span>
                                 </div>

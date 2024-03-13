@@ -204,6 +204,10 @@ body {
     margin-bottom: 10rem;
 }
 
+.user-interface-container {
+    display: flex;
+}
+
 .user-img-details {
     width: 40%;
     display: flex;
@@ -431,6 +435,7 @@ body {
     border: 0.1em solid white;
     padding: 1.5em;
     margin-left: 3rem;
+    margin-bottom: auto;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -475,16 +480,28 @@ body {
         padding-left: 0.5rem;
     }
 
-    .main-container {
+    .dropdown {
+        margin: 0;
+        margin-left: auto;
+    }
+
+    #main-container {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        padding-bottom: auto;
         display: flex;
-        flex-direction: row;
-        justify-content: center;
+        flex-direction: column;
         align-items: center;
+        justify-content: center;
+        margin-top: 1rem;
+        padding-bottom: 10rem;
     }
 
     .user-img-details {
-        margin: auto;
-        padding: 10px
+        order: 1;
+        margin: 0;
+        padding: 0;
     }
 
     .profile-avatar-container {
@@ -495,12 +512,16 @@ body {
     .details {
         width: 300px;
         max-width: none; 
+        text-align: center;
     }
         
     .repositories{
-        margin: auto;
+        order: 2;
+        margin: 0px;
         width: 90%;
         margin-top: 0.5rem;
         padding: 1rem;
+        margin-bottom: 10rem;
+        height: 20rem;
     }
 }

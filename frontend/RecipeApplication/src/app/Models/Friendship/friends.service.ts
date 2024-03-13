@@ -36,7 +36,7 @@ export class FriendsService {
 
     public rejectFriendRequest(notificationId: number): Observable<void> {
         const headers = this.getHeaders();
-        return this.http.post<void>(`${this.apiServerUrl}/user/friends/rejectFriendRequest/${notificationId}`, null, { headers });
+        return this.http.put<void>(`${this.apiServerUrl}/user/friends/rejectFriendRequest/${notificationId}`, null, { headers });
     }
 
     public removeFriend(userId: number, removedFriendId: number): Observable<void> {

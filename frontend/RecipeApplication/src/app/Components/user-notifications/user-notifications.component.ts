@@ -7,8 +7,9 @@ import { Recipe } from '../../Models/Recipe/recipe';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NotificationService } from '../../Models/Notification/notification.service';
 import { Notif } from '../../Models/Notification/notification';
-import { FriendsService } from '../../Models/User/friends.service';
+import { FriendsService } from '../../Models/Friendship/friends.service';
 import { MessageService } from '../../Models/Message/message.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-user-notifications',
@@ -17,6 +18,7 @@ import { MessageService } from '../../Models/Message/message.service';
 })
 export class UserNotificationsComponent {
   constructor(
+    private datePipe: DatePipe,
     private authService: AuthService,
     private userService: UserService,
     private notificationService: NotificationService,
@@ -97,10 +99,11 @@ export class UserNotificationsComponent {
       this.recipesShared = [];
       this.notificationService.getNotifications(this.user.userId).subscribe(
         (notifications: Notif[]) => {
+          this.notifications = notifications;
           notifications.forEach(notification => {
             notification.sender.profileImage = 'data:image/jpeg;base64,' + notification.sender.profileImage;
           });
-          this.notifications = notifications.filter(notification => notification.status === 'PENDING');
+          this.notifications = notifications.filter(notification => notification.status === 'PENDING' || notification.status === 'SHARED');
           notifications.forEach(notification => {
             if(notification.type == 'FRIEND_REQUEST' && notification.status == 'PENDING') {
               this.friendRequests.push(notification);
@@ -148,7 +151,33 @@ export class UserNotificationsComponent {
     if(notification){
       this.friendsService.rejectFriendRequest(notification.id).subscribe(
         (response: any) => {
-          this.ngOnInit();
+          this.getNotifications();
+        },
+        (error: HttpErrorResponse) => {
+          console.error(error);
+        }
+      );
+    }
+  }
+
+  public rejectRecipeShare(recipeShared: Notif) {
+    if(recipeShared){
+      this.notificationService.rejectRecipeShare(recipeShared.id).subscribe(
+        (response: any) => {
+          this.getNotifications();
+        },
+        (error: HttpErrorResponse) => {
+          console.error(error);
+        }
+      );
+    }
+  }
+
+  public acceptRecipeShare(recipeShared: Notif) {
+    if(recipeShared){
+      this.notificationService.acceptRecipeShare(recipeShared.id).subscribe(
+        (response: any) => {
+          this.onOpenRecipe(recipeShared.sharedRecipe);
         },
         (error: HttpErrorResponse) => {
           console.error(error);
@@ -211,6 +240,10 @@ export class UserNotificationsComponent {
     });
 
     return 'data:image/jpeg;base64,' + btoa(bytes.join(''));
+  }
+
+  public formattedDate(date: string): string | null{
+    return this.datePipe.transform(date, 'M/d/yyyy HH:mm');
   }
 
   public onOpenFriendProfile(friendUsername: String): void {

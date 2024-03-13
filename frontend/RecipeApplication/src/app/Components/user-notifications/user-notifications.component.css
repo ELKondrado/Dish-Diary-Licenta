@@ -2,13 +2,7 @@ body {
     height: 100vh;
     overflow-y: scroll;
     box-sizing: border-box;
-}
-
-.main-body {
-    height: 100vh;
-    min-height: 100%;
-    box-sizing: border-box;
-    padding-bottom: 10rem;
+    padding-bottom: 20rem;
 }
 
 /* START NAVBAR */
@@ -213,65 +207,97 @@ body {
 /* END NAVBAR */
 
 #main-container {
-    margin-top: 1rem;
-    margin-bottom: 10rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .notifications-title {
     position: relative;
     display: flex;
     flex-direction: row;
-    margin-top: 1rem;
+    margin-top: 0rem;
     margin-left: 3rem;
     margin-right: 3rem;
-    margin-bottom: 2rem;
-    border-bottom: 1px solid white;
+    margin-bottom: 0rem;
 }
 
 .notifications-title h2{
     width: 100%;
+    margin: 0;
     color: white;
     text-align: center;
     font-size: 70px;
 }
 
 .notifications-container {
-    margin-top: 1rem;
-    padding-left: 15rem;
-    padding-right: 15rem;
     width: 100%;
+    margin-top: 1rem;
     color: white;
 }
 
 .horizontal-line {
+    margin: 0;
     background-color: white;
     height: 1px;
 }
 
-.notifications-container h2 {
+.notification-type-title {
     text-align: center;
-    margin-bottom: 1rem;
+    margin: 1rem 0;
 }
 
-.friend-request {
-    padding: 0.75rem 1rem;
+.friend-request, .recipe-share  {
+    width: 100%;
+    padding: 0.75rem 12.5rem;
     padding-top: 0.75rem;
     padding-bottom: 0.75rem;
 }
 
-.friend-request {
+.friend-request, .recipe-share  {
     display: flex;
     flex-direction: row;
     align-items: center;
 }
 
-.friend-request h4 {
+.friend-request h4{
     cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.recipe-shared-name {
+    margin-right: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.recipe-shared-name h4 {
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.recipe-shared-date {
+    padding-bottom: 0.25rem;
+    margin-left: 0.5rem;
+}
+
+.recipe-shared-date .date {
+    color: #777;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .user-avatar {
     width: 80px;
     height: 80px;
+    min-width: 80px;
+    min-height: 80px;
     border-radius: 50%;
     overflow: hidden;
     margin-right: 1rem;
@@ -285,7 +311,42 @@ body {
     cursor: pointer;
 }
 
+.sender-nickname-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.sender-nickname {
+    cursor: pointer;
+    margin-right: 0.75rem;
+    max-width: 15rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.recipe-shared-image {
+    width: 90px;
+    height: 90px;
+    min-width: 90px;
+    min-height: 90px;
+    overflow: hidden;
+    margin-right: 1rem;
+    margin-left: 1rem;
+    border: 0.5px solid white;
+}
+
+.recipe-shared-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+}
+
 .accept-icon-container {
+    background-color: rgb(56, 184, 56);
     cursor: pointer;
     margin-left: auto;
     border-radius: 50%;
@@ -308,6 +369,7 @@ body {
 }
 
 .reject-icon-container {
+    background-color: #db1f1f;
     cursor: pointer;
     margin-left: 1rem;
     border-radius: 50%;
@@ -315,14 +377,14 @@ body {
     padding: 0.5rem;
 }
 
-.reject-icon-container:hover {
-    background-color: #c8060c;
-}
-
 .reject.icon {
     width: 21px;
     height: 21px;
     position: relative;
+}
+
+.reject-icon-container:hover {
+    background-color: #c8060c;
 }
 
 .reject.icon::before,
@@ -341,12 +403,99 @@ body {
     transform: rotate(45deg);
 }
 
-@media (max-width: 768px) {
-    .main-body{
+@media (max-width: 1000px) {
+    body{
         min-height: 100%;
     }
 
     .navbar {
         padding-left: 0.5rem;
+    }
+
+    .notifications-container {
+        margin-bottom: 5rem;
+    }
+
+    .notifications-title {
+        margin: 0;
+        margin-bottom: 0.5rem;
+    }
+
+    .notifications-title h2 {
+        margin: 0;
+        font-size: 45px;
+    }
+
+    .friend-request, .recipe-share  {
+        width: 100%;
+        padding: 0.1rem 0.3rem;
+    }
+
+    .notification-type-title {
+        margin: 0;
+        font-size: 22px;
+    }
+
+    .horizontal-line {
+        margin: 0.5rem 0;
+    }
+
+    .user-avatar {
+        width: 45px;
+        height: 45px;
+        min-width: 45px;
+        min-height: 45px;
+        margin-right: 0.2rem;
+    }
+
+    .notifications-container {
+        width: 100%;
+        margin: 0px;
+        padding: 0px;
+        margin-bottom: 5rem;
+    }
+
+    .sender-nickname-container .shared-label, .sender-nickname {
+        margin: 0;
+        font-size: 12px;
+    }
+
+    .sender-nickname {
+        max-width: 5rem;
+        margin-right: 0.15rem;
+    }
+
+    .recipe-shared-image {
+        width: 50px;
+        height: 50px;
+        min-width: 50px;
+        min-height: 50px;
+        margin: 0 0.3rem;
+    }
+
+    .recipe-name {
+        margin: 0;
+        font-size: 12px;
+    }
+
+    .accept-icon-container {
+        padding: 0.25rem;
+    }
+    
+    .accept.icon {
+        margin: 0.2rem 0.2rem 0.4rem 0.2rem;
+        width: 14px;
+        height: 8px;
+    }
+
+    .reject-icon-container {
+        padding: 0.3rem;
+        margin-left: 0.5rem;
+    }
+    
+    .reject.icon {
+        margin: 0.2rem 0.2rem 0.4rem 0.2rem;
+        width: 14px;
+        height: 8px;
     }
 }

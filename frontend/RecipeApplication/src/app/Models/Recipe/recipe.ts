@@ -7,4 +7,5 @@ export interface Recipe{
     stepsOfPreparation: string;
     image: String;
     userOwner: User;
+    tags: String[];
 }

@@ -34,7 +34,7 @@ export class RecipeInfoComponent implements OnInit {
   public user: User | null = null;
   public username: string | undefined;
   public friends: User[] = [];
-  public notifications: Notif[] | undefined;
+  public notifications: number = 0;
   public unseenConversations: number = 0;
   public userRecipes: Recipe[] | undefined;
   public recipe: Recipe | undefined;
@@ -69,7 +69,7 @@ export class RecipeInfoComponent implements OnInit {
       this.fetchRecipe();
       this.getProfileImage();
       this.getUserRecipes();
-      this.getNotifications();
+      this.getNotificationsCount();
       this.getFriends();
       this.getUnseenConversations();
       this.getLikedReviewsByUser();
@@ -167,18 +167,20 @@ export class RecipeInfoComponent implements OnInit {
     subMenu?.classList.toggle("open-menu");
   }
 
-  public getNotifications(): void {
+  public getNotificationsCount(): void {
     if(this.user)
     {
       this.notificationService.getNotifications(this.user.userId).subscribe(
         (notifications: Notif[]) => {
           notifications.forEach(notification => {
             notification.sender.profileImage = 'data:image/jpeg;base64,' + notification.sender.profileImage;
+            if(notification.status === 'PENDING' || notification.status === 'SHARED') {
+              this.notifications = this.notifications + 1;
+            }
           });
-          this.notifications = notifications.filter(notification => notification.status === 'PENDING');
         },
         (error) => {
-          console.error("ERROR getting the notifications: " + error);
+          console.error(error);
         }
       );
     }
@@ -330,7 +332,6 @@ export class RecipeInfoComponent implements OnInit {
             recipe.image = 'data:image/jpeg;base64,' + recipe.image;
           });
           this.isRecipeInUserRecipes = !!this.recipe && !!this.userRecipes && this.userRecipes.some(userRecipe => userRecipe.id == this.recipe?.id);
-
         },
         (error) => {
           console.error(error);
