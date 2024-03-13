@@ -1,7 +1,8 @@
 package com.example.recipeapp.Services;
 
 import com.example.recipeapp.Exceptions.*;
-import com.example.recipeapp.Model.Recipe;
+import com.example.recipeapp.Model.Recipe.Recipe;
+import com.example.recipeapp.Model.Recipe.RecipeTag;
 import com.example.recipeapp.Model.Review;
 import com.example.recipeapp.Model.User;
 import com.example.recipeapp.Repositories.RecipeRepository;
@@ -56,6 +57,15 @@ public class RecipeService {
         }
         if(review.getUserStarRating() == null) {
             throw new IllegalStateException("Review Start Rating does not exist!");
+        }
+    }
+
+    public static boolean isValidRecipeTag(String tag) {
+        try {
+            RecipeTag.valueOf(tag);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
         }
     }
 
@@ -156,5 +166,29 @@ public class RecipeService {
 
     public List<Recipe> getRecipesByOwner(Long userId) {
         return recipeRepository.findRecipesByOwner(userId);
+    }
+
+    public short addTag(Recipe recipe, String tag) {
+        if(isValidRecipeTag(tag)) {
+            if(!recipe.getTags().contains(RecipeTag.valueOf(tag))) {
+                recipe.getTags().add(RecipeTag.valueOf(tag));
+                recipeRepository.save(recipe);
+                return 0;
+            }
+            else return -1;
+        }
+        else return -2;
+    }
+
+    public short deleteTag(Recipe recipe, String tag) {
+        if(isValidRecipeTag(tag)) {
+            if(recipe.getTags().contains(RecipeTag.valueOf(tag))) {
+                recipe.getTags().remove(RecipeTag.valueOf(tag));
+                recipeRepository.save(recipe);
+                return 0;
+            }
+            else return -1;
+        }
+        else return -2;
     }
 }

@@ -2,7 +2,7 @@ package com.example.recipeapp.Controllers;
 
 import com.example.recipeapp.Exceptions.RecipeNotFoundException;
 import com.example.recipeapp.Model.Notification.Notification;
-import com.example.recipeapp.Model.Recipe;
+import com.example.recipeapp.Model.Recipe.Recipe;
 import com.example.recipeapp.Model.User;
 import com.example.recipeapp.Services.NotificationService;
 import com.example.recipeapp.Services.RecipeService;
@@ -179,6 +179,35 @@ public class RecipeController {
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/addTag/{recipeId}")
+    public ResponseEntity<Recipe> addTag(@PathVariable("recipeId") long recipeId,
+                                         @RequestParam("tag") String tag) {
+        Recipe recipe = recipeService.findRecipeById(recipeId);
+        short response = recipeService.addTag(recipe, tag);
+        if(response == 0) {
+            return new ResponseEntity<>(recipe, HttpStatus.OK);
+        }
+        else if (response == -1){
+            return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/deleteTag/{recipeId}")
+    public ResponseEntity<Recipe> deleteTag(@PathVariable("recipeId") long recipeId,
+                                            @RequestParam("tag") String tag) {
+        Recipe recipe = recipeService.findRecipeById(recipeId);
+        short response = recipeService.deleteTag(recipe, tag);
+        if(response == 0) {
+            return new ResponseEntity<>(recipe, HttpStatus.OK);
         }
         else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

@@ -1,6 +1,6 @@
 package com.example.recipeapp.Controllers;
 
-import com.example.recipeapp.Model.Recipe;
+import com.example.recipeapp.Model.Recipe.Recipe;
 import com.example.recipeapp.Model.Review;
 import com.example.recipeapp.Model.User;
 import com.example.recipeapp.Services.RecipeService;

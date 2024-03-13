@@ -1,7 +1,7 @@
 package com.example.recipeapp.Services;
 
 import com.example.recipeapp.Model.Friendship;
-import com.example.recipeapp.Model.Recipe;
+import com.example.recipeapp.Model.Recipe.Recipe;
 import com.example.recipeapp.Model.User;
 import com.example.recipeapp.Repositories.NotificationRepository;
 import com.example.recipeapp.Repositories.UserRepository;

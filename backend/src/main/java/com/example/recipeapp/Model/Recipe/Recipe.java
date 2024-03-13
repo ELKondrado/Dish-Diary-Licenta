@@ -1,5 +1,7 @@
-package com.example.recipeapp.Model;
+package com.example.recipeapp.Model.Recipe;
 
+import com.example.recipeapp.Model.Review;
+import com.example.recipeapp.Model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 import lombok.Data;
@@ -39,6 +41,12 @@ public class Recipe {
 
     @Lob
     private byte[] image;
+
+    @ElementCollection(targetClass = RecipeTag.class)
+    @CollectionTable(name = "recipe_tags", joinColumns = @JoinColumn(name = "recipe_id"))
+    @Column(name = "tag")
+    @Enumerated(EnumType.STRING)
+    private List<RecipeTag> tags;
 
     @Column(name = "date_created")
     private Date dateCreated;
