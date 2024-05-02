@@ -80,7 +80,7 @@ public class FriendsController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/rejectFriendRequest/{notificationId}")
+    @PutMapping("/rejectFriendRequest/{notificationId}")
     public ResponseEntity<Notification> rejectFriendRequest(@PathVariable long notificationId) {
         Optional<Notification> optionalNotification = notificationRepository.findNotificationById(notificationId);
 

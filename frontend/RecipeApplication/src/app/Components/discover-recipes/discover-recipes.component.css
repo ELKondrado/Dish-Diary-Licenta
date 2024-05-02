@@ -2,12 +2,6 @@ body {
     height: 100vh;
     overflow-y: scroll;
     box-sizing: border-box;
-}
-
-.main-body {
-    height: 100vh;
-    min-height: 100%;
-    box-sizing: border-box;
     padding-bottom: 10rem;
 }
 
@@ -200,8 +194,8 @@ body {
   
 .icon-button__badge {
     position: absolute;
-    top: -7px;
-    right: -7px;
+    top: -5px;
+    right: -5px;
     width: 20px;
     height: 20px;
     background: red;
@@ -213,7 +207,7 @@ body {
 }
 
 .icon-button .notifications-number {
-    font-weight: 500;
+    font-weight: 700;
     font-size: 12px;
 }   
 
@@ -389,6 +383,16 @@ body {
 
 a {
     color: #707070;
+}
+
+.modal-content {
+    background-color: rgb(30, 28, 28);
+    color: white;
+    font-weight: 600;
+}
+
+.modal-content .close {
+    color: white;
 }
 
 .modal-body input {

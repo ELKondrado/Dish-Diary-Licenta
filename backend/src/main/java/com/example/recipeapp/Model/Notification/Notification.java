@@ -1,6 +1,6 @@
 package com.example.recipeapp.Model.Notification;
 
-import com.example.recipeapp.Model.Recipe;
+import com.example.recipeapp.Model.Recipe.Recipe;
 import com.example.recipeapp.Model.User;
 import lombok.Data;
 

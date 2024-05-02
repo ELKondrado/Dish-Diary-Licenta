@@ -20,6 +20,13 @@ import { UserNotificationsComponent } from './Components/user-notifications/user
 import { FriendUserProfileComponent } from './Components/friend-user-profile/friend-user-profile.component';
 import { UserChatComponent } from './Components/user-chat/user-chat.component';
 import { DatePipe } from '@angular/common';
+import { WebSocketService } from './web-socket.service';
+import { ConversationService } from './Models/Conversation/conversation.service';
+import { FriendsService } from './Models/Friendship/friends.service';
+import { MessageService } from './Models/Message/message.service';
+import { NotificationService } from './Models/Notification/notification.service';
+import { ReviewService } from './Models/Review/review.service';
+
 
 const routes: Routes = [
   {path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -61,6 +68,12 @@ const routes: Routes = [
     AuthService,
     RecipeService,
     UserService,
+    ConversationService,
+    FriendsService,
+    MessageService,
+    NotificationService,
+    ReviewService,
+    WebSocketService,
     DatePipe
   ],  
   bootstrap: [AppComponent],

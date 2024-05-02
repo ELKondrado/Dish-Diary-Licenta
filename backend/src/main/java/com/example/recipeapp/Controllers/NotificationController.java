@@ -41,4 +41,45 @@ public class NotificationController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping(value = "getNotificationsCount/{userId}")
+    public ResponseEntity<Long> getNotificationsCount(@PathVariable("userId") Long userId) {
+        Optional<User> optionalUser = userRepository.findUserByUserId(userId);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            Long notificationsCount = notificationService.getNotificationsCount(user);
+            return new ResponseEntity<>(notificationsCount, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/rejectRecipeShare/{notificationId}")
+    public ResponseEntity<Notification> rejectRecipeShare(@PathVariable long notificationId) {
+        Optional<Notification> optionalNotification = notificationRepository.findNotificationById(notificationId);
+
+        if(optionalNotification.isPresent()) {
+            Notification notification = optionalNotification.get();
+            notificationService.rejectRecipeShare(notification);
+            return new ResponseEntity<>(notification, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/acceptRecipeShare/{notificationId}")
+    public ResponseEntity<Notification> acceptRecipeShare(@PathVariable long notificationId) {
+        Optional<Notification> optionalNotification = notificationRepository.findNotificationById(notificationId);
+
+        if(optionalNotification.isPresent()) {
+            Notification notification = optionalNotification.get();
+            notificationService.acceptRecipeShare(notification);
+            return new ResponseEntity<>(notification, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

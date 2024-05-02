@@ -2,12 +2,6 @@ body {
     height: 100vh;
     overflow-y: scroll;
     box-sizing: border-box;
-}
-
-.main-body {
-    height: 100vh;
-    min-height: 100%;
-    box-sizing: border-box;
     padding-bottom: 10rem;
 }
 
@@ -208,8 +202,8 @@ body {
   
 .icon-button__badge {
     position: absolute;
-    top: -7px;
-    right: -7px;
+    top: -5px;
+    right: -5px;
     width: 20px;
     height: 20px;
     background: red;
@@ -221,7 +215,7 @@ body {
 }
 
 .icon-button .notifications-number {
-    font-weight: 500;
+    font-weight: 700;
     font-size: 12px;
 }   
 
@@ -455,7 +449,25 @@ a {
 .modal-body textarea {
     font-size: 1rem;
     font-weight: 400;
-    height: 150px;
+    height: 125px;
+}
+
+.modal-body select {
+    font-size: 1rem;
+    font-weight: 400;
+    width: 90%;
+}
+
+.modal-body .select-tag-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.modal-body .select-tag-container button {
+    background-color: #2a62d4;
+    color: white;
+    margin-left: 0.25rem;
+    border: 1px solid white;
 }
 
 .no-recipes-modal {
@@ -465,6 +477,97 @@ a {
     left: 50%;
     transform: translate(-50%, -50%);
     width: fit-content;
+}
+
+.modal-content {
+    background-color: rgb(30, 28, 28);
+    color: white;
+    font-weight: 600;
+}
+
+.modal-content .close {
+    color: white;
+}
+
+.modal-title {
+    width: 100%;
+    text-align: center;
+    margin: 0;
+}
+
+.form-group {
+    margin: 0rem;
+    margin-top: 0.25rem;
+}
+
+.modal-footer {
+    margin: 0;
+    padding: 0;
+    padding-top: 0.25rem;
+}
+
+.modal-body input, textarea, select {
+    color: white;
+    background-color: #333333;
+    outline: none;
+    border: 1px solid white;
+}
+
+.modal-body input:focus, textarea:focus, select:focus{
+    color: white;
+    background-color: #333333;
+    outline: none;
+    border: 1px solid #2a62d4;
+}
+
+.recipe-tags {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 0.25rem 0;
+    padding: 0;
+}
+
+.recipe-tags .tag{
+    color: white;
+    padding: 0 0.2rem;
+    border: 0.1rem solid white;
+    border-radius: 6px;
+    margin: 0.1rem;
+}
+
+.recipe-tags .tag label {
+    font-size: 13px;
+    padding: 0;
+    margin: 0;
+}
+
+.recipe-tags .remove-tag {
+    font-size: 14px;
+    font-weight: 800;
+    display: none;
+}
+
+.hoverable:hover .remove-tag {
+    display: inline-block; 
+}
+
+.modal-body .cancel-button {
+    background-color: rgb(44, 43, 43);
+    border: 1px solid grey;
+    color: white;
+}
+
+.modal-body .create-button {
+    background-color: #2a62d4;
+    border: 1px solid white;
+    color: white;
+}
+
+.modal-body .cancel-button:hover{
+    border-color: white;
 }
 
 @media (max-width: 768px) {

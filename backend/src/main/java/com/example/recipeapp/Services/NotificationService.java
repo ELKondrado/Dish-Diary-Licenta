@@ -3,7 +3,7 @@ package com.example.recipeapp.Services;
 import com.example.recipeapp.Model.Notification.Notification;
 import com.example.recipeapp.Model.Notification.NotificationStatus;
 import com.example.recipeapp.Model.Notification.NotificationType;
-import com.example.recipeapp.Model.Recipe;
+import com.example.recipeapp.Model.Recipe.Recipe;
 import com.example.recipeapp.Model.User;
 import com.example.recipeapp.Repositories.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class NotificationService {
+public class NotificationService extends AbstractWSService{
     private final NotificationRepository notificationRepository;
 
     @Autowired
@@ -21,8 +21,17 @@ public class NotificationService {
         this.notificationRepository = notificationRepository;
     }
 
+    @Override
+    protected String getEntityTopic() {
+        return "notification";
+    }
+
     public List<Notification> getNotifications(User user) {
         return notificationRepository.findNotificationsByUserId(user.getUserId());
+    }
+
+    public Long getNotificationsCount(User user) {
+        return notificationRepository.getNotificationsCount(user.getUserId());
     }
 
     public Notification shareRecipeToFriend(User user, Recipe recipe, User friend) {
@@ -34,5 +43,15 @@ public class NotificationService {
         notification.setDateCreated(new Date());
         notification.setSharedRecipe(recipe);
         return notificationRepository.save(notification);
+    }
+
+    public void rejectRecipeShare(Notification notification) {
+        notification.setStatus(NotificationStatus.REJECTED);
+        notificationRepository.save(notification);
+    }
+
+    public void acceptRecipeShare(Notification notification) {
+        notification.setStatus(NotificationStatus.ACCEPTED);
+        notificationRepository.save(notification);
     }
 }

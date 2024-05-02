@@ -1,28 +1,31 @@
 <nav class="navbar navbar-expand-lg navbar-dark">
-    <a id="mainPage" class="navbar-brand" (click)="mainPage()" style="color: white; font-weight: 800; font-size: x-large">DishDiary</a>
-  
-    <div class="collapse navbar-collapse">
-       <ul class="navbar-nav mr-auto justify-content-start">
-          <li class="nav-item">
-             <a class="nav-link" (click)="mainPage()">Repository <span class="sr-only">(current)</span></a>
-          </li>
+   <a id="mainPage" class="navbar-brand" (click)="mainPage()" style="color: white; font-weight: 800; font-size: x-large">DishDiary</a>
+
+   <div class="collapse navbar-collapse">
+      <ul class="navbar-nav mr-auto justify-content-start">
+         <li class="nav-item">
+            <a class="nav-link" (click)="mainPage()">Repository <span class="sr-only">(current)</span></a>
+         </li>
+
+         <li class="nav-item">
+            <a class="nav-link" (click)="discoverRecipes()">Discover Recipes <span class="sr-only">(current)</span></a>
+         </li>
+      </ul>
  
-          <li class="nav-item">
-             <a class="nav-link" (click)="discoverRecipes()">Discover Recipes <span class="sr-only">(current)</span></a>
-          </li>
-       </ul>
- 
-       <div class="lil-avatar">
-          <img (click)="toggleMenu()" class="avatar profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
-          <img (click)="toggleMenu()" class="avatar profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
-       </div>
+      <div class="icon-button">
+         <div class="lil-avatar">
+             <img (click)="toggleMenu()" class="avatar profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
+             <img (click)="toggleMenu()" class="avatar profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
+         </div>
+         <span *ngIf="unseenConversations + notifications.length != 0 " class="icon-button__badge notifications-number">{{unseenConversations + notifications.length}}</span>
+      </div> 
  
        <div class="sub-menu-wrap" id="subMenu">
           <div class="sub-menu">
              <div class="user-info">
                 <div class="lil-avatar">
-                   <img *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
-                   <img *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
+                   <img class="avatar profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
+                   <img class="avatar profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
                 </div>
                 <h6>{{user?.userNickname}}</h6>
              </div>
@@ -87,24 +90,24 @@
     </div>
  </nav>
 
-<body>
+<body class="main-body">
 
-    <div id="main-container">
+   <div class="notifications-title">
+      <h2>Notifications</h2>
+   </div>
 
-        <div class="notifications-title">
-            <h2>Notifications</h2>
-        </div>
+   <div id="main-container">
         
          <div class="notifications-container">
             <div *ngIf="friendRequests.length != 0">
-               <h2>Friend Requests</h2>
+               <h2 class="notification-type-title">Friend Requests</h2>
                <hr class="horizontal-line">
                <div *ngFor="let friendRequest of friendRequests">
                   <div class="friend-request" *ngIf="friendRequest.status == 'PENDING'">
                      <div class="user-avatar">
                         <img (click)="onOpenFriendProfile(friendRequest.sender.userName)" src="{{friendRequest.sender.profileImage}}" alt="User Avatar">
                      </div>
-                     <h4 (click)="onOpenFriendProfile(friendRequest.sender.userName)">{{friendRequest.sender.userNickname}}</h4>
+                     <h4 (click)="onOpenFriendProfile(friendRequest.sender.userName)" class="sender-nickname">{{friendRequest.sender.userNickname}}</h4>
                      <div (click)="onResponseFriendRequestModal(friendRequest, 'accept')" class="accept-icon-container">
                         <div class="accept icon"></div>
                      </div>
@@ -117,19 +120,34 @@
             </div>
  
             <div *ngIf="recipesShared.length != 0">
-               <h2>Recipes Shared</h2>
+               <h2 class="notification-type-title">Recipes Shared</h2>
                <hr class="horizontal-line">
                <div *ngFor="let recipeShared of recipesShared">
-                  <div class="friend-request" *ngIf="recipeShared.status == 'SHARED'">
+                  <div class="recipe-share" *ngIf="recipeShared.status == 'SHARED'">
                      <div class="user-avatar">
+                        <img (click)="onOpenFriendProfile(recipeShared.sender.userName)" src="{{recipeShared.sender.profileImage}}" alt="User Avatar">
+                     </div>
+                     <div class="sender-nickname-container">
+                        <h4 (click)="onOpenFriendProfile(recipeShared.sender.userName)" class="sender-nickname">{{recipeShared.sender.userNickname}}</h4>
+                        <h4 class="shared-label">shared</h4>
+                     </div>
+
+                     <div class="recipe-shared-image">
                         <img (click)="onOpenRecipe(recipeShared.sharedRecipe)" src="{{recipeShared.sharedRecipe.image}}" alt="User Avatar">
                      </div>
-                     <h4 (click)="onOpenRecipe(recipeShared.sharedRecipe)">{{recipeShared.sharedRecipe.name}}</h4>
-                     <div  class="accept-icon-container">
-                        <div class="accept icon"></div>
+
+                     <div class="recipe-shared-name">
+                        <h4 (click)="onOpenRecipe(recipeShared.sharedRecipe)" class="recipe-name">{{recipeShared.sharedRecipe.name}}</h4>
                      </div>
+                     
+                   
+
+                     <div class="accept-icon-container">
+                        <div (click)="acceptRecipeShare(recipeShared)" class="accept icon"></div>
+                     </div>
+
                      <div class="reject-icon-container">
-                        <div class="reject icon"></div>
+                        <div (click)="rejectRecipeShare(recipeShared)" class="reject icon"></div>
                      </div>
                   </div>
                </div>

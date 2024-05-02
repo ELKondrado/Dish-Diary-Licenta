@@ -20,17 +20,20 @@
          <input (ngModelChange)="searchRecipe(key.value)" #key="ngModel" ngModel type="search" name="key" id="searchRecipe" class="form-control mr-sm-2 search-recipe-box" placeholder="Search recipes..." required>
       </div>
       
-      <div class="lil-avatar">
-         <img (click)="toggleMenu()" class="avatar profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
-         <img (click)="toggleMenu()" class="avatar profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
-      </div>
+      <div class="icon-button">
+         <div class="lil-avatar">
+             <img (click)="toggleMenu()" class="avatar profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
+             <img (click)="toggleMenu()" class="avatar profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
+         </div>
+         <span *ngIf="unseenConversations + notificationsCount != 0 " class="icon-button__badge notifications-number">{{unseenConversations + notificationsCount}}</span>
+      </div> 
 
       <div class="sub-menu-wrap" id="subMenu">
          <div class="sub-menu">
             <div class="user-info">
                <div class="lil-avatar">
-                  <img *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
-                  <img *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
+                  <img class="avatar profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
+                  <img class="avatar profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
                </div>
                <h6>{{user?.userNickname}}</h6>
             </div>
@@ -73,7 +76,7 @@
                <div class="icon-container">
                   <div class="icon-button">
                      <i class="material-icons">notifications</i>
-                     <span *ngIf="notifications?.length !=0 " class="icon-button__badge notifications-number">{{notifications?.length}}</span>
+                     <span *ngIf="notificationsCount !=0 " class="icon-button__badge notifications-number">{{notificationsCount}}</span>
                   </div>               
                </div>
                
@@ -131,18 +134,18 @@
       </div>
       
 
-   <!-- Add Recipe Modal -->
-   <div class="modal fade" id="addRecipeModal" tabindex="-1" role="dialog" aria-labelledby="addRecipeModalLabel" aria-hidden="true">
+   <!-- Create Recipe Modal -->
+   <div class="modal fade" id="createRecipeModal" tabindex="-1" role="dialog" aria-labelledby="createRecipeModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
          <div class="modal-content">
             <div class="modal-header">
-               <h5 class="modal-title" id="addRecipeModalLabel">Add Recipe</h5>
+               <h5 class="modal-title" id="createRecipeModalLabel">Create Recipe</h5>
                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                <span aria-hidden="true">&times;</span>
                </button>
             </div>
             <div class="modal-body">
-               <form #addForm="ngForm" (ngSubmit)="onAddRecipe(addForm)">
+               <form #addForm="ngForm" (ngSubmit)="onCreateRecipe(addForm)">
                <div class="form-group">
                   <label for="name">Name</label>
                   <input type="text" ngModel name="name" class="form-control" id="name" placeholder="Name" max="254" required>
@@ -155,9 +158,27 @@
                   <label for="stepsOfPreparation">Steps Of Preparation</label>
                   <textarea ngModel name="stepsOfPreparation" class="form-control" id="stepsOfPreparation" placeholder="Steps Of Preparation" maxlength="2055" required></textarea>
                </div>
+               <div class="form-group">
+                  <label for="tags">Tags</label>
+                  <div class="select-tag-container">
+                      <select name="tags" class="form-control" id="tags" required #tagsRef>
+                          <option value="" disabled selected>Select tags</option>
+                          <option *ngFor="let tag of tags" [value]="tag">{{tag}}</option>
+                      </select>
+                      <button type="button" (click)="addTagToForm(tagsRef.value)">Add</button>
+                     </div>
+               </div>              
+               <div class="form-group recipe-tags">
+                  <div *ngFor="let tag of addedRecipeTags" class="tag">
+                      <label class="hoverable">{{tag}}
+                          <span (click)="removeTagFromForm(tag)" class="material-icons remove-tag">close</span>
+                      </label>
+                  </div>
+              </div>
+                                   
                <div class="modal-footer">
-                  <button type="button" id="add-recipe-form" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary" style="background-color: royalblue;" >Save changes</button>
+                  <button type="button" id="create-recipe-form" class="btn btn-secondary cancel-button" data-dismiss="modal">Close</button>
+                  <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary create-button" style="background-color: royalblue;">Create</button>
                </div>
                </form>
             </div>

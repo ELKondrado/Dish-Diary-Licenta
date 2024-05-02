@@ -2,14 +2,13 @@ package com.example.recipeapp.Services;
 
 import com.example.recipeapp.Exceptions.RecipeNotFoundException;
 import com.example.recipeapp.Exceptions.ReviewNotFoundException;
-import com.example.recipeapp.Model.Recipe;
+import com.example.recipeapp.Model.Recipe.Recipe;
 import com.example.recipeapp.Model.Review;
 import com.example.recipeapp.Model.User;
 import com.example.recipeapp.Repositories.RecipeRepository;
 import com.example.recipeapp.Repositories.ReviewRepository;
 import com.example.recipeapp.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;

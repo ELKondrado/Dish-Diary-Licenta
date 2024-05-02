@@ -24,7 +24,22 @@ export class NotificationService {
   }
 
   public getNotifications(userId: number): Observable<Notif[]> {
-      const headers = this.getHeaders();
-      return this.http.get<Notif[]>(`${this.apiServerUrl}/user/notifications/getNotifications/${userId}`, { headers });
+    const headers = this.getHeaders();
+    return this.http.get<Notif[]>(`${this.apiServerUrl}/user/notifications/getNotifications/${userId}`, { headers });
+  }
+
+  public getNotificationsCount(userId: number): Observable<number> {
+    const headers = this.getHeaders();
+    return this.http.get<number>(`${this.apiServerUrl}/user/notifications/getNotificationsCount/${userId}`, { headers });
+  }
+
+  public rejectRecipeShare(notificationId: number): Observable<number> {
+    const headers = this.getHeaders();
+    return this.http.put<number>(`${this.apiServerUrl}/user/notifications/rejectRecipeShare/${notificationId}`, null, { headers });
+  }
+
+  public acceptRecipeShare(notificationId: number): Observable<number> {
+    const headers = this.getHeaders();
+    return this.http.put<number>(`${this.apiServerUrl}/user/notifications/acceptRecipeShare/${notificationId}`, null, { headers });
   }
 }

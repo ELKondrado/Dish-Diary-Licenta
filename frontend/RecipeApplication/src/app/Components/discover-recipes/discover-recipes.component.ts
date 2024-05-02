@@ -27,7 +27,7 @@ export class DiscoverRecipesComponent implements OnInit{
 
   public user: User | null = null;
   public recipes: Recipe[] = [];
-  public notifications: Notif[] | undefined;
+  public notificationsCount: number = 0;
   public unseenConversations: number = 0;
   public repositoryRecipes: Recipe[] = [];
   public username: string | undefined;
@@ -47,7 +47,7 @@ export class DiscoverRecipesComponent implements OnInit{
       this.getRecipes();
       this.getRepositoryRecipes();
       this.getProfileImage();
-      this.getNotifications();
+      this.getNotificationsCount();
       this.getUnseenConversations();
     });
   }
@@ -83,20 +83,15 @@ export class DiscoverRecipesComponent implements OnInit{
     subMenu?.classList.toggle("open-menu");
   }
 
-  public getNotifications(): void {
+  public getNotificationsCount(): void {
     if(this.user)
     {
-      this.notificationService.getNotifications(this.user.userId).subscribe(
-        (notifications: Notif[]) => {
-          console.log(notifications);
-          notifications.forEach(notification => {
-            notification.sender.profileImage = 'data:image/jpeg;base64,' + notification.sender.profileImage;
-          });
-          this.notifications = notifications.filter(notification => notification.status === 'PENDING');
-          console.log(this.notifications.length)
+      this.notificationService.getNotificationsCount(this.user.userId).subscribe(
+        (notifications: number) => {
+          this.notificationsCount = notifications;
         },
         (error) => {
-          console.error("ERROR getting the notifications: " + error);
+          console.error(error);
         }
       );
     }

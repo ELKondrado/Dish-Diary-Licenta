@@ -1,5 +1,6 @@
 package com.example.recipeapp.Model;
 
+import com.example.recipeapp.Model.Recipe.Recipe;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 import com.sun.istack.Nullable;
