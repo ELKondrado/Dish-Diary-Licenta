@@ -13,12 +13,17 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class NotificationService {
+public class NotificationService extends AbstractWSService{
     private final NotificationRepository notificationRepository;
 
     @Autowired
     public NotificationService(NotificationRepository notificationRepository) {
         this.notificationRepository = notificationRepository;
+    }
+
+    @Override
+    protected String getEntityTopic() {
+        return "notification";
     }
 
     public List<Notification> getNotifications(User user) {

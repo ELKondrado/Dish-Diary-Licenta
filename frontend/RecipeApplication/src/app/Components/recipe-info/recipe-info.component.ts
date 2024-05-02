@@ -34,7 +34,7 @@ export class RecipeInfoComponent implements OnInit {
   public user: User | null = null;
   public username: string | undefined;
   public friends: User[] = [];
-  public notifications: number = 0;
+  public notificationsCount: number = 0;
   public unseenConversations: number = 0;
   public userRecipes: Recipe[] | undefined;
   public recipe: Recipe | undefined;
@@ -170,14 +170,9 @@ export class RecipeInfoComponent implements OnInit {
   public getNotificationsCount(): void {
     if(this.user)
     {
-      this.notificationService.getNotifications(this.user.userId).subscribe(
-        (notifications: Notif[]) => {
-          notifications.forEach(notification => {
-            notification.sender.profileImage = 'data:image/jpeg;base64,' + notification.sender.profileImage;
-            if(notification.status === 'PENDING' || notification.status === 'SHARED') {
-              this.notifications = this.notifications + 1;
-            }
-          });
+      this.notificationService.getNotificationsCount(this.user.userId).subscribe(
+        (notifications: number) => {
+          this.notificationsCount = notifications;
         },
         (error) => {
           console.error(error);

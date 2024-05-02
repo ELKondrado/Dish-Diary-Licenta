@@ -164,8 +164,8 @@ body {
   
 .icon-button__badge {
     position: absolute;
-    top: -7px;
-    right: -7px;
+    top: -5px;
+    right: -5px;
     width: 20px;
     height: 20px;
     background: red;
@@ -177,7 +177,7 @@ body {
 }
 
 .icon-button .notifications-number {
-    font-weight: 500;
+    font-weight: 700;
     font-size: 12px;
 }   
 

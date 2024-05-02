@@ -1,3 +1,5 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <nav class="navbar navbar-expand-lg navbar-dark">
     <a (click)="mainPage()" id="mainPage" class="navbar-brand" style="color: white; font-weight: 800; font-size: x-large">DishDiary</a>
   
@@ -12,18 +14,22 @@
             </li>
         </ul>
 
-        <div class="lil-avatar">
-            <img (click)="toggleMenu()" class="avatar profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
-            <img (click)="toggleMenu()" class="avatar profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
-        </div>
+        <div class="icon-button">
+            <div class="lil-avatar">
+                <img (click)="toggleMenu()" class="avatar profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
+                <img (click)="toggleMenu()" class="avatar profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
+            </div>
+            <span *ngIf="unseenConversations + notificationsCount != 0 " class="icon-button__badge notifications-number">{{unseenConversations + notificationsCount}}</span>
+        </div> 
+      
     
         <div class="sub-menu-wrap" id="subMenu">
             <div class="sub-menu">
                 <div class="user-info">
                     <div class="lil-avatar">
-                    <img class="avatar profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
-                    <img class="avatar profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
-                    </div>
+                        <img class="avatar profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
+                        <img class="avatar profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
+                    </div>  
                     <h6>{{user?.userNickname}}</h6>
                 </div>
     
@@ -65,7 +71,7 @@
                     <div class="icon-container">
                         <div class="icon-button">
                             <i class="material-icons">notifications</i>
-                            <span *ngIf="notifications !=0 " class="icon-button__badge notifications-number">{{notifications}}</span>
+                            <span *ngIf="notificationsCount !=0 " class="icon-button__badge notifications-number">{{notificationsCount}}</span>
                         </div>               
                     </div>
                     
@@ -145,17 +151,17 @@
 
                 <div #scrollContainer class="chat-messages-container">
                     <div class="messages" *ngIf="friendCurrentConversation">
-                      <div *ngFor="let message of messagesFromFriend; let i = index">
-                        <div *ngIf="shouldShowDate(message, i)" class="date">
+                        <div *ngFor="let message of messagesFromFriend; let i = index">
+                            <div class="date" *ngIf="shouldShowDate(message, i)">
                                 <span>{{formattedDateDDMMYYYY(message.timestamp.toString())}}</span>
                             </div>
-                            <div class="message-from-user" *ngIf="message.receiver.userId == user?.userId"  (mouseover)="showDateBubbles[i] = true" (mouseleave)="showDateBubbles[i] = false">
+                            <div class="message-from-user" *ngIf="user?.userId == message.receiver.userId" (mouseover)="showDateBubbles[i] = true" (mouseleave)="showDateBubbles[i] = false">
                                 <p class="content">{{message.content}}</p>
                                 <div class="date-bubble" *ngIf="showDateBubbles[i]">
                                     <span>{{formattedDateHour(message.timestamp.toString())}}</span>
                                 </div>
                             </div>
-                            <div class="message-to-user" *ngIf="message.receiver.userId != user?.userId" (mouseover)="showDateBubbles[i] = true" (mouseleave)="showDateBubbles[i] = false">
+                            <div class="message-to-user" *ngIf="user?.userId == message.sender.userId" (mouseover)="showDateBubbles[i] = true" (mouseleave)="showDateBubbles[i] = false">
                                 <p class="content">{{message.content}}</p>
                                 <div class="date-bubble" *ngIf="showDateBubbles[i]">
                                     <span>{{formattedDateHour(message.timestamp.toString())}}</span>
@@ -167,7 +173,7 @@
 
                 <div class="messages-input">
                     <div>
-                        <textarea [(ngModel)]="messageToSend" (keypress)="auto_grow($event)" (keyup)="auto_grow($event)" id="chat-box" placeholder="Type your message..." maxlength="16383"></textarea>
+                        <textarea [(ngModel)]="messageToSend" (keyup.enter)="sendMessage()" (keypress)="auto_grow($event)" (keyup)="auto_grow($event)" id="chat-box" placeholder="Type your message..." maxlength="16383"></textarea>
                     </div>
                     <div (click)="sendMessage()" class="send-button">
                         <i class="material-icons send-icon">send</i>

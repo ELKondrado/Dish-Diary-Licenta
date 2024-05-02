@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.Optional;
 
 @Service
-public class FriendsService {
+public class FriendsService extends AbstractWSService{
     private final FriendshipRepository friendshipRepository;
     private final UserRepository userRepository;
     private final NotificationRepository notificationRepository;
@@ -27,6 +27,12 @@ public class FriendsService {
         this.userRepository = userRepository;
         this.notificationRepository = notificationRepository;
     }
+
+    @Override
+    protected String getEntityTopic() {
+        return "notification";
+    }
+
 
     public Short sendFriendRequest(User userSender, User userReceiver){
         Optional<Notification> optionalNotification = notificationRepository.findNotificationBySenderIdReceiverId(userSender.getUserId(), userReceiver.getUserId());
@@ -52,6 +58,7 @@ public class FriendsService {
         notification.setStatus(NotificationStatus.PENDING);
         notification.setDateCreated(new Date());
         notificationRepository.save(notification);
+        notifyFrontend();
         return 0;
     }
 
@@ -66,11 +73,13 @@ public class FriendsService {
         }
         notification.setStatus(NotificationStatus.ACCEPTED);
         notificationRepository.save(notification);
+        notifyFrontend();
     }
 
     public void rejectFriendRequest(Notification notification){
         notification.setStatus(NotificationStatus.REJECTED);
         notificationRepository.save(notification);
+        notifyFrontend();
     }
 
     @Transactional
@@ -85,6 +94,7 @@ public class FriendsService {
 
                 userRepository.save(user);
                 userRepository.save(friend);
+                notifyFrontend();
             } else {
                 throw new IllegalStateException("Users are already friends.");
             }
@@ -96,5 +106,6 @@ public class FriendsService {
     @Transactional
     public void removeFriend(User user, User removedFriend) {
         friendshipRepository.deleteFriendship(user.getUserId(), removedFriend.getUserId());
+        notifyFrontend();
     }
 }

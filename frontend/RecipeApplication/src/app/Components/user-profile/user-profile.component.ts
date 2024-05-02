@@ -7,7 +7,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { User } from '../../Models/User/user';
 import { RecipeService } from '../../Models/Recipe/recipe.service';
 import { NotificationService } from '../../Models/Notification/notification.service';
-import { Notif } from '../../Models/Notification/notification';
 import { NgForm } from '@angular/forms';
 import { MessageService } from '../../Models/Message/message.service';
 
@@ -28,7 +27,7 @@ export class UserProfileComponent implements OnInit{
 
   public user: User | null = null;
   public username: string | undefined;
-  public notifications: number = 0;
+  public notificationsCount: number = 0;
   public unseenConversations: number = 0;
   public avatarUrl: String | undefined;
   public selectedFile: File | undefined;
@@ -100,14 +99,9 @@ export class UserProfileComponent implements OnInit{
   public getNotificationsCount(): void {
     if(this.user)
     {
-      this.notificationService.getNotifications(this.user.userId).subscribe(
-        (notifications: Notif[]) => {
-          notifications.forEach(notification => {
-            notification.sender.profileImage = 'data:image/jpeg;base64,' + notification.sender.profileImage;
-            if(notification.status === 'PENDING' || notification.status === 'SHARED') {
-              this.notifications = this.notifications + 1;
-            }
-          });
+      this.notificationService.getNotificationsCount(this.user.userId).subscribe(
+        (notifications: number) => {
+          this.notificationsCount = notifications;
         },
         (error) => {
           console.error(error);

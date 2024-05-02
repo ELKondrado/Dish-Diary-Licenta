@@ -3,7 +3,6 @@ package com.example.recipeapp.Controllers;
 import com.example.recipeapp.Model.Conversation;
 import com.example.recipeapp.Model.Message;
 import com.example.recipeapp.Model.User;
-import com.example.recipeapp.Repositories.MessageRepository;
 import com.example.recipeapp.Repositories.UserRepository;
 import com.example.recipeapp.Services.ConversationService;
 import com.example.recipeapp.Services.MessageService;
@@ -11,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

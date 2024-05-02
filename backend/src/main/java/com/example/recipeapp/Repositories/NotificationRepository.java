@@ -23,6 +23,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
     @Query(value = "SELECT count(*) " +
                    "FROM notifications n " +
-                   "WHERE n.receiver_id = :userId", nativeQuery = true)
+                   "WHERE n.receiver_id = :userId AND ( n.status = 'PENDING' OR n.status = 'SHARED' )", nativeQuery = true)
     Long getNotificationsCount(Long userId);
 }

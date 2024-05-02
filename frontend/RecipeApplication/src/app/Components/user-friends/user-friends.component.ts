@@ -4,9 +4,7 @@ import { UserService } from '../../Models/User/user.service';
 import { Router } from '@angular/router';
 import { User } from '../../Models/User/user';
 import { HttpErrorResponse } from '@angular/common/http';
-import { NgForm } from '@angular/forms';
 import { NotificationService } from '../../Models/Notification/notification.service';
-import { Notif } from '../../Models/Notification/notification';
 import { FriendsService } from '../../Models/Friendship/friends.service';
 import { MessageService } from '../../Models/Message/message.service';
 
@@ -35,7 +33,7 @@ export class UserFriendsComponent implements OnInit{
   public friendRequestAlreadyFriend: boolean = false;
   public friendRequestCannotAddYourself: boolean = false;
   public showFriendRequestForm: boolean = false;
-  public notifications: number = 0;
+  public notificationsCount: number = 0;
   public unseenConversations: number = 0;
   public avatarUrl: String | undefined;
   public friends: User[] = [];
@@ -99,14 +97,9 @@ export class UserFriendsComponent implements OnInit{
   public getNotificationsCount(): void {
     if(this.user)
     {
-      this.notificationService.getNotifications(this.user.userId).subscribe(
-        (notifications: Notif[]) => {
-          notifications.forEach(notification => {
-            notification.sender.profileImage = 'data:image/jpeg;base64,' + notification.sender.profileImage;
-            if(notification.status === 'PENDING' || notification.status === 'SHARED') {
-              this.notifications = this.notifications + 1;
-            }
-          });
+      this.notificationService.getNotificationsCount(this.user.userId).subscribe(
+        (notifications: number) => {
+          this.notificationsCount = notifications;
         },
         (error) => {
           console.error(error);

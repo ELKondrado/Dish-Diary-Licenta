@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Message } from './message';
 import { AuthService } from '../../Security/auth.service';
+import { MessageDto } from './messageDto';
 
 @Injectable({
   providedIn: 'root'

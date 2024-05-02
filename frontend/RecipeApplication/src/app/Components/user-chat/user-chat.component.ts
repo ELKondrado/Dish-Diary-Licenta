@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { AuthService } from '../../Security/auth.service';
 import { UserService } from '../../Models/User/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -10,19 +10,23 @@ import { MessageService } from '../../Models/Message/message.service';
 import { Message } from '../../Models/Message/message';
 import { DatePipe } from '@angular/common';
 import { interval } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { take, timestamp } from 'rxjs/operators';
 import { Conversation } from '../../Models/Conversation/conversation';
 import { ConversationService } from '../../Models/Conversation/conversation.service';
+import { Stomp } from '@stomp/stompjs';
+import { Client } from 'stompjs';
+import { WebSocketService } from '../../web-socket.service';
 
 @Component({
   selector: 'app-user-chat',
   templateUrl: './user-chat.component.html',
   styleUrl: './user-chat.component.css'
 })
-export class UserChatComponent {
+export class UserChatComponent implements OnInit, OnDestroy{
   @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
 
   constructor(
+    private webSocketService: WebSocketService,
     private route: ActivatedRoute,
     private datePipe: DatePipe,
     private authService: AuthService,
@@ -31,11 +35,13 @@ export class UserChatComponent {
     private messageService: MessageService,
     private conversationService: ConversationService,
     private router: Router
-  ) {}
+  ) {
+  }
+
   public user: User | null = null;
   public username: string | undefined;
   public conversations: Conversation[] = [];
-  public notifications: number = 0;
+  public notificationsCount: number = 0;
   public unseenConversations: number = 0;
   public friendRequestNotification: Notif | undefined;
   public avatarUrl: String | undefined;
@@ -48,6 +54,10 @@ export class UserChatComponent {
   public showDateBubbles: boolean[] = [];
 
   ngOnInit(): void {
+    this.webSocketService.subscribe('/topic/message', (): void =>{
+      this.getMessagesFromUser();
+    });
+
     this.fetchData();
     this.fetchUser();
 
@@ -59,6 +69,9 @@ export class UserChatComponent {
           conversation.lastMessage.timestamp = this.currentTimeDifferenceFormattedDate(conversation.lastMessage.timestamp.toString());
         });
       });
+  }
+
+  ngOnDestroy(): void {
   }
   
   private fetchData(): void{
@@ -125,7 +138,6 @@ export class UserChatComponent {
         this.getMessagesFromUser();
         this.messageService.setWasSeenConversation(this.user?.userId, this.friendCurrentConversation.userId).subscribe(
           (response: any) => {
-            console.log(response)
           },
           (error : HttpErrorResponse) =>
           {
@@ -141,7 +153,6 @@ export class UserChatComponent {
         this.getMessagesFromUser();
         this.messageService.setWasSeenConversation(this.user?.userId, this.friendCurrentConversation.userId).subscribe(
           (response: any) => {
-            console.log(response)
           },
           (error : HttpErrorResponse) =>
           {
@@ -160,7 +171,6 @@ export class UserChatComponent {
     if (this.user) {
           this.conversationService.getConversations(this.user.userId).subscribe(
             (conversations: Conversation[]) => {
-              console.log(conversations);
               this.conversations = conversations;
               this.conversations.sort((a, b) => {
                 const timestampA = new Date(a.lastMessage.timestamp);
@@ -212,7 +222,7 @@ export class UserChatComponent {
 
             return timestampA.getTime() - timestampB.getTime();
           });
-          this.scrollToBottom();
+          this.scrollChatToBottom();
           this.showDateBubbles = new Array(this.messagesFromFriend.length).fill(false);
         },
         (error: HttpErrorResponse) => {
@@ -222,7 +232,7 @@ export class UserChatComponent {
     }
   }
 
-  private scrollToBottom() {
+  private scrollChatToBottom() {
     const chatMessagesContainer = this.scrollContainer.nativeElement;
     if (chatMessagesContainer) {
       setTimeout(() => {
@@ -231,7 +241,7 @@ export class UserChatComponent {
     }
   }
 
-  public sendMessage(): void {
+   public sendMessage(): void {
     if(this.user && this.friendCurrentConversation && this.messageToSend.trim().length != 0) {
       this.messageService.sendMessage(this.user?.userId, this.friendCurrentConversation?.userId, this.messageToSend).subscribe(
         (response: any) => {
@@ -312,14 +322,9 @@ export class UserChatComponent {
   public getNotificationsCount(): void {
     if(this.user)
     {
-      this.notificationService.getNotifications(this.user.userId).subscribe(
-        (notifications: Notif[]) => {
-          notifications.forEach(notification => {
-            notification.sender.profileImage = 'data:image/jpeg;base64,' + notification.sender.profileImage;
-            if(notification.status === 'PENDING' || notification.status === 'SHARED') {
-              this.notifications = this.notifications + 1;
-            }
-          });
+      this.notificationService.getNotificationsCount(this.user.userId).subscribe(
+        (notifications: number) => {
+          this.notificationsCount = notifications;
         },
         (error) => {
           console.error(error);

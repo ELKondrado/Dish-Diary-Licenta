@@ -138,7 +138,7 @@ export class UserNotificationsComponent {
     if(notification){
       this.friendsService.acceptFriendRequest(notification.id).subscribe(
         (response: any) => {
-          this.ngOnInit();
+          this.getNotifications();
         },
         (error: HttpErrorResponse) => {
           console.error(error);

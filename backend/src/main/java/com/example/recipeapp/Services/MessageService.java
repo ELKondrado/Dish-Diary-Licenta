@@ -4,6 +4,7 @@ import com.example.recipeapp.Model.Message;
 import com.example.recipeapp.Model.User;
 import com.example.recipeapp.Repositories.MessageRepository;
 import com.example.recipeapp.Repositories.UserRepository;
+import com.example.recipeapp.WebSocket.WebSocketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,12 +18,17 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class MessageService {
+public class MessageService extends AbstractWSService{
     private final MessageRepository messageRepository;
 
     @Autowired
     public MessageService(MessageRepository messageRepository) {
         this.messageRepository = messageRepository;
+    }
+
+    @Override
+    protected String getEntityTopic() {
+        return "message";
     }
 
     public Message sendMessage(User sender, User receiver, String content) {
@@ -33,6 +39,7 @@ public class MessageService {
             message.setContent(content);
             message.setTimestamp(new Date());
             message.setWasSeen(false);
+            notifyFrontend();
             return messageRepository.save(message);
         }
        else throw new IllegalStateException("Message content was not found!");
