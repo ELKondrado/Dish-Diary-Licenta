@@ -43,7 +43,7 @@ public class User {
     @Lob
     private byte[] profileImage;
 
-    @Column(name = "bio", length = 256)
+    @Column(name = "bio", length = 255)
     private String userBio;
 
     @Nullable
@@ -67,13 +67,13 @@ public class User {
     private List<Role> roles = new ArrayList<>();
 
     @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
-            name = "user_recipes",
+            name = "user_repositories",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "recipe_id", referencedColumnName = "id")
+            inverseJoinColumns = @JoinColumn(name = "repository_id", referencedColumnName = "id")
     )
-    private List<Recipe> recipes = new ArrayList<>();
+    private List<Repository> repositories = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

@@ -134,7 +134,7 @@ export class FriendUserProfileComponent {
   public getCreatedRecipes() {
     if(this.friend)
     {
-      this.recipeService.getRecipesByOwner(this.friend?.userName).subscribe(
+      this.recipeService.getCreatedRecipes(this.friend?.userId).subscribe(
         (createdRecipes: Recipe[]) => {
           console.log(createdRecipes)
           this.createdRecipes = createdRecipes;
@@ -235,7 +235,7 @@ export class FriendUserProfileComponent {
   }
 
   public mainPage(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/main`]);
+    this.router.navigate([`/${this.userService.getUsername()}/starter-page`]);
   }
 
   public discoverRecipes(): void {

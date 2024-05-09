@@ -44,11 +44,10 @@ export class RegisterFormComponent implements OnInit {
           )
         }
         else {
-          console.log(response)
           this.usernameTaken = response.statusUsername === "USERNAME IS TAKEN";
           this.passwordCondition = response.statusPassword === "PASSWORD IS NOT STRONG ENOUGH";
           this.passwordsNotMatch = response.statusConfirmPassword === "PASSWORD DOES NOT MATCH";
-          this.emailNotValid = response.statusConfirmPassword === "EMAIL IS NOT VALID";
+          this.emailNotValid = response.statusEmail === "EMAIL IS NOT VALID";
           this.emailTaken = response.statusEmail === "EMAIL IS TAKEN";
           this.nickanameTaken = response.statusNickname === "NICKNAME IS TAKEN";
         }

@@ -1,6 +1,6 @@
 package com.example.recipeapp.Security;
 
-import com.example.recipeapp.Exceptions.UserNotFoundException;
+import com.example.recipeapp.Exceptions.NotFound;
 import com.example.recipeapp.Model.Role;
 import com.example.recipeapp.Model.User;
 import com.example.recipeapp.Repositories.UserRepository;
@@ -27,7 +27,7 @@ class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findUserByUserName(username).orElseThrow(() -> new UserNotFoundException("Username not found!"));
+        User user = userRepository.findUserByUserName(username).orElseThrow(() -> new NotFound("Username not found!"));
         return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getUserPassword(), mapRolesToAuthorities(user.getRoles()));
     }
 

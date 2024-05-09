@@ -2,6 +2,7 @@ package com.example.recipeapp.Services;
 
 import com.example.recipeapp.Model.Friendship;
 import com.example.recipeapp.Model.Recipe.Recipe;
+import com.example.recipeapp.Model.Repository;
 import com.example.recipeapp.Model.User;
 import com.example.recipeapp.Repositories.NotificationRepository;
 import com.example.recipeapp.Repositories.UserRepository;
@@ -18,12 +19,10 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
     private final UserRepository userRepository;
-    private final NotificationRepository notificationRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, NotificationRepository notificationRepository) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.notificationRepository = notificationRepository;
     }
 
     public Optional<User> findUserByUserName(String username) {
@@ -67,10 +66,6 @@ public class UserService {
         userRepository.deleteUserRecipe(user.getUserId(), recipeId);
         user.setTotalRecipes( user.getTotalRecipes() - 1);
         userRepository.save(user);
-    }
-
-    public boolean doesUserHaveRecipe(User user, Recipe recipe) {
-        return user.getRecipes().contains(recipe);
     }
 
     public List<User> getFriends(User user) {

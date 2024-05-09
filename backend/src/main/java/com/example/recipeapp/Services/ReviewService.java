@@ -1,7 +1,6 @@
 package com.example.recipeapp.Services;
 
-import com.example.recipeapp.Exceptions.RecipeNotFoundException;
-import com.example.recipeapp.Exceptions.ReviewNotFoundException;
+import com.example.recipeapp.Exceptions.NotFound;
 import com.example.recipeapp.Model.Recipe.Recipe;
 import com.example.recipeapp.Model.Review;
 import com.example.recipeapp.Model.User;
@@ -47,7 +46,7 @@ public class ReviewService {
 
     public List<Review> getReviewsForRecipe(long recipeId) {
         Recipe recipe = recipeRepository.findById(recipeId)
-                .orElseThrow(() -> new RecipeNotFoundException("Recipe with id: " + recipeId + " does not exist"));
+                .orElseThrow(() -> new NotFound("Recipe with id: " + recipeId + " does not exist"));
 
         return reviewRepository.findReviewsByRecipeId(recipe.getId());
     }
@@ -77,11 +76,11 @@ public class ReviewService {
     public void deleteReview(Long recipeId, Long reviewId) {
         boolean exists = recipeRepository.existsById(recipeId);
         if (!exists) {
-            throw new RecipeNotFoundException("Recipe with id: " + recipeId + " does not exist");
+            throw new NotFound("Recipe with id: " + recipeId + " does not exist");
         }
         exists = reviewRepository.existsById(reviewId);
         if (!exists) {
-            throw new ReviewNotFoundException("Review with id: " + reviewId + " does not exist");
+            throw new NotFound("Review with id: " + reviewId + " does not exist");
         }
         reviewRepository.deleteReviewOfRecipe(recipeId, reviewId);
     }

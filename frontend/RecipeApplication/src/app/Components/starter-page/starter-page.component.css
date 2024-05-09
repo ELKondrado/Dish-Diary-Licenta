@@ -1,0 +1,622 @@
+body {
+    height: 100vh;
+    overflow-y: scroll;
+    box-sizing: border-box;
+    padding-bottom: 10rem;
+}
+
+/* START NAVBAR */
+
+.navbar {
+    background-color: rgba(1, 4, 9, 255);
+    padding-left: 5rem;
+}
+
+.navbar button:hover {
+    color: red;
+}
+
+.navbar .repository-link {
+    font-weight: 500;
+    color: red; 
+    padding-bottom: 20px; 
+    position: absolute;
+    border-bottom: 3px solid red;
+}
+
+.navbar .discover-recipes-link {
+    font-weight: 500;
+    margin-left: 5.9rem;
+} 
+
+.search-icon {
+    color: white;
+    position: absolute;
+    top: 53.5%;
+    right: 6rem; 
+    transform: translateY(-50%);
+}
+
+#searchUser, #searchRecipeRepo {
+    position: relative;
+    background: transparent;
+    border: none;
+    width: 22.5rem;
+    flex-grow: 1;
+    border: 1px solid grey;
+    border-radius: 0.3em;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    padding-right: 2rem;
+}
+
+#searchUser:focus, #searchRecipeRepo:focus {
+    outline: none;
+    border: 2px solid white;
+}
+
+#searchRecipeRepo {
+    margin-right: auto;
+    margin-left: 3rem;
+    margin-top: 2rem;
+}
+
+.navbar a:hover {
+    color: red;
+}
+
+.navbar a {
+    cursor: pointer;
+}
+
+/* START DROP DOWN */
+
+.navbar {
+    background-color: rgba(1, 4, 9, 255);
+    padding-left: 5rem;
+    border-bottom: 1px solid grey;
+}
+
+.navbar button:hover {
+    color: red;
+}
+
+.navbar a:hover {
+    color: red;
+}
+
+.navbar a {
+    cursor: pointer;
+}
+
+/* START DROP DOWN */
+
+.sub-menu-wrap{
+    position: absolute;
+    z-index: 2;
+    top: 85%;
+    right: 0.5%;
+    width: 320px;
+    max-height: 0px;
+    overflow: hidden;
+    color: white;
+    transition: max-height 0.5s;
+    z-index: 1;
+}
+
+.sub-menu-wrap.open-menu{
+    max-height: 400px;
+}
+
+.sub-menu{
+    color: white;
+    background: rgba(1, 4, 9, 255);
+    padding: 20px;
+    margin: 10px;
+    border: 0.75px solid grey;
+}
+
+.user-info{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-bottom: 0.75rem;
+    border-bottom: 0.75px solid grey;
+}
+
+.user-info h6{
+    margin-left: 0.5rem;
+    font-weight: 500;
+}
+
+.user-info img{
+    width: 50px;
+    border-radius: 50%;
+}
+
+.sub-menu-link{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: rgb(107, 5, 5);
+    margin: 15px 0;
+}
+
+.sub-menu-link p{
+    width: 100%;
+}
+
+.sub-menu-link .icon-type{
+    width: 100%;
+    margin-left: 1rem;
+    margin-bottom: 0.2rem;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.sub-menu-link i{
+    color: black;
+    background-color: #e5e5e5;
+    border-radius: 50%;
+}
+
+.sub-menu-link .arrow{
+    margin-bottom: 0.5rem;
+    font-size: 22px;
+    transition: transform 0.5s;
+}
+
+.sub-menu-link:hover .arrow{
+    transform: translateX(5px);
+}
+
+.sub-menu-link:hover p{
+    font-weight: 600;
+}
+  
+.icon-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 35px;
+    height: 35px;
+}
+
+.icon-button {
+    width: inherit;
+    height: inherit;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333333;
+    background: #dddddd;
+    border: none;
+    outline: none;
+    border-radius: 50%;
+}
+  
+.icon-button:hover {
+    cursor: pointer;
+}
+  
+.icon-button:active {
+    background: #cccccc;
+}
+  
+.icon-button__badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 20px;
+    height: 20px;
+    background: red;
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+}
+
+.icon-button .notifications-number {
+    font-weight: 700;
+    font-size: 12px;
+}   
+
+.avatar {
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    cursor: pointer;
+}
+
+.lil-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 0.1rem solid white;
+}
+
+.profile-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    object-position: center center;
+}
+
+/* END DROP DOWN */
+
+/* END NAVBAR */
+
+#main-container {
+    margin-top: 1rem;
+    margin-bottom: 3rem;
+}
+
+.recipe-cards-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-right: -2rem;
+    margin-left: -2rem;
+}
+
+.add-recipe-button-container {
+    width: 100%;
+    margin-top: 2rem;
+    display: grid;
+    place-items: center;
+}
+
+.add-recipe-button {
+    color: white;
+    background: #2a62d4;
+    width: 12rem;
+    height: 2.25rem;
+    border: 2px solid grey;
+    border-radius: 6px;
+}
+
+.add-recipe-button:hover {
+    border: 2px solid white;
+}
+
+.recipe-card-title {
+    display: grid;
+    align-items: center; 
+    text-align: center;
+    padding: 0.5rem;
+}
+
+.recipe-card-title h6 {
+    font-size: 20px;
+    margin: 0;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.recipe-card {
+    border: 1px solid white;
+    color: white;
+    margin: 1rem;
+    width: 16rem;
+    height: 21.5rem;
+    background-color: #262626;
+    overflow: hidden;
+}
+
+.recipe-card-image-container {
+   width: 16rem;
+   height: 17rem; 
+}
+
+.recipe-card img {
+    width: 100%;
+    height: 100%;
+    border: 1px solid white;
+    object-fit: cover;
+}
+
+.recipe-card-buttons {
+    width: 100%;
+    height: 2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding: 0;
+}
+
+.edit-area {
+    flex: 1; 
+    background-color: royalblue;
+    border: 1px solid white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative; 
+}
+
+.edit-area .edit-button {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    border: none;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+    background: #007FFF;
+    position: absolute; 
+    z-index: 1;
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%); 
+}
+
+.edit-area .edit-button, .edit-area .edit-button span {
+    transition: 300ms;
+}
+
+.edit-area span {
+    text-align: center;
+}
+
+.edit-area .edit-button .text {
+    transform: translateX(35px);
+    color: white;
+    font-weight: bold;
+}
+
+.edit-area .edit-button:hover {
+    background: royalblue;
+}
+
+.delete-area {
+    cursor: pointer;
+    flex: 1;
+    border: 1px solid white;
+    background-color: #e62222;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative; 
+}
+
+.delete-area .delete-button {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    border: none;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+    background: #EF0107;
+    position: absolute; 
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%); 
+}
+   
+.delete-area .delete-button, .delete-area .delete-button span {
+    transition: 300ms;
+}
+
+.delete-area span {
+    text-align: center;
+}
+   
+.delete-area .delete-button .text {
+    transform: translateX(35px);
+    color: white;
+    font-weight: bold;
+}
+   
+.delete-area .delete-button:hover {
+    background: #CF1020;
+}
+   
+.list-group-item {
+    border-color: white;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background-color: #262626;
+}
+
+.li a {
+    -webkit-border-radius: 50%;
+    background-color: rgba(89, 206, 181, 0.85);
+    border-radius: 50%;
+    color: #fff;
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    width: 30px;
+    font-size: 12px;
+}
+
+a {
+    color: #707070;
+}
+
+.modal-body input {
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+.modal-body label {
+    font-size: large;
+    font-weight: 600;
+}
+
+.modal-body textarea {
+    font-size: 1rem;
+    font-weight: 400;
+    height: 125px;
+}
+
+.modal-body select {
+    font-size: 1rem;
+    font-weight: 400;
+    width: 90%;
+}
+
+.modal-body .select-tag-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.modal-body .select-tag-container button {
+    background-color: #2a62d4;
+    color: white;
+    margin-left: 0.25rem;
+    border: 1px solid white;
+}
+
+.no-recipes-modal {
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: fit-content;
+}
+
+.modal-content {
+    background-color: rgb(30, 28, 28);
+    color: white;
+    font-weight: 600;
+}
+
+.modal-content .close {
+    color: white;
+}
+
+.modal-title {
+    width: 100%;
+    text-align: center;
+    margin: 0;
+}
+
+.form-group {
+    margin: 0rem;
+    margin-top: 0.25rem;
+}
+
+.modal-footer {
+    margin: 0;
+    padding: 0;
+    padding-top: 0.25rem;
+}
+
+.modal-body input, textarea, select {
+    color: white;
+    background-color: #333333;
+    outline: none;
+    border: 1px solid white;
+}
+
+.modal-body input:focus, textarea:focus, select:focus{
+    color: white;
+    background-color: #333333;
+    outline: none;
+    border: 1px solid #2a62d4;
+}
+
+.recipe-tags {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 0.25rem 0;
+    padding: 0;
+}
+
+.recipe-tags .tag{
+    color: white;
+    padding: 0 0.2rem;
+    border: 0.1rem solid white;
+    border-radius: 6px;
+    margin: 0.1rem;
+}
+
+.recipe-tags .tag label {
+    font-size: 13px;
+    padding: 0;
+    margin: 0;
+}
+
+.recipe-tags .remove-tag {
+    font-size: 14px;
+    font-weight: 800;
+    display: none;
+}
+
+.hoverable:hover .remove-tag {
+    display: inline-block; 
+}
+
+.modal-body .cancel-button {
+    background-color: rgb(44, 43, 43);
+    border: 1px solid grey;
+    color: white;
+}
+
+.modal-body .create-button {
+    background-color: #2a62d4;
+    border: 1px solid white;
+    color: white;
+}
+
+.modal-body .cancel-button:hover{
+    border-color: white;
+}
+
+@media (max-width: 768px) {
+    .main-body{
+        min-height: 100%;
+    }
+
+    .navbar {
+        padding-left: 0.5rem;
+    }
+
+    .dropdown {
+        margin: 0;
+        margin-left: auto;
+    }
+
+    .recipe-cards-container {
+        margin-bottom: 12rem;
+    }
+
+    .recipe-card {
+        margin: 0.5rem;
+        width: 10rem;
+        height: 14.75rem;
+    }
+
+    .recipe-card-image-container {
+        width: 10rem;
+        height: 11rem;
+    }
+
+    .recipe-card-buttons .delete-area, .edit-area{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 1.75rem;
+    }
+
+    .recipe-card-title {
+        height: 2rem;
+    }
+
+    .recipe-card-title h6{
+        font-size: 16px;
+    }
+}

@@ -1,11 +1,14 @@
 package com.example.recipeapp.Controllers;
 
-import com.example.recipeapp.Exceptions.RecipeNotFoundException;
+import com.example.recipeapp.Dtos.RecipeUpdateDto;
+import com.example.recipeapp.Exceptions.NotFound;
 import com.example.recipeapp.Model.Notification.Notification;
 import com.example.recipeapp.Model.Recipe.Recipe;
+import com.example.recipeapp.Model.Repository;
 import com.example.recipeapp.Model.User;
 import com.example.recipeapp.Services.NotificationService;
 import com.example.recipeapp.Services.RecipeService;
+import com.example.recipeapp.Services.RepositoryService;
 import com.example.recipeapp.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -35,35 +38,22 @@ public class RecipeController {
         this.notificationService = notificationService;
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<Recipe>> getRecipes(){
-        List<Recipe> recipes = recipeService.getRecipes();
+    @GetMapping("/getAllRecipes")
+    public ResponseEntity<List<Recipe>> getAllRecipes(){
+        List<Recipe> recipes = recipeService.getAllRecipes();
         return new ResponseEntity<>(recipes, HttpStatus.OK);
     }
 
-    @GetMapping("/find/{id}")
-    public ResponseEntity<Recipe> getRecipeById(@PathVariable("id") Long id){
+    @GetMapping("/findRecipe/{id}")
+    public ResponseEntity<Recipe> findRecipeById(@PathVariable("id") Long id){
         Recipe recipe = recipeService.findRecipeById(id);
         return new ResponseEntity<>(recipe, HttpStatus.OK);
     }
 
-    @GetMapping("/{username}/createdRecipes")
-    public ResponseEntity<List<Recipe>> getCreatedRecipes(@PathVariable("username") String username){
-
-        Optional<User> optionalUser = userService.fetchUserDetails(username);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            List<Recipe> recipes = recipeService.getRecipesByOwner(user.getUserId());
-            return new ResponseEntity<>(recipes, HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @PostMapping("/add")
-    public ResponseEntity<Recipe> registerNewRecipe(@RequestBody Recipe recipe){
-        Recipe newRecipe = recipeService.addNewRecipe(recipe);
-        return new ResponseEntity<>(newRecipe, HttpStatus.CREATED);
+    @GetMapping("/createdRecipes/{userId}")
+    public ResponseEntity<List<Recipe>> getCreatedRecipes(@PathVariable("userId") long userId){
+        List<Recipe> createdRecipes = recipeService.getCreatedRecipes(userId);
+        return new ResponseEntity<>(createdRecipes, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{recipeId}")
@@ -72,64 +62,42 @@ public class RecipeController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/update/{recipeId}")
-    public ResponseEntity<Recipe> updateRecipe(
-            @PathVariable("recipeId") long recipeId,
-            @RequestBody Map<String, String> request) {
-
-        Recipe recipe = recipeService.getRecipeById(recipeId);
-
-        if (request.containsKey("name")) {
-            recipe = recipeService.updateRecipeName(recipe, request.get("name"));
-        }
-        if (request.containsKey("ingredients")) {
-            recipe = recipeService.updateRecipeIngredients(recipe, request.get("ingredients"));
-        }
-        if (request.containsKey("stepsOfPreparation")) {
-            recipe = recipeService.updateRecipeStepsOfPreparation(recipe, request.get("stepsOfPreparation"));
-        }
+    @PutMapping("/updateRecipe/{userId}")
+    public ResponseEntity<Recipe> updateRecipe(@PathVariable("userId") long userId,
+                                               @RequestBody RecipeUpdateDto recipeUpdateDto) {
+        Recipe recipe = recipeService.updateRecipe(recipeUpdateDto, userId);
         return new ResponseEntity<>(recipe, HttpStatus.OK);
     }
 
-    @PostMapping("/addUserNewRecipe")
-    public ResponseEntity<Recipe> registerNewRecipe(@RequestBody Recipe recipe,
-                                                    @RequestParam("username") String username) {
-        Optional<User> optionalUser = userService.findUserByUserName(username);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            Recipe newRecipe = recipeService.addNewRecipe(recipe, user);
+    @PostMapping("/createNewRecipeInRepository/{repositoryId}")
+    public ResponseEntity<Recipe> createNewRecipeInRepository(@RequestBody Recipe recipe,
+                                                              @PathVariable("repositoryId") long repositoryId) {
+        recipeService.createNewRecipeInRepository(recipe, repositoryId);
+        return new ResponseEntity<>(recipe, HttpStatus.CREATED);
+    }
 
-            return new ResponseEntity<>(newRecipe, HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    @PostMapping("/addUserRecipe/{recipeId}/{repositoryId}")
+    public ResponseEntity<Recipe> addUserRecipe(@PathVariable("recipeId") long recipeId,
+                                                @PathVariable("repositoryId") long repositoryId) {
+        boolean status = recipeService.addRecipeToRepository(recipeId, repositoryId);
+        if(status){
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
         }
     }
 
-    @PostMapping("/addUserRecipe/{username}/{recipeId}")
-    public ResponseEntity<Recipe> addUserRecipe(@PathVariable("username") String username,
-                                                @PathVariable("recipeId") long recipeId) {
-        Optional<User> optionalUser = userService.findUserByUserName(username);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            Recipe recipe = recipeService.findRecipeById(recipeId);
-            if(recipe != null)
-            {
-                if(recipeService.addUserRecipe(recipe, user)) {
-                    return new ResponseEntity<>(recipe, HttpStatus.CREATED);
-                }
-                else{
-                    return new ResponseEntity<>(null, HttpStatus.OK);
-                }
-            }
-            throw new RecipeNotFoundException("Recipe not found in adding it to user recipes!");
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    @DeleteMapping("/deleteRecipeFromRepository/{recipeId}/{repositoryId}")
+    public ResponseEntity<Recipe> deleteRecipeFromRepository(@PathVariable("recipeId") long recipeId,
+                                                             @PathVariable("repositoryId") long repositoryId) {
+        recipeService.deleteRecipeFromRepository(recipeId, repositoryId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/user/{userId}/recipes")
-    public ResponseEntity<List<Recipe>> getUserRecipes(@PathVariable("userId") Long userId) {
-        List<Recipe> recipes = recipeService.getUserRecipes(userId);
+    @GetMapping("/getRecipesFromRepository/{repositoryId}")
+    public ResponseEntity<List<Recipe>> getRecipesFromRepository(@PathVariable("repositoryId") long repositoryId) {
+        List<Recipe> recipes = recipeService.getRecipesFromRepository(repositoryId);
         return new ResponseEntity<>(recipes, HttpStatus.OK);
     }
 

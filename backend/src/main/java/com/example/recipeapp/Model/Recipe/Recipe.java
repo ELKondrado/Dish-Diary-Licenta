@@ -1,5 +1,6 @@
 package com.example.recipeapp.Model.Recipe;
 
+import com.example.recipeapp.Model.Repository;
 import com.example.recipeapp.Model.Review;
 import com.example.recipeapp.Model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -52,7 +53,7 @@ public class Recipe {
     private Date dateCreated;
 
     @ManyToMany(mappedBy = "recipes", fetch = FetchType.LAZY)
-    private List<User> users = new ArrayList<>();
+    private List<Repository> repositories = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private User userOwner;

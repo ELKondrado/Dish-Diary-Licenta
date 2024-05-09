@@ -1,21 +1,22 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild, ViewContainerRef } from '@angular/core';
+import { Router } from '@angular/router';
+import { UserService } from '../../Models/User/user.service';
+import { HttpErrorResponse } from '@angular/common/http';
 import { RecipeService } from '../../Models/Recipe/recipe.service';
 import { AuthService } from '../../Security/auth.service';
-import { UserService } from '../../Models/User/user.service';
-import { Router } from '@angular/router';
 import { Recipe } from '../../Models/Recipe/recipe';
-import { HttpErrorResponse } from '@angular/common/http';
+import { NgForm } from '@angular/forms';
 import { User } from '../../Models/User/user';
 import { NotificationService } from '../../Models/Notification/notification.service';
 import { Notif } from '../../Models/Notification/notification';
 import { MessageService } from '../../Models/Message/message.service';
 
 @Component({
-  selector: 'app-discover-recipes',
-  templateUrl: './discover-recipes.component.html',
-  styleUrl: './discover-recipes.component.css'
+  selector: 'app-starter-page',
+  templateUrl: './starter-page.component.html',
+  styleUrl: './starter-page.component.css'
 })
-export class DiscoverRecipesComponent implements OnInit{
+export class StarterPageComponent implements OnInit{
   constructor(
     private recipeService: RecipeService,
     private authService: AuthService, 
@@ -29,9 +30,6 @@ export class DiscoverRecipesComponent implements OnInit{
   public recipes: Recipe[] = [];
   public notificationsCount: number = 0;
   public unseenConversations: number = 0;
-  public repositoryRecipes: Recipe[] = [];
-  public username: string | undefined;
-  public addedRecipe: Recipe | undefined;
   public avatarUrl: String | undefined;
   public selectedFile: File | undefined;
 
@@ -43,9 +41,6 @@ export class DiscoverRecipesComponent implements OnInit{
   private fetchData(): void {
     this.authService.initializeApp().subscribe(() => {
       this.user = this.authService.getUser();
-      this.username = this.userService.getUsername();
-      this.getRecipes();
-      this.getRepositoryRecipes();
       this.getProfileImage();
       this.getNotificationsCount();
       this.getUnseenConversations();
@@ -60,22 +55,6 @@ export class DiscoverRecipesComponent implements OnInit{
     avatar?.addEventListener('click', () => {
       menu?.classList.toggle('menu-open');
     });
-  }
-
-  public getRecipes(): void {
-    this.recipeService.getRecipes().subscribe(
-      (response: Recipe[]) => {
-        console.log(response);
-        this.recipes = response;
-        this.recipes.forEach(recipe => {
-          recipe.image = 'data:image/jpeg;base64,' + recipe.image;
-        });
-        this.filterDiscoverRecipes();
-      },
-      (error: HttpErrorResponse) => {
-        console.error(error.message);
-      }
-    );
   }
 
   public toggleMenu(){
@@ -110,67 +89,7 @@ export class DiscoverRecipesComponent implements OnInit{
     }
   }
 
-  public getRepositoryRecipes(): void {
-    if(this.user)
-    {
-      this.recipeService.getUserRecipes(this.user?.userId).subscribe(
-        (response: Recipe[]) => {
-          this.repositoryRecipes = response;
-          this.filterDiscoverRecipes();
-        },
-        (error: HttpErrorResponse) => {
-          console.error(error.message);
-        }
-      );
-    }
-  }
-
-  public filterDiscoverRecipes() {
-    const filteredRecipes = this.recipes.filter(recipe1 =>
-      !this.repositoryRecipes.some(recipe2 => recipe1.id === recipe2.id)
-    );
-    this.recipes = filteredRecipes;
-  }
-
-  public onAddRecipeModal(recipe: Recipe | undefined): void {
-    const container = document.getElementById("main-container");
-    const button = document.createElement('button');
-    this.addedRecipe = recipe;
-
-    button.type = 'button';
-    button.style.display = 'none';
-    button.setAttribute('data-toggle', 'modal');
-    button.setAttribute('data-target', '#addRecipeToUserModal');
-
-    container?.appendChild(button);
-    button.click();
-  }
-
-  public addRecipeToUser(recipeId: number): void {
-    const username = this.authService.getUsernameFromToken();
-
-    const container = document.getElementById("main-container");
-    const button = document.createElement('button');
-    
-    button.type = 'button';
-    button.style.display = 'none';
-    button.setAttribute('data-toggle', 'modal');
-    container?.appendChild(button);
-
-    this.recipeService.addUserRecipe(username, recipeId).subscribe(
-      (response: any) => {
-        if (response) {
-          this.getRepositoryRecipes();
-          button.setAttribute('data-target', '#recipeSuccesModal');
-          button.click();
-        }
-      },
-      (error: HttpErrorResponse) => {
-        console.error(error);
-      }
-    );
-  }
-
+  // change in searchUser
   public searchRecipe(key: string): void {
     const resultRecipes: Recipe[] = [];
     for (const recipe of this.recipes) {
@@ -180,7 +99,7 @@ export class DiscoverRecipesComponent implements OnInit{
     }
     this.recipes = resultRecipes;
     if (resultRecipes.length === 0 || !key){
-      this.fetchData();
+      //this.getUserRecipes();
     }
   }
 
@@ -208,8 +127,8 @@ export class DiscoverRecipesComponent implements OnInit{
     return 'data:image/jpeg;base64,' + btoa(bytes.join(''));
   }
 
-  public mainPage(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/starter-page`]);
+  public discoverRecipes(): void {
+    this.router.navigate([`/${this.userService.getUsername()}/recipes`]);
   }
 
   public onOpenRecipe(recipe: Recipe): void {
@@ -231,7 +150,7 @@ export class DiscoverRecipesComponent implements OnInit{
   public userNotifications(): void {
     this.router.navigate([`/${this.userService.getUsername()}/notifications`]);
   }
-
+ 
   public logout(): void {   
     this.authService.logout();
   }
