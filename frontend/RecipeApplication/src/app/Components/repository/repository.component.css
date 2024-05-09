@@ -37,7 +37,7 @@ body {
     transform: translateY(-50%);
 }
 
-.navbar #searchRecipe {
+#searchUser, #searchRecipeRepo {
     position: relative;
     background: transparent;
     border: none;
@@ -51,9 +51,15 @@ body {
     padding-right: 2rem;
 }
 
-.navbar #searchRecipe:focus {
+#searchUser:focus, #searchRecipeRepo:focus {
     outline: none;
     border: 2px solid white;
+}
+
+#searchRecipeRepo {
+    margin-right: auto;
+    margin-left: 3rem;
+    margin-top: 2rem;
 }
 
 .navbar a:hover {

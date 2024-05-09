@@ -24,7 +24,7 @@ public class UserController {
     private final UserRepository userRepository;
 
     @Autowired
-    public UserController(UserService userService, UserRepository userRepository, NotificationRepository notificationRepository) {
+    public UserController(UserService userService, UserRepository userRepository) {
         this.userService = userService;
         this.userRepository = userRepository;
     }

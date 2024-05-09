@@ -138,10 +138,10 @@ export class UserProfileComponent implements OnInit{
     }
   }
 
-  public getCreatedRecipes() {
+  public getCreatedRecipes(): void {
     if(this.user)
     {
-      this.recipeService.getRecipesByOwner(this.user?.userName).subscribe(
+      this.recipeService.getCreatedRecipes(this.user?.userId).subscribe(
         (createdRecipes: Recipe[]) => {
           this.createdRecipes = createdRecipes;
           this.getAddedRecipes();
@@ -242,7 +242,7 @@ export class UserProfileComponent implements OnInit{
   }
 
   public mainPage(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/main`]);
+    this.router.navigate([`/${this.userService.getUsername()}/starter-page`]);
   }
 
   public discoverRecipes(): void {

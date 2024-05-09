@@ -1,6 +1,6 @@
 package com.example.recipeapp.Controllers;
 
-import com.example.recipeapp.Exceptions.RoleNotFoundException;
+import com.example.recipeapp.Exceptions.NotFound;
 import com.example.recipeapp.Model.Role;
 import com.example.recipeapp.Model.User;
 import com.example.recipeapp.Repositories.RoleRepository;
@@ -76,7 +76,7 @@ public class AuthController {
         if (userRepository.existsByUserNickname(registerDto.getNickname())) {
             response.put("statusNickname", "NICKNAME IS TAKEN");
         }
-        if ( registerDto.getEmail().contains("@") ) {
+        if (!registerDto.getEmail().contains("@") ) {
             response.put("statusEmail", "EMAIL IS NOT VALID");
         }
         else if (userRepository.existsByUserEmail(registerDto.getEmail())) {
@@ -88,7 +88,7 @@ public class AuthController {
                 !response.containsKey("statusPassword")) {
 
             Role userRole = roleRepository.findByName("USER")
-                    .orElseThrow(() -> new RoleNotFoundException("Role 'USER' not found"));
+                    .orElseThrow(() -> new NotFound("Role 'USER' not found"));
 
             User user = new User();
             user.setUserName(registerDto.getUsername());

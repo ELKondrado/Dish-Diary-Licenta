@@ -7,7 +7,7 @@ import { LoginFormComponent } from './Components/login-form/login-form.component
 import { RegisterFormComponent } from './Components/register-form/register-form.component';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes, RouterOutlet } from '@angular/router';
-import { MainPageComponent } from './Components/main-page/main-page.component';
+import { RepositoryComponent } from './Components/repository/repository.component';
 import { UserService } from './Models/User/user.service';
 import { AuthGuard } from './Security/auth.guard';
 import { AuthService } from './Security/auth.service';
@@ -26,13 +26,15 @@ import { FriendsService } from './Models/Friendship/friends.service';
 import { MessageService } from './Models/Message/message.service';
 import { NotificationService } from './Models/Notification/notification.service';
 import { ReviewService } from './Models/Review/review.service';
+import { StarterPageComponent } from './Components/starter-page/starter-page.component';
 
 
 const routes: Routes = [
   {path: '', redirectTo: '/login', pathMatch: 'full'},
   {path: 'login', component: LoginFormComponent},
   {path: 'register', component: RegisterFormComponent},
-  {path: ':username/main', component: MainPageComponent, canActivate: [AuthGuard]},
+  {path: ':username/starter-page', component: StarterPageComponent, canActivate: [AuthGuard]},
+  {path: ':username/repository', component: RepositoryComponent, canActivate: [AuthGuard]},
   {path: ':username/recipes', component: DiscoverRecipesComponent, canActivate: [AuthGuard]},
   {path: ':username/recipe/:recipeId', component: RecipeInfoComponent, canActivate: [AuthGuard]},
   {path: ':username/profile', component: UserProfileComponent, canActivate: [AuthGuard]},
@@ -48,14 +50,15 @@ const routes: Routes = [
     AppComponent,
     LoginFormComponent,
     RegisterFormComponent,
-    MainPageComponent,
+    RepositoryComponent,
     DiscoverRecipesComponent,
     RecipeInfoComponent,
     UserProfileComponent,
     UserFriendsComponent,
     UserNotificationsComponent,
     FriendUserProfileComponent,
-    UserChatComponent
+    UserChatComponent,
+    StarterPageComponent
   ],
   imports: [
     BrowserModule,

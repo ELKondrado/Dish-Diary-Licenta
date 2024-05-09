@@ -12,11 +12,11 @@ import { Notif } from '../../Models/Notification/notification';
 import { MessageService } from '../../Models/Message/message.service';
 
 @Component({
-  selector: 'app-main-page',
-  templateUrl: './main-page.component.html',
-  styleUrl: './main-page.component.css'
+  selector: 'app-repository',
+  templateUrl: './repository.component.html',
+  styleUrl: './repository.component.css'
 })
-export class MainPageComponent implements OnInit{
+export class RepositoryComponent implements OnInit{
   constructor(
     private recipeService: RecipeService,
     private authService: AuthService, 

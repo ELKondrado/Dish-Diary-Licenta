@@ -17,7 +17,7 @@
       </div>
 
       <div class="search-bar nav-link">
-         <input (ngModelChange)="searchRecipe(key.value)" #key="ngModel" ngModel type="search" name="key" id="searchRecipe" class="form-control mr-sm-2 search-recipe-box" placeholder="Search recipes..." required>
+         <input (ngModelChange)="searchRecipe(key.value)" #key="ngModel" ngModel type="search" name="key" id="searchUser" class="form-control mr-sm-2 search-recipe-box" placeholder="Search recipes..." required>
       </div>
       
       <div class="icon-button">
@@ -103,6 +103,10 @@
 
       <div class="add-recipe-button-container">
          <button type="button" class="add-recipe-button" (click)="onOpenModal(undefined, 'add')">Add New Recipe</button>
+      </div>
+
+      <div class="search-bar">
+         <input (ngModelChange)="searchRecipe(searchedRecipe.value)" #searchedRecipe="ngModel" ngModel type="search" name="searchedRecipe" id="searchRecipeRepo" class="form-control mr-sm-2 search-recipe-box" placeholder="Search recipes..." required>
       </div>
 
       <div class="container" id="main-container">

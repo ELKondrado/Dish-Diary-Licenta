@@ -440,7 +440,7 @@ export class RecipeInfoComponent implements OnInit {
   }
 
   public mainPage(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/main`]);
+    this.router.navigate([`/${this.userService.getUsername()}/starter-page`]);
   }
 
   public discoverRecipes(): void {

@@ -1,0 +1,168 @@
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <a id="mainPage" class="navbar-brand" style="color: white; font-weight: 800; font-size: x-large">DishDiary</a>
+  
+    <div class="collapse navbar-collapse">
+       <ul class="navbar-nav mr-auto justify-content-start">
+          <li class="nav-item">
+             <a class="nav-link repository-link">Repository <span class="sr-only">(current)</span></a>
+          </li>
+ 
+          <li class="nav-item">
+             <a class="nav-link discover-recipes-link" (click)="discoverRecipes()">Discover Recipes <span class="sr-only">(current)</span></a>
+          </li>
+       </ul>
+ 
+       <div class="search-icon">
+          <span class="material-icons" style="cursor: pointer;">search</span>
+       </div>
+ 
+       <div class="search-bar nav-link">
+          <input (ngModelChange)="searchRecipe(key.value)" #key="ngModel" ngModel type="search" name="key" id="searchUser" class="form-control mr-sm-2 search-recipe-box" placeholder="Search recipes..." required>
+       </div>
+       
+       <div class="icon-button">
+          <div class="lil-avatar">
+              <img (click)="toggleMenu()" class="avatar profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
+              <img (click)="toggleMenu()" class="avatar profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
+          </div>
+          <span *ngIf="unseenConversations + notificationsCount != 0 " class="icon-button__badge notifications-number">{{unseenConversations + notificationsCount}}</span>
+       </div> 
+ 
+       <div class="sub-menu-wrap" id="subMenu">
+          <div class="sub-menu">
+             <div class="user-info">
+                <div class="lil-avatar">
+                   <img class="avatar profile-avatar" *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Image">
+                   <img class="avatar profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Profile Image">
+                </div>
+                <h6>{{user?.userNickname}}</h6>
+             </div>
+ 
+             <a (click)="userProfile()" class="sub-menu-link">
+                <div class="icon-container">
+                   <div class="icon-button">
+                      <span class="material-icons">person</span>
+                   </div>               
+                </div>
+ 
+                <span class="icon-type">Profile</span>
+                <span class="arrow">></span>
+             </a>
+ 
+             <a (click)="userFriends()" class="sub-menu-link">
+                <div class="icon-container">
+                   <div class="icon-button">
+                      <span class="material-icons">people</span>
+                   </div>               
+                </div>
+ 
+                <span class="icon-type">Friends</span>
+                <span class="arrow">></span>
+             </a>
+            
+             <a (click)="userChat()" class="sub-menu-link">
+                <div class="icon-container">
+                   <div class="icon-button">
+                      <i class="material-icons">chat</i>
+                      <span *ngIf="unseenConversations !=0 " class="icon-button__badge notifications-number">{{unseenConversations}}</span>
+                   </div>               
+                </div>
+                
+                <span class="icon-type">Chat</span>
+                <span class="arrow">></span>
+             </a>
+ 
+             <a (click)="userNotifications()" class="sub-menu-link">
+                <div class="icon-container">
+                   <div class="icon-button">
+                      <i class="material-icons">notifications</i>
+                      <span *ngIf="notificationsCount !=0 " class="icon-button__badge notifications-number">{{notificationsCount}}</span>
+                   </div>               
+                </div>
+                
+                <span class="icon-type">Notifications</span>
+                <span class="arrow">></span>
+             </a>
+ 
+             <a (click)="logout()" class="sub-menu-link">
+                <div class="icon-container">
+                   <div class="icon-button">
+                      <i class="fa fa-sign-out"></i>
+                   </div>
+                </div>
+                <span class="icon-type">Logout</span>
+                <span class="arrow">></span>
+             </a>
+          </div>
+       </div>
+    </div>
+ </nav>
+ 
+ <body class="main-body">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+ 
+       <div class="add-recipe-button-container">
+          <button type="button" class="add-recipe-button" >Add New Repository</button>
+       </div>
+ 
+       <div class="container" id="main-container">
+          <div class="recipe-cards-container">
+             <div *ngFor="let recipe of recipes" class="recipe-card">
+                <div class="recipe-card-title">
+                   <h6 style="cursor: pointer;">{{recipe?.name}}</h6>
+                </div>
+       
+                <ul class="list-group recipe-card-image-container" style="cursor: pointer;">
+                   <img *ngIf="recipe.image" [src]="recipe.image">
+                </ul>
+       
+                <div class="recipe-card-buttons">
+                   <div *ngIf="recipe.userOwner.userId == user?.userId" class="edit-area">
+                      <button class="edit-button">
+                         <span class="text">Edit</span>
+                      </button>
+                   </div>
+       
+                   <div class="delete-area">
+                      <button  class="delete-button">
+                         <span class="text">Delete</span>
+                      </button>
+                   </div>
+                </div>
+             </div>
+          </div>
+       </div>
+       
+ 
+    <!-- Create Repository Modal -->
+       
+    <!-- Delete Repository Modal -->
+    <div class="modal fade" id="deleteRecipeModal" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel" aria-hidden="true">
+       <div class="modal-dialog" role="document">
+          <div class="modal-content">
+             <div class="modal-header">
+                <h5 class="modal-title" id="deleteModelLabel">Delete Recipe</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+             </div>
+             <div class="modal-body">
+                <p>Are you sure you want to delete the repository: ?</p>
+                <div class="modal-footer">
+                   <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                   <button     class="btn btn-danger" data-dismiss="modal">Yes</button>
+                </div>
+             </div>
+          </div>
+       </div>
+    </div>
+ 
+    <!-- Notification for no recipes -->
+    <div *ngIf="recipes?.length == 0" class="col-lg-12 col-md-12 col-xl-12 no-recipes-modal">
+       <div class="alert alert-info" role="alert">
+          <h4 class="alert-heading">NO REPOSITORIES!</h4>
+          <p>No Repositories were found.</p>
+       </div>
+    </div>
+ 
+ </body>

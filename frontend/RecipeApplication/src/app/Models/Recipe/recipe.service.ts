@@ -31,9 +31,9 @@ export class RecipeService {
   }
 
   // getting created recipes
-  public getRecipesByOwner(username: string): Observable<Recipe[]> {
+  public getCreatedRecipes(userId: number): Observable<Recipe[]> {
     const headers = this.getHeaders();
-    return this.http.get<Recipe[]>(`${this.apiServerUrl}/recipe/${username}/createdRecipes`, { headers });
+    return this.http.get<Recipe[]>(`${this.apiServerUrl}/recipe/createdRecipes/${userId}`, { headers });
   }
 
   public getRecipeById(recipeId: number): Observable<Recipe>{
