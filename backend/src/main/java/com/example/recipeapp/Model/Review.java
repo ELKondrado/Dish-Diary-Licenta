@@ -25,25 +25,31 @@ public class Review {
             generator = "review_sequence"
     )
     private long id;
+
     @NotNull
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private User userOwner;
+
     @NotNull
     private Byte userStarRating;
+
     @NotNull
     @Column(length = 2056)
     private String userReviewText;
+
     @Column(name = "likes")
     private long likes;
+
     @NotNull
     private Date date;
+
     @JsonIgnore
     @ManyToMany(mappedBy = "likedReviews", cascade = CascadeType.ALL)
     private Set<User> likedByUsers = new HashSet<>();
 
     @Override
     public int hashCode() {
-        return Objects.hash(id); // Assuming id is a unique identifier for Review
+        return Objects.hash(id);
     }
 
     @Override

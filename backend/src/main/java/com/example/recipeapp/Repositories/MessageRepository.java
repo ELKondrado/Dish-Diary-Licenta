@@ -31,7 +31,7 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     @Modifying
     @Query("UPDATE Message m " +
            "SET m.wasSeen = true " +
-           "WHERE (m.sender.id = :user1Id AND m.receiver.id =:user2Id) OR (m.sender.id = :user2Id AND m.receiver.id = :user1Id)")
+           "WHERE m.sender.id = :user2Id AND m.receiver.id =:user1Id")
     void setWasSeenConversation(@Param("user1Id") Long user1Id, @Param("user2Id") Long user2Id);
 
     @Query("SELECT COUNT(DISTINCT CONCAT(m.sender.id, '_', m.receiver.id)) " +

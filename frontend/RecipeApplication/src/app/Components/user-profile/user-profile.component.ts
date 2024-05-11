@@ -47,7 +47,7 @@ export class UserProfileComponent implements OnInit{
       () => {
       this.user = this.authService.getUser();
       this.username = this.userService.getUsername();
-      this.getRepositoryRecipes();
+      this.getUserTotalRecipes();
       this.getCreatedRecipes()
       this.getProfileImage();
       this.getNotificationsCount();
@@ -76,6 +76,7 @@ export class UserProfileComponent implements OnInit{
 
   public onEditProfile(editForm: NgForm): void {
     if(this.user && editForm){
+      console.log(editForm)
       this.userService.updateUserAttributes(this.user.userId, editForm).subscribe(
         (response: any) => {
           console.log(response)
@@ -84,9 +85,9 @@ export class UserProfileComponent implements OnInit{
           }
           else if(response.status == "SUCCESS"){
             this.nicknameAlreadyUsed = false;
-            this.ngOnInit();
-            this.toggleProfileEdit();
           }
+          this.ngOnInit();
+          this.toggleProfileEdit();
         },
         (error: HttpErrorResponse) =>
         {
@@ -123,7 +124,7 @@ export class UserProfileComponent implements OnInit{
     }
   }
 
-  public getRepositoryRecipes(): void {
+  public getUserTotalRecipes(): void {
     if(this.user)
     {
       this.recipeService.getUserRecipes(this.user?.userId).subscribe(
@@ -209,6 +210,7 @@ export class UserProfileComponent implements OnInit{
       this.userService.uploadProfileImage(this.user.userId, formData).subscribe(
         () => {
           this.getProfileImage();
+          this.toggleProfileEdit();
         },
         (error: HttpErrorResponse) => {
           console.error('Error uploading profile image:', error);

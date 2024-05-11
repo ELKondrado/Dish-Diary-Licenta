@@ -1,17 +1,11 @@
 package com.example.recipeapp.Controllers;
 
 import com.example.recipeapp.Dtos.RecipeUpdateDto;
-import com.example.recipeapp.Exceptions.NotFound;
 import com.example.recipeapp.Model.Notification.Notification;
 import com.example.recipeapp.Model.Recipe.Recipe;
-import com.example.recipeapp.Model.Repository;
-import com.example.recipeapp.Model.User;
 import com.example.recipeapp.Services.NotificationService;
 import com.example.recipeapp.Services.RecipeService;
-import com.example.recipeapp.Services.RepositoryService;
-import com.example.recipeapp.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,21 +14,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping(path = "/recipe")
 public class RecipeController {
     private final RecipeService recipeService;
-    private final UserService userService;
     private final NotificationService notificationService;
 
     @Autowired
-    public RecipeController(RecipeService recipeService, UserService userService, NotificationService notificationService) {
+    public RecipeController(RecipeService recipeService, NotificationService notificationService) {
         this.recipeService = recipeService;
-        this.userService = userService;
         this.notificationService = notificationService;
     }
 
@@ -79,12 +69,12 @@ public class RecipeController {
     @PostMapping("/addUserRecipe/{recipeId}/{repositoryId}")
     public ResponseEntity<Recipe> addUserRecipe(@PathVariable("recipeId") long recipeId,
                                                 @PathVariable("repositoryId") long repositoryId) {
-        boolean status = recipeService.addRecipeToRepository(recipeId, repositoryId);
-        if(status){
-            return new ResponseEntity<>(HttpStatus.OK);
+        Recipe recipe = recipeService.addRecipeToRepository(recipeId, repositoryId);
+        if(recipe == null){
+            return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
         }
         else{
-            return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
+            return new ResponseEntity<>(recipe, HttpStatus.OK);
         }
     }
 
@@ -101,26 +91,10 @@ public class RecipeController {
         return new ResponseEntity<>(recipes, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/{recipeId}/uploadImage", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<String> uploadImage(@PathVariable("recipeId") Long recipeId,
-                                              @RequestPart("image") MultipartFile image) throws IOException {
-        Recipe recipe = recipeService.findRecipeById(recipeId);
-        recipeService.addRecipeImage(recipe, image);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @GetMapping("/{recipeId}/image")
-    public ResponseEntity<byte[]> getProfileImage(@PathVariable("recipeId") Long recipeId) {
-        Recipe recipe = recipeService.findRecipeById(recipeId);
-
-        if (recipe.getImage() != null) {
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.IMAGE_JPEG);
-
-            return new ResponseEntity<>(recipe.getImage(), headers, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    @GetMapping("/getUserTotalRecipes/{userId}")
+    public ResponseEntity<List<Recipe>> getUserTotalRecipes(@PathVariable("userId") long userId) {
+        List<Recipe> recipes = recipeService.getUserTotalRecipes(userId);
+        return new ResponseEntity<>(recipes, HttpStatus.OK);
     }
 
     @PostMapping("/share")
@@ -128,27 +102,10 @@ public class RecipeController {
                                                     @RequestParam long recipeId,
                                                     @RequestParam long friendId) {
         Recipe recipe = recipeService.getRecipeById(recipeId);
-        Optional<User> optionalUser = userService.findUserByUserId(userId);
-        if(optionalUser.isPresent())
-        {
-            User user = optionalUser.get();
-
-            Optional<User> optionalFriend = userService.findUserByUserId(friendId);
-            if (optionalFriend.isPresent())
-            {
-                User friend = optionalFriend.get();
-
-                if (recipe != null) {
-                    Notification notification = notificationService.shareRecipeToFriend(user, recipe, friend);
-                    return new ResponseEntity<>(notification, HttpStatus.OK);
-                } else {
-                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-                }
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-        }
-        else {
+        if (recipe != null) {
+            Notification notification = notificationService.shareRecipeToFriend(userId, recipe, friendId);
+            return new ResponseEntity<>(notification, HttpStatus.OK);
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -158,15 +115,11 @@ public class RecipeController {
                                          @RequestParam("tag") String tag) {
         Recipe recipe = recipeService.findRecipeById(recipeId);
         short response = recipeService.addTag(recipe, tag);
-        if(response == 0) {
-            return new ResponseEntity<>(recipe, HttpStatus.OK);
-        }
-        else if (response == -1){
-            return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
-        }
-        else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return switch (response) {
+            case 0 -> new ResponseEntity<>(recipe, HttpStatus.OK);
+            case -1 -> new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
+            default -> new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        };
     }
 
     @DeleteMapping("/deleteTag/{recipeId}")
@@ -174,11 +127,23 @@ public class RecipeController {
                                             @RequestParam("tag") String tag) {
         Recipe recipe = recipeService.findRecipeById(recipeId);
         short response = recipeService.deleteTag(recipe, tag);
-        if(response == 0) {
-            return new ResponseEntity<>(recipe, HttpStatus.OK);
-        }
-        else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return switch (response) {
+            case 0 -> new ResponseEntity<>(recipe, HttpStatus.OK);
+            default -> new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        };
+    }
+
+    @PostMapping(value = "/{recipeId}/uploadImage", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<byte[]> uploadImage(@PathVariable("recipeId") Long recipeId,
+                                              @RequestPart("image") MultipartFile image) throws IOException {
+        Recipe recipe = recipeService.findRecipeById(recipeId);
+        recipeService.addRecipeImage(recipe, image);
+        return new ResponseEntity<>(recipe.getImage(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{recipeId}/getImage")
+    public ResponseEntity<byte[]> getImage(@PathVariable("recipeId") Long recipeId) {
+        byte[] image = recipeService.getImage(recipeId);
+        return new ResponseEntity<>(image, HttpStatus.OK);
     }
 }

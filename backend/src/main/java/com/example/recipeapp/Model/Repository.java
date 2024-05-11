@@ -28,7 +28,6 @@ public class Repository {
     @NotNull
     private String name;
 
-    @JsonIgnore
     @ManyToOne
     private User userOwner;
 

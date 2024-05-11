@@ -52,6 +52,7 @@ public class Recipe {
     @Column(name = "date_created")
     private Date dateCreated;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "recipes", fetch = FetchType.LAZY)
     private List<Repository> repositories = new ArrayList<>();
 

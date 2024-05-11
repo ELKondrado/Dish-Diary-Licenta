@@ -2,17 +2,14 @@ package com.example.recipeapp.Controllers;
 
 import com.example.recipeapp.Model.Recipe.Recipe;
 import com.example.recipeapp.Model.Review;
-import com.example.recipeapp.Model.User;
 import com.example.recipeapp.Services.RecipeService;
 import com.example.recipeapp.Services.ReviewService;
-import com.example.recipeapp.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -20,28 +17,20 @@ import java.util.Optional;
 public class ReviewController {
     private final ReviewService reviewService;
     private final RecipeService recipeService;
-    private final UserService userService;
 
     @Autowired
-    public ReviewController(ReviewService reviewService, RecipeService recipeService, UserService userService) {
+    public ReviewController(ReviewService reviewService, RecipeService recipeService) {
         this.reviewService = reviewService;
         this.recipeService = recipeService;
-        this.userService = userService;
     }
 
     @PostMapping("/addReviewToRecipe/{recipeId}/{username}")
     public ResponseEntity<Review> addReview(@RequestBody Review review,
                                             @PathVariable("recipeId") long recipeId,
                                             @PathVariable("username") String username){
-        Optional<User> optionalUser = userService.findUserByUserName(username);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            Recipe recipe = recipeService.findRecipeById(recipeId);
-            Review newReview = reviewService.addReviewToRecipe(review, recipe, user);
-            return new ResponseEntity<>(newReview, HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        Recipe recipe = recipeService.findRecipeById(recipeId);
+        Review newReview = reviewService.addReviewToRecipe(review, recipe, username);
+        return new ResponseEntity<>(newReview, HttpStatus.CREATED);
     }
 
     @GetMapping("/getReviewsForRecipe/{recipeId}")
@@ -53,54 +42,21 @@ public class ReviewController {
     @PutMapping("/likeReview/{reviewId}/{userId}")
     public ResponseEntity<Review> likeReview(@PathVariable("reviewId") Long reviewId,
                                              @PathVariable("userId") Long userId) {
-        Optional<User> optionalUser = userService.findUserByUserId(userId);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            Optional<Review> optionalReview = reviewService.findReviewById(reviewId);
-            if (optionalReview.isPresent()) {
-                Review review = optionalReview.get();
-                review = reviewService.likeReview(review, user);
-                return new ResponseEntity<Review>(review, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-        }
-        else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        Review review = reviewService.likeReview(reviewId, userId);
+        return new ResponseEntity<>(review, HttpStatus.OK);
     }
 
     @PutMapping("/dislikeReview/{reviewId}/{userId}")
     public ResponseEntity<Review> dislikeReview(@PathVariable("reviewId") Long reviewId,
                                                 @PathVariable("userId") Long userId) {
-        Optional<User> optionalUser = userService.findUserByUserId(userId);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            Optional<Review> optionalReview = reviewService.findReviewById(reviewId);
-            if (optionalReview.isPresent()) {
-                Review review = optionalReview.get();
-                review = reviewService.dislikeReview(review, user);
-                return new ResponseEntity<Review>(review, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-        }
-        else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        Review review = reviewService.dislikeReview(reviewId, userId);
+        return new ResponseEntity<Review>(review, HttpStatus.OK);
     }
 
     @GetMapping("/getLikedReviews/{userId}")
     public ResponseEntity<List<Review>> getLikedReviews(@PathVariable("userId") Long userId) {
-        Optional<User> optionalUser = userService.findUserByUserId(userId);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            List<Review> likedReviews = reviewService.getLikedReviews(user.getUserId());
-            return new ResponseEntity<>(likedReviews, HttpStatus.OK);
-        }
-        else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        List<Review> likedReviews = reviewService.getLikedReviews(userId);
+        return new ResponseEntity<>(likedReviews, HttpStatus.OK);
     }
 
     @DeleteMapping("/deleteReview/{recipeId}/{reviewId}")
@@ -109,5 +65,4 @@ public class ReviewController {
         reviewService.deleteReview(recipeId, reviewId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 }

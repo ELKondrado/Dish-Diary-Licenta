@@ -32,7 +32,6 @@ export class RecipeInfoComponent implements OnInit {
   ) {}
 
   public user: User | null = null;
-  public username: string | undefined;
   public friends: User[] = [];
   public notificationsCount: number = 0;
   public unseenConversations: number = 0;
@@ -58,14 +57,13 @@ export class RecipeInfoComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    this.fetchData();
     this.fetchUser();
+    this.fetchData();
   }
 
   public fetchData(): void{
     this.authService.initializeApp().subscribe(() => {
       this.user = this.authService.getUser();
-      this.username = this.userService.getUsername();
       this.fetchRecipe();
       this.getProfileImage();
       this.getUserRecipes();
@@ -91,11 +89,9 @@ export class RecipeInfoComponent implements OnInit {
       const recipeId = params['recipeId'];
       this.recipeService.getRecipeById(recipeId).subscribe(
         (recipe: Recipe) => {
-          console.log(recipe)
           this.recipe = recipe;
           this.getRecipeImage();
           this.fetchReviewsForRecipe();
-          console.log(this.user);
         },
         (error: HttpErrorResponse) => {
           console.error(error);
@@ -144,7 +140,6 @@ export class RecipeInfoComponent implements OnInit {
       this.reviewService.getLikedReviews(this.user.userId).subscribe(
         (likedReviews: Review[]) => {
           this.likedReviewsByUser = likedReviews;
-          console.log(likedReviews);
         },
         (error: HttpErrorResponse) => {
           console.error(error);
@@ -190,10 +185,9 @@ export class RecipeInfoComponent implements OnInit {
           this.friends.forEach(friend => {
             friend.profileImage = 'data:image/jpeg;base64,' + friend.profileImage;
           });
-          console.log(this.friends);
         },
         (error: HttpErrorResponse) => {
-          console.log("ERROR getting user friends: ", error);
+          console.error(error);
         }
       );
     }
@@ -232,6 +226,7 @@ export class RecipeInfoComponent implements OnInit {
 
   public shareRecipe(friend: User): void {
     if(this.user && this.recipe) {
+      console.log(this.user)
       this.recipeService.shareRecipe(this.user.userId, this.recipe.id, friend.userId).subscribe(
         (response: Notif) => {
           console.log(response);

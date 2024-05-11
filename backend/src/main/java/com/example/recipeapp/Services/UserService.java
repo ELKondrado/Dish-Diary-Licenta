@@ -1,5 +1,7 @@
 package com.example.recipeapp.Services;
 
+import com.example.recipeapp.Dtos.UserEditProfileDto;
+import com.example.recipeapp.Exceptions.NotFound;
 import com.example.recipeapp.Model.Friendship;
 import com.example.recipeapp.Model.Recipe.Recipe;
 import com.example.recipeapp.Model.Repository;
@@ -7,6 +9,10 @@ import com.example.recipeapp.Model.User;
 import com.example.recipeapp.Repositories.NotificationRepository;
 import com.example.recipeapp.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,59 +31,87 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public Optional<User> findUserByUserName(String username) {
-        return userRepository.findUserByUserName(username);
-    }
-
     public Optional<User> findUserByUserId(long userId) {
         return userRepository.findUserByUserId(userId);
     }
 
-    public Optional<User> fetchUserDetails(String username) {
-        return userRepository.findUserByUserName(username);
+    public User getUserDetails(String username) {
+        Optional<User> optionalUser = userRepository.findUserByUserName(username);
+        if (optionalUser.isPresent()) {
+            return optionalUser.get();
+        } else {
+            throw new NotFound("User with username " + username + " not found in getting user details");
+        }
     }
 
-    @Transactional
-    public short updateUserNickname(User user, String nickname) {
-        if(nickname != null && nickname.length() > 0){
-            Optional<User> optionalUser = userRepository.findUserByUserNickname(nickname);
-            if(optionalUser.isPresent()) {
-                User newUser = optionalUser.get();
-                if(user == newUser) {
-                    return 0;
-                }
-                return -1;
-            }
-            user.setUserNickname(nickname);
+    public User editProfileAttributes(long userId, UserEditProfileDto userEditProfileDto) {
+        Optional<User> optionalUser = userRepository.findUserByUserId(userId);
+        if(optionalUser.isPresent()) {
+            User user = optionalUser.get();
+
+            user.setUserNickname(userEditProfileDto.getUserNicknameToChange());
+            user.setUserBio(userEditProfileDto.getUserBioToChange());
+            return userRepository.save(user);
+        } else {
+            throw new NotFound("User with id " + userId + " not found in editing profile");
+        }
+    }
+
+    public void deleteUserRecipe(long userId, long recipeId) {
+        Optional<User> optionalUser = userRepository.findUserByUserId(userId);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+
+            userRepository.deleteUserRecipe(user.getUserId(), recipeId);
+            user.setTotalRecipes( user.getTotalRecipes() - 1);
             userRepository.save(user);
+        } else {
+            throw new NotFound("User with id " + userId + " not found in deleting user's recipe");
         }
-        return 0;
+    }
+
+    public List<User> getFriends(long userId) {
+        Optional<User> optionalUser = userRepository.findUserByUserId(userId);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+
+            return user.getFriendships().stream()
+                    .map(Friendship::getFriend)
+                    .collect(Collectors.toList());
+        } else {
+            throw new NotFound("User with id " + userId + " not found in getting user friends");
+        }
+
     }
 
     @Transactional
-    public User updateUserBio(User user, String bio) {
-        if(bio != null && bio.length() > 0){
-            user.setUserBio(bio);
+    public byte[] addProfileImage(long userId, MultipartFile image) throws IOException {
+        Optional<User> optionalUser = userRepository.findUserByUserId(userId);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+
+            byte[] imageData = image.getBytes();
+            user.setProfileImage(imageData);
+            userRepository.save(user);
+            return user.getProfileImage();
+        } else {
+            throw new NotFound("User with id " + userId + " not found in uploading profile image");
         }
-        return user;
     }
 
-    public void deleteUserRecipe(User user, long recipeId) {
-        userRepository.deleteUserRecipe(user.getUserId(), recipeId);
-        user.setTotalRecipes( user.getTotalRecipes() - 1);
-        userRepository.save(user);
-    }
+    public byte[] getProfileImage(long userId){
+        Optional<User> optionalUser = userRepository.findUserByUserId(userId);
+        if(optionalUser.isPresent()) {
+            User user = optionalUser.get();
 
-    public List<User> getFriends(User user) {
-        return user.getFriendships().stream()
-                .map(Friendship::getFriend)
-                .collect(Collectors.toList());
-    }
-
-    @Transactional
-    public void addProfileImage(User user, MultipartFile image) throws IOException {
-        byte[] imageData = image.getBytes();
-        user.setProfileImage(imageData);
-        userRepository.save(user);
+            if (user.getProfileImage() != null) {
+                return user.getProfileImage();
+            } else {
+                throw new NotFound("Profile image not found");
+            }
+        }
+        else {
+            throw new NotFound("User with id " + userId + " not found in getting profile image");
+        }
     }
 }
