@@ -56,6 +56,7 @@ export class UserChatComponent implements OnInit, OnDestroy{
   ngOnInit(): void {
     this.webSocketService.subscribe('/topic/message', (): void =>{
       this.getMessagesFromUser();
+      this.setWasSeenConversation();
     });
 
     this.fetchData();
@@ -130,20 +131,27 @@ export class UserChatComponent implements OnInit, OnDestroy{
     return currentMessageDate !== previousMessageDate;
   }
 
+  public setWasSeenConversation(): void {
+    if(this.user && this.friendCurrentConversation) {
+      this.messageService.setWasSeenConversation(this.user?.userId, this.friendCurrentConversation.userId).subscribe(
+        (response: any) => 
+        {
+
+        },
+        (error : HttpErrorResponse) =>
+        {
+          console.error(error);
+        });
+    }
+  }
+
   public changeCurrentFriendConversation(conversation: Conversation, index: number): void {
     if(this.user){
-      if(conversation.user1.userId != this.user?.userId){
+      if(conversation.user1.userId != this.user?.userId) {
         this.friendCurrentConversation = conversation.user1;
         this.activeConversationIndex = index;
         this.getMessagesFromUser();
-        this.messageService.setWasSeenConversation(this.user?.userId, this.friendCurrentConversation.userId).subscribe(
-          (response: any) => {
-          },
-          (error : HttpErrorResponse) =>
-          {
-            console.error(error);
-          }
-        )
+        this.setWasSeenConversation();
         this.getConversations();
         this.getUnseenConversations()
       }
@@ -164,7 +172,6 @@ export class UserChatComponent implements OnInit, OnDestroy{
         this.getUnseenConversations()
       }
     }
-   
   }
 
   public getConversations(): void {

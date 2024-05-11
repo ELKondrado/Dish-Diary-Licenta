@@ -30,5 +30,4 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
                    "FROM recipe_review " +
                    "WHERE recipe_id = :recipeId AND review_id = :reviewId", nativeQuery = true)
     void deleteReviewOfRecipe(@Param("recipeId") long recipeId, @Param("reviewId") long reviewId);
-
 }

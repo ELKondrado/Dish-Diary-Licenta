@@ -24,4 +24,11 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     List<Recipe> findRecipesByOwner(@Param("userId") Long userId);
 
     List<Recipe> findByRepositories_id(long repositoryId);
+
+    @Query("SELECT DISTINCT  rec " +
+            "FROM Recipe rec " +
+            "JOIN rec.repositories repo " +
+            "JOIN repo.recipes repoRec " +
+            "WHERE repo.userOwner.userId = :userId")
+    List<Recipe> findUserTotalRecipes(long userId);
 }

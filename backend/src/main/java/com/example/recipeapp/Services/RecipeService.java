@@ -12,7 +12,9 @@ import com.example.recipeapp.Repositories.RepositoryRepository;
 import com.example.recipeapp.Repositories.ReviewRepository;
 import com.example.recipeapp.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -114,7 +116,7 @@ public class RecipeService {
     }
 
     @Transactional
-    public boolean addRecipeToRepository(long recipeId, long repositoryId) {
+    public Recipe addRecipeToRepository(long recipeId, long repositoryId) {
         Optional<Recipe> optionalRecipe = recipeRepository.findRecipeById(recipeId);
         if (optionalRecipe.isPresent()) {
             Recipe recipe = optionalRecipe.get();
@@ -129,17 +131,17 @@ public class RecipeService {
                     repository.getUserOwner().setTotalRecipesAdded(repository.getUserOwner().getTotalRecipesAdded() + 1);
                     recipe.getRepositories().add(repository);
                     userRepository.save(repository.getUserOwner());
-                    return true;
+                    return recipe;
                 }
                 else{
-                    return false;
+                    return null;
                 }
             } else {
-                throw new NotFound("Repository with id " + repositoryId + " not found");
+                throw new NotFound("Repository with id " + repositoryId + " not found in adding the recipe to the repository");
             }
 
         } else {
-            throw new NotFound("Recipe with id " + recipeId + " not found");
+            throw new NotFound("Recipe with id " + recipeId + " not found in adding the recipe to the repository with id " + repositoryId);
         }
     }
 
@@ -176,6 +178,17 @@ public class RecipeService {
         }
     }
 
+    public List<Recipe> getUserTotalRecipes(long userId) {
+        Optional<User> optionalUser = userRepository.findUserByUserId(userId);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+
+            return recipeRepository.findUserTotalRecipes(user.getUserId());
+        } else {
+            throw new NotFound("User with id " + userId + " not found in getting user total recipes");
+        }
+    }
+
     public Recipe getRecipeById(long recipeId) {
         return recipeRepository.findById(recipeId)
                 .orElseThrow(() -> new NotFound("Recipe with id: " + recipeId + " does not exist"));
@@ -183,13 +196,6 @@ public class RecipeService {
 
     public List<Recipe> getRecipesByOwner(Long userId) {
         return recipeRepository.findRecipesByOwner(userId);
-    }
-
-    @Transactional
-    public void addRecipeImage(Recipe recipe, MultipartFile image) throws IOException {
-        byte[] imageData = image.getBytes();
-        recipe.setImage(imageData);
-        recipeRepository.save(recipe);
     }
 
     public short addTag(Recipe recipe, String tag) {
@@ -216,7 +222,22 @@ public class RecipeService {
         else return -2;
     }
 
+    @Transactional
+    public void addRecipeImage(Recipe recipe, MultipartFile image) throws IOException {
+        byte[] imageData = image.getBytes();
+        recipe.setImage(imageData);
+        recipeRepository.save(recipe);
+    }
 
+    public byte[] getImage(long recipeId) {
+        Recipe recipe = findRecipeById(recipeId);
+
+        if (recipe.getImage() != null) {
+            return recipe.getImage();
+        } else {
+           throw new NotFound("Image not found in getting recipe image");
+        }
+    }
 
     // Private Methods
 

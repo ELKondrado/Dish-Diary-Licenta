@@ -27,7 +27,7 @@ export class RecipeService {
 
   public getRecipes(): Observable<Recipe[]> {
     const headers = this.getHeaders();
-    return this.http.get<Recipe[]>(`${this.apiServerUrl}/recipe/all`, { headers });
+    return this.http.get<Recipe[]>(`${this.apiServerUrl}/recipe/getAllRecipes`, { headers });
   }
 
   // getting created recipes
@@ -39,7 +39,7 @@ export class RecipeService {
   public getRecipeById(recipeId: number): Observable<Recipe>{
     const headers = this.getHeaders();
 
-    return this.http.get<Recipe>(`${this.apiServerUrl}/recipe/find/${recipeId}`, { headers });
+    return this.http.get<Recipe>(`${this.apiServerUrl}/recipe/findRecipe/${recipeId}`, { headers });
   }
 
   //adding new recipes through recipe-form
@@ -61,7 +61,7 @@ export class RecipeService {
   public getUserRecipes(userId: number): Observable<Recipe[]> {
     const headers = this.getHeaders();
   
-    return this.http.get<Recipe[]>(`${this.apiServerUrl}/recipe/user/${userId}/recipes`, { headers });
+    return this.http.get<Recipe[]>(`${this.apiServerUrl}/recipe/getUserTotalRecipes/${userId}`, { headers });
   }
 
   public addRecipe(recipe: Recipe): Observable<Recipe> {
@@ -99,7 +99,7 @@ export class RecipeService {
   
   public getImage(recipeId: number) {
     const headers = this.getHeaders();
-    return this.http.get(`${this.apiServerUrl}/recipe/${recipeId}/image`, { headers, responseType: 'arraybuffer' });
+    return this.http.get(`${this.apiServerUrl}/recipe/${recipeId}/getImage`, { headers, responseType: 'arraybuffer' });
   }
 
   public shareRecipe(userId: number, recipeId: number, friendId: number): Observable<Notif> {
