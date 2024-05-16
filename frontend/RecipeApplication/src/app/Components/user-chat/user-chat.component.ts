@@ -1,20 +1,17 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from '../../Security/auth.service';
 import { UserService } from '../../Models/User/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../../Models/User/user';
-import { NotificationService } from '../../Models/Notification/notification.service';
 import { Notif } from '../../Models/Notification/notification';
 import { MessageService } from '../../Models/Message/message.service';
 import { Message } from '../../Models/Message/message';
 import { DatePipe } from '@angular/common';
 import { interval } from 'rxjs';
-import { take, timestamp } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import { Conversation } from '../../Models/Conversation/conversation';
 import { ConversationService } from '../../Models/Conversation/conversation.service';
-import { Stomp } from '@stomp/stompjs';
-import { Client } from 'stompjs';
 import { WebSocketService } from '../../web-socket.service';
 
 @Component({
@@ -31,7 +28,6 @@ export class UserChatComponent implements OnInit, OnDestroy{
     private datePipe: DatePipe,
     private authService: AuthService,
     private userService: UserService,
-    private notificationService: NotificationService,
     private messageService: MessageService,
     private conversationService: ConversationService,
     private router: Router
@@ -39,19 +35,16 @@ export class UserChatComponent implements OnInit, OnDestroy{
   }
 
   public user: User | null = null;
-  public username: string | undefined;
   public conversations: Conversation[] = [];
-  public notificationsCount: number = 0;
-  public unseenConversations: number = 0;
   public friendRequestNotification: Notif | undefined;
   public avatarUrl: String | undefined;
-  public selectedFile: File | undefined;
   public friendCurrentConversation: User | undefined;
   public activeConversationIndex: number | null = null;
   public messagesFromFriend: Message[] = [];
   public messageToSend: string = "";
   public previousMessageTimestamp: string | null = null;
   public showDateBubbles: boolean[] = [];
+  public unseenConversations: number = 0;
 
   ngOnInit(): void {
     this.webSocketService.subscribe('/topic/message', (): void =>{
@@ -59,8 +52,13 @@ export class UserChatComponent implements OnInit, OnDestroy{
       this.setWasSeenConversation();
     });
 
-    this.fetchData();
-    this.fetchUser();
+    this.authService.initializeApp().subscribe(
+      () => {
+      this.user = this.authService.getUser();
+      this.getProfileImage();
+      this.getConversations();
+      this.fetchFriendCurrentConversation();
+    });
 
     if(this.conversations.length != 0)
       interval(1000)
@@ -73,29 +71,6 @@ export class UserChatComponent implements OnInit, OnDestroy{
   }
 
   ngOnDestroy(): void {
-  }
-  
-  private fetchData(): void{
-    this.authService.initializeApp().subscribe(
-      () => {
-      this.user = this.authService.getUser();
-      this.username = this.userService.getUsername();
-      this.getProfileImage();
-      this.getNotificationsCount();
-      this.getConversations();
-      this.fetchFriendCurrentConversation();
-      this.getUnseenConversations();
-    });
-  }
-
-  private fetchUser(): void {
-    const dropdown = document.querySelector(".dropdown");
-    const avatar = dropdown?.querySelector(".lil-avatar");
-    const menu = dropdown?.querySelector(".menu");
-  
-    avatar?.addEventListener('click', () => {
-      menu?.classList.toggle('menu-open');
-    });
   }
 
   public fetchFriendCurrentConversation(): void{
@@ -114,11 +89,6 @@ export class UserChatComponent implements OnInit, OnDestroy{
         });
       }
     });
-  }
-
-  public toggleMenu(): void {
-    let subMenu = document.getElementById("subMenu");
-    subMenu?.classList.toggle("open-menu");
   }
 
   public shouldShowDate(message: Message, currentIndex: number): boolean {
@@ -192,30 +162,6 @@ export class UserChatComponent implements OnInit, OnDestroy{
             }
         );
       }
-  }
-
-  public getMessages(): void {
-    // if (this.user) {
-    //   const page = 1;
-    //   const pageSize = 100;
-
-    //   this.messageService.getMessages(this.user.userId, page, pageSize).subscribe(
-    //       (conversations: Message[]) => {
-    //         this.conversations = conversations;
-    //         this.conversations.sort((a, b) => {
-    //           const timestampA = new Date(a.timestamp);
-    //           const timestampB = new Date(b.timestamp);
-          
-    //           return timestampB.getTime() - timestampA.getTime();
-    //         });
-    //         this.conversations = this.removeDuplicateMessages(this.conversations)
-    //         this.fetchChatUserProfiles();
-    //       },
-    //       (error: HttpErrorResponse) => {
-    //           console.error(error);
-    //       }
-    //   );
-    // }
   }
 
   public getMessagesFromUser(): void {
@@ -326,57 +272,11 @@ export class UserChatComponent implements OnInit, OnDestroy{
     }
   }
 
-  public getNotificationsCount(): void {
-    if(this.user)
-    {
-      this.notificationService.getNotificationsCount(this.user.userId).subscribe(
-        (notifications: number) => {
-          this.notificationsCount = notifications;
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
-    }
-  }
- 
   public getUnseenConversations(): void {
     if(this.user){
       this.messageService.getUnseenConversations(this.user.userId).subscribe(
         (unseenConversations: number) => {
           this.unseenConversations = unseenConversations;
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
-    }
-  }
-
-  public onSelectFile(event: any) {
-    if (event.target.files && event.target.files.length > 0) {
-      this.selectedFile = event.target.files[0];
-
-      const reader = new FileReader();
-      if(this.selectedFile)
-      {
-          reader.readAsDataURL(this.selectedFile);
-          reader.onload = (eventReader: any) => {
-          this.avatarUrl = eventReader.target.result;
-          this.uploadImage();
-        };
-      }
-    }
-  }
-  
-  public uploadImage() {
-    if (this.user?.userId && this.selectedFile) {
-      const formData = new FormData();
-      formData.append('image', this.selectedFile);
-  
-      this.userService.uploadProfileImage(this.user.userId, formData).subscribe(
-        () => {
-          this.getProfileImage();
         },
         (error: HttpErrorResponse) => {
           console.error(error);
@@ -424,12 +324,12 @@ export class UserChatComponent implements OnInit, OnDestroy{
 
   public currentTimeDifferenceFormattedDate(date: string | null): string {
     if (!date) {
-      return ''; // Handle null or empty date strings
+      return '';
     }
   
     const parsedDate = Date.parse(date);
     if (isNaN(parsedDate)) {
-      return 'Invalid Date'; // Handle invalid date strings
+      return 'Invalid Date';
     }
   
     const now = new Date();
@@ -448,33 +348,8 @@ export class UserChatComponent implements OnInit, OnDestroy{
     } else
       return `now`;
   }
-  
 
   public onOpenFriendProfile(friendUsername: String): void {
     this.router.navigate([`/${this.userService.getUsername()}/friend-profile/${friendUsername}`]);
-  }
-
-  public mainPage(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/starter-page`]);
-  }
-
-  public discoverRecipes(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/recipes`]);
-  }
-
-  public userProfile(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/profile`]);
-  }
-
-  public userFriends(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/friends`]);
-  }
-
-  public userNotifications(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/notifications`]);
-  }
-
-  public logout(): void{   
-    this.authService.logout();
   }
 }

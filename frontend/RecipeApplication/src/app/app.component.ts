@@ -1,24 +1,25 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { Recipe } from './Models/Recipe/recipe';
-import { RecipeService } from './Models/Recipe/recipe.service';
-import { HttpErrorResponse } from '@angular/common/http';
-import { NgForm } from '@angular/forms';
-import { UserService } from './Models/User/user.service';
 import { AuthService } from './Security/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
-  public title = "RecipeApp";
+  public title = 'Dish-Diary';
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private router: Router) {
     this.authService.initializeAuthentication();
   }
 
-  ngOnInit(): void {
-    
+  ngOnInit(): void {}
+
+  shouldShowHeader(): boolean {
+    return (
+      !this.router.url.includes('/login') &&
+      !this.router.url.includes('/register')
+    );
   }
 }

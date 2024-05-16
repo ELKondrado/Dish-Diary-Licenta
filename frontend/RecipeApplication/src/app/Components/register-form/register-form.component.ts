@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '../../Models/User/user';
 import { UserService } from '../../Models/User/user.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NgForm } from '@angular/forms';
 import { AuthService } from '../../Security/auth.service';
-import { Route, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register-form',

@@ -5,39 +5,12 @@ body {
     padding-bottom: 10rem;
 }
 
-/* START NAVBAR */
-
-.navbar {
-    background-color: rgba(1, 4, 9, 255);
-    padding-left: 5rem;
+#main-container {
+    margin-top: 1rem;
+    margin-bottom: 3rem;
 }
 
-.navbar button:hover {
-    color: red;
-}
-
-.navbar .repository-link {
-    font-weight: 500;
-    color: red; 
-    padding-bottom: 20px; 
-    position: absolute;
-    border-bottom: 3px solid red;
-}
-
-.navbar .discover-recipes-link {
-    font-weight: 500;
-    margin-left: 5.9rem;
-} 
-
-.search-icon {
-    color: white;
-    position: absolute;
-    top: 53.5%;
-    right: 6rem; 
-    transform: translateY(-50%);
-}
-
-#searchUser, #searchRecipeRepo {
+#searchRecipeRepo {
     position: relative;
     background: transparent;
     border: none;
@@ -49,211 +22,14 @@ body {
     font-size: 16px;
     font-weight: 600;
     padding-right: 2rem;
-}
-
-#searchUser:focus, #searchRecipeRepo:focus {
-    outline: none;
-    border: 2px solid white;
-}
-
-#searchRecipeRepo {
     margin-right: auto;
     margin-left: 3rem;
     margin-top: 2rem;
 }
 
-.navbar a:hover {
-    color: red;
-}
-
-.navbar a {
-    cursor: pointer;
-}
-
-/* START DROP DOWN */
-
-.navbar {
-    background-color: rgba(1, 4, 9, 255);
-    padding-left: 5rem;
-    border-bottom: 1px solid grey;
-}
-
-.navbar button:hover {
-    color: red;
-}
-
-.navbar a:hover {
-    color: red;
-}
-
-.navbar a {
-    cursor: pointer;
-}
-
-/* START DROP DOWN */
-
-.sub-menu-wrap{
-    position: absolute;
-    z-index: 2;
-    top: 85%;
-    right: 0.5%;
-    width: 320px;
-    max-height: 0px;
-    overflow: hidden;
-    color: white;
-    transition: max-height 0.5s;
-    z-index: 1;
-}
-
-.sub-menu-wrap.open-menu{
-    max-height: 400px;
-}
-
-.sub-menu{
-    color: white;
-    background: rgba(1, 4, 9, 255);
-    padding: 20px;
-    margin: 10px;
-    border: 0.75px solid grey;
-}
-
-.user-info{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding-bottom: 0.75rem;
-    border-bottom: 0.75px solid grey;
-}
-
-.user-info h6{
-    margin-left: 0.5rem;
-    font-weight: 500;
-}
-
-.user-info img{
-    width: 50px;
-    border-radius: 50%;
-}
-
-.sub-menu-link{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    color: rgb(107, 5, 5);
-    margin: 15px 0;
-}
-
-.sub-menu-link p{
-    width: 100%;
-}
-
-.sub-menu-link .icon-type{
-    width: 100%;
-    margin-left: 1rem;
-    margin-bottom: 0.2rem;
-    font-size: 16px;
-    font-weight: 500;
-}
-
-.sub-menu-link i{
-    color: black;
-    background-color: #e5e5e5;
-    border-radius: 50%;
-}
-
-.sub-menu-link .arrow{
-    margin-bottom: 0.5rem;
-    font-size: 22px;
-    transition: transform 0.5s;
-}
-
-.sub-menu-link:hover .arrow{
-    transform: translateX(5px);
-}
-
-.sub-menu-link:hover p{
-    font-weight: 600;
-}
-  
-.icon-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 35px;
-    height: 35px;
-}
-
-.icon-button {
-    width: inherit;
-    height: inherit;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #333333;
-    background: #dddddd;
-    border: none;
+#searchRecipeRepo:focus {
     outline: none;
-    border-radius: 50%;
-}
-  
-.icon-button:hover {
-    cursor: pointer;
-}
-  
-.icon-button:active {
-    background: #cccccc;
-}
-  
-.icon-button__badge {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    width: 20px;
-    height: 20px;
-    background: red;
-    color: #ffffff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-}
-
-.icon-button .notifications-number {
-    font-weight: 700;
-    font-size: 12px;
-}   
-
-.avatar {
-    border-radius: 50%;
-    width: 3rem;
-    height: 3rem;
-    cursor: pointer;
-}
-
-.lil-avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 0.1rem solid white;
-}
-
-.profile-avatar {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; 
-    object-position: center center;
-}
-
-/* END DROP DOWN */
-
-/* END NAVBAR */
-
-#main-container {
-    margin-top: 1rem;
-    margin-bottom: 3rem;
+    border: 1px solid white;
 }
 
 .recipe-cards-container {
@@ -558,6 +334,22 @@ a {
 
 .hoverable:hover .remove-tag {
     display: inline-block; 
+}
+
+.delete-repository-button {
+    color: white;
+    width: 12rem;
+    height: 2.25rem;
+    border: 2px solid grey;
+    border-radius: 6px;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    background-color: red;
+    margin-left: -9.75rem;
+}
+
+.delete-repository-button:hover {
+    border: 2px solid white;
 }
 
 .modal-body .cancel-button {

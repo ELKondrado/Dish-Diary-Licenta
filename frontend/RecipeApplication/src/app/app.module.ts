@@ -27,22 +27,22 @@ import { MessageService } from './Models/Message/message.service';
 import { NotificationService } from './Models/Notification/notification.service';
 import { ReviewService } from './Models/Review/review.service';
 import { StarterPageComponent } from './Components/starter-page/starter-page.component';
-
+import { HeaderComponent } from './Components/header/header.component';
 
 const routes: Routes = [
-  {path: '', redirectTo: '/login', pathMatch: 'full'},
-  {path: 'login', component: LoginFormComponent},
-  {path: 'register', component: RegisterFormComponent},
-  {path: ':username/starter-page', component: StarterPageComponent, canActivate: [AuthGuard]},
-  {path: ':username/repository', component: RepositoryComponent, canActivate: [AuthGuard]},
-  {path: ':username/recipes', component: DiscoverRecipesComponent, canActivate: [AuthGuard]},
-  {path: ':username/recipe/:recipeId', component: RecipeInfoComponent, canActivate: [AuthGuard]},
-  {path: ':username/profile', component: UserProfileComponent, canActivate: [AuthGuard]},
-  {path: ':username/friends', component: UserFriendsComponent, canActivate: [AuthGuard]},
-  {path: ':username/notifications', component: UserNotificationsComponent, canActivate: [AuthGuard]},
-  {path: ':username/friend-profile/:friendUserName', component: FriendUserProfileComponent, canActivate: [AuthGuard]},
-  {path: ':username/chat', component: UserChatComponent, canActivate: [AuthGuard]},
-  {path: ':username/chat/:friendUserName', component: UserChatComponent, canActivate: [AuthGuard]}
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: 'login', component: LoginFormComponent },
+  { path: 'register', component: RegisterFormComponent },
+  { path: ':username/starter-page', component: StarterPageComponent, canActivate: [AuthGuard] },
+  { path: ':username/repository/:repositoryId', component: RepositoryComponent, canActivate: [AuthGuard] },
+  { path: ':username/recipes', component: DiscoverRecipesComponent, canActivate: [AuthGuard] },
+  { path: ':username/recipe/:recipeId', component: RecipeInfoComponent, canActivate: [AuthGuard] },
+  { path: ':username/profile', component: UserProfileComponent, canActivate: [AuthGuard] },
+  { path: ':username/friends', component: UserFriendsComponent, canActivate: [AuthGuard] },
+  { path: ':username/notifications', component: UserNotificationsComponent, canActivate: [AuthGuard] },
+  { path: ':username/friend-profile/:friendUserName', component: FriendUserProfileComponent, canActivate: [AuthGuard] },
+  { path: ':username/chat', component: UserChatComponent, canActivate: [AuthGuard] },
+  { path: ':username/chat/:friendUserName', component: UserChatComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -50,6 +50,7 @@ const routes: Routes = [
     AppComponent,
     LoginFormComponent,
     RegisterFormComponent,
+    StarterPageComponent,
     RepositoryComponent,
     DiscoverRecipesComponent,
     RecipeInfoComponent,
@@ -58,14 +59,14 @@ const routes: Routes = [
     UserNotificationsComponent,
     FriendUserProfileComponent,
     UserChatComponent,
-    StarterPageComponent
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot(routes),
-    IonicModule.forRoot()
+    IonicModule.forRoot(),
   ],
   providers: [
     AuthService,
@@ -77,8 +78,8 @@ const routes: Routes = [
     NotificationService,
     ReviewService,
     WebSocketService,
-    DatePipe
-  ],  
+    DatePipe,
+  ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

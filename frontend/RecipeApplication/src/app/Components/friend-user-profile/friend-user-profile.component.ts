@@ -1,14 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { Notif } from '../../Models/Notification/notification';
 import { User } from '../../Models/User/user';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NotificationService } from '../../Models/Notification/notification.service';
 import { UserService } from '../../Models/User/user.service';
 import { AuthService } from '../../Security/auth.service';
 import { Recipe } from '../../Models/Recipe/recipe';
 import { RecipeService } from '../../Models/Recipe/recipe.service';
-import { MessageService } from '../../Models/Message/message.service';
 
 @Component({
   selector: 'app-friend-user-profile',
@@ -21,16 +18,11 @@ export class FriendUserProfileComponent {
     private authService: AuthService,
     private userService: UserService,
     private recipeService: RecipeService,
-    private notificationService: NotificationService,
-    private messageService: MessageService,
     private router: Router
   ) {}
 
   public user: User | null = null;
-  public username: string | undefined;
   public friend: User | undefined;
-  public notificationsCount: number = 0;
-  public unseenConversations: number = 0;
   public avatarUrl: String | undefined;
   public friendAvatarUrl: String | undefined;
   public selectedFile: File | undefined;
@@ -39,29 +31,11 @@ export class FriendUserProfileComponent {
   public addedRecipes: Recipe[] | undefined;
 
   ngOnInit(): void {
-    this.fetchData();
-    this.fetchUser();
-  }
-
-  private fetchData(): void{
     this.authService.initializeApp().subscribe(
       () => {
       this.user = this.authService.getUser();
-      this.username = this.userService.getUsername();
       this.fetchFriend();
       this.getProfileImage();
-      this.getNotificationsCount();
-      this.getUnseenConversations();
-    });
-  }
-
-  private fetchUser(): void {
-    const dropdown = document.querySelector(".dropdown");
-    const avatar = dropdown?.querySelector(".lil-avatar");
-    const menu = dropdown?.querySelector(".menu");
-  
-    avatar?.addEventListener('click', () => {
-      menu?.classList.toggle('menu-open');
     });
   }
 
@@ -82,43 +56,11 @@ export class FriendUserProfileComponent {
     });
   }
 
-  public toggleMenu(){
-    let subMenu = document.getElementById("subMenu");
-    subMenu?.classList.toggle("open-menu");
-  }
-
-  public getNotificationsCount(): void {
-    if(this.user)
-    {
-      this.notificationService.getNotificationsCount(this.user.userId).subscribe(
-        (notifications: number) => {
-          this.notificationsCount = notifications;
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
-    }
-  }
-
-  public getUnseenConversations(): void {
-    if(this.user){
-      this.messageService.getUnseenConversations(this.user.userId).subscribe(
-        (unseenConversations: number) => {
-          this.unseenConversations = unseenConversations;
-        },
-        (error: HttpErrorResponse) => {
-          console.error(error);
-        }
-      );
-    }
-  }
-
   public getRepositoryRecipes(): void {
     console.log(this.friend)
     if(this.friend)
     {
-      this.recipeService.getUserRecipes(this.friend?.userId).subscribe(
+      this.recipeService.getUserTotalRecipes(this.friend?.userId).subscribe(
         (response: Recipe[]) => {
           console.log(response)
           this.repositoryRecipes = response;
@@ -178,38 +120,6 @@ export class FriendUserProfileComponent {
     button.click();
   }
 
-  public onSelectFile(event: any) {
-    if (event.target.files && event.target.files.length > 0) {
-      this.selectedFile = event.target.files[0];
-
-      const reader = new FileReader();
-      if(this.selectedFile)
-      {
-          reader.readAsDataURL(this.selectedFile);
-          reader.onload = (eventReader: any) => {
-          this.avatarUrl = eventReader.target.result;
-          this.uploadImage();
-        };
-      }
-    }
-  }
-  
-  public uploadImage() {
-    if (this.user?.userId && this.selectedFile) {
-      const formData = new FormData();
-      formData.append('image', this.selectedFile);
-  
-      this.userService.uploadProfileImage(this.user.userId, formData).subscribe(
-        () => {
-          this.getProfileImage();
-        },
-        (error: HttpErrorResponse) => {
-          console.error('Error uploading profile image:', error);
-        }
-      );
-    }
-  }
-
   public getProfileImage() {
     if (this.user?.userId) {
       this.userService.getProfileImage(this.user.userId).subscribe(
@@ -234,35 +144,7 @@ export class FriendUserProfileComponent {
     return 'data:image/jpeg;base64,' + btoa(bytes.join(''));
   }
 
-  public mainPage(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/starter-page`]);
-  }
-
-  public discoverRecipes(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/recipes`]);
-  }
-
-  public userProfile(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/profile`]);
-  }
-
-  public userFriends(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/friends`]);
-  }
-
-  public userChat(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/chat`]);
-  }
-
   public userChatFriend(friendUserName: string): void {
     this.router.navigate([`/${this.userService.getUsername()}/chat/${friendUserName}`]);
-  }
- 
-  public userNotifications(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/notifications`]);
-  }
-
-  public logout(): void{   
-    this.authService.logout();
   }
 }

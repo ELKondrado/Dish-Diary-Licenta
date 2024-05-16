@@ -89,9 +89,4 @@ export class UserService {
   public deleteUser(userId: number): Observable<void>{
       return this.http.delete<void>(`${this.apiServerUrl}/users/delete/${userId}`);
   }
-
-  public deleteUserRecipe(userId: number, recipeId: number): Observable<void> {
-    const headers = this.getHeaders();
-    return this.http.delete<void>(`${this.apiServerUrl}/user/deleteUserRecipe/${userId}/${recipeId}`, { headers });
-  }
 }

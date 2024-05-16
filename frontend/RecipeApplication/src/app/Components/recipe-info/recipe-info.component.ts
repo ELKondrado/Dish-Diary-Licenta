@@ -8,10 +8,8 @@ import { UserService } from '../../Models/User/user.service';
 import { User } from '../../Models/User/user';
 import { Review } from '../../Models/Review/review';
 import { ReviewService } from '../../Models/Review/review.service';
-import { NotificationService } from '../../Models/Notification/notification.service';
 import { Notif } from '../../Models/Notification/notification';
 import { DatePipe } from '@angular/common';
-import { MessageService } from '../../Models/Message/message.service';
 
 @Component({
   selector: 'app-recipe-info',
@@ -26,15 +24,10 @@ export class RecipeInfoComponent implements OnInit {
     private userService: UserService,
     private recipeService: RecipeService,
     private reviewService: ReviewService,
-    private notificationService: NotificationService,
-    private messageService: MessageService,
-    private router: Router
   ) {}
 
   public user: User | null = null;
   public friends: User[] = [];
-  public notificationsCount: number = 0;
-  public unseenConversations: number = 0;
   public userRecipes: Recipe[] | undefined;
   public recipe: Recipe | undefined;
   public isRecipeInUserRecipes: boolean = false;
@@ -57,30 +50,12 @@ export class RecipeInfoComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    this.fetchUser();
-    this.fetchData();
-  }
-
-  public fetchData(): void{
     this.authService.initializeApp().subscribe(() => {
       this.user = this.authService.getUser();
       this.fetchRecipe();
       this.getProfileImage();
-      this.getUserRecipes();
-      this.getNotificationsCount();
       this.getFriends();
-      this.getUnseenConversations();
       this.getLikedReviewsByUser();
-    });
-  }
-
-  private fetchUser(): void {
-    const dropdown = document.querySelector(".dropdown");
-    const avatar = dropdown?.querySelector(".lil-avatar");
-    const menu = dropdown?.querySelector(".menu");
-  
-    avatar?.addEventListener('click', () => {
-      menu?.classList.toggle('menu-open');
     });
   }
 
@@ -157,25 +132,6 @@ export class RecipeInfoComponent implements OnInit {
     this.showReviewForm = !this.showReviewForm;
   }
 
-  public toggleMenu(){
-    let subMenu = document.getElementById("subMenu");
-    subMenu?.classList.toggle("open-menu");
-  }
-
-  public getNotificationsCount(): void {
-    if(this.user)
-    {
-      this.notificationService.getNotificationsCount(this.user.userId).subscribe(
-        (notifications: number) => {
-          this.notificationsCount = notifications;
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
-    }
-  }
-
   public getFriends(): void {
     if(this.user)
     {
@@ -185,19 +141,6 @@ export class RecipeInfoComponent implements OnInit {
           this.friends.forEach(friend => {
             friend.profileImage = 'data:image/jpeg;base64,' + friend.profileImage;
           });
-        },
-        (error: HttpErrorResponse) => {
-          console.error(error);
-        }
-      );
-    }
-  }
-
-  public getUnseenConversations(): void {
-    if(this.user){
-      this.messageService.getUnseenConversations(this.user.userId).subscribe(
-        (unseenConversations: number) => {
-          this.unseenConversations = unseenConversations;
         },
         (error: HttpErrorResponse) => {
           console.error(error);
@@ -312,27 +255,6 @@ export class RecipeInfoComponent implements OnInit {
     }
   }
 
-  public getUserRecipes(): void{
-    if(this.user)
-    {
-      this.recipeService.getUserRecipes(this.user.userId).subscribe(
-        (recipes: Recipe[]) => {
-          this.userRecipes = recipes;
-          this.userRecipes.forEach(recipe => {
-            recipe.image = 'data:image/jpeg;base64,' + recipe.image;
-          });
-          this.isRecipeInUserRecipes = !!this.recipe && !!this.userRecipes && this.userRecipes.some(userRecipe => userRecipe.id == this.recipe?.id);
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
-    }
-    else{
-      console.error("User for getUserRecipes not found!")
-    }
-  }
-
   public addRecipeToUser(recipeId: number): void {
     const username = this.authService.getUsernameFromToken();
 
@@ -432,33 +354,5 @@ export class RecipeInfoComponent implements OnInit {
 
   public formattedDate(date: string): string | null{
     return this.datePipe.transform(date, 'M/d/yyyy HH:mm');
-  }
-
-  public mainPage(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/starter-page`]);
-  }
-
-  public discoverRecipes(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/recipes`]);
-  }
-
-  public userProfile(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/profile`]);
-  }
-
-  public userFriends(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/friends`]);
-  }
-
-  public userChat(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/chat`]);
-  }
-
-  public userNotifications(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/notifications`]);
-  }
-
-  public logout(): void{   
-    this.authService.logout();
   }
 }

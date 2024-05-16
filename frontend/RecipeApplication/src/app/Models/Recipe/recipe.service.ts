@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Recipe } from './recipe';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../Security/auth.service';
-import { Review } from '../Review/review';
 import { Notif } from '../Notification/notification';
 
 @Injectable({
@@ -30,6 +29,11 @@ export class RecipeService {
     return this.http.get<Recipe[]>(`${this.apiServerUrl}/recipe/getAllRecipes`, { headers });
   }
 
+  public getUserTotalRecipes(userId: number): Observable<Recipe[]> {
+    const headers = this.getHeaders();
+    return this.http.get<Recipe[]>(`${this.apiServerUrl}/recipe/getUserTotalRecipes/${userId}`, { headers });
+  }
+
   // getting created recipes
   public getCreatedRecipes(userId: number): Observable<Recipe[]> {
     const headers = this.getHeaders();
@@ -38,58 +42,33 @@ export class RecipeService {
 
   public getRecipeById(recipeId: number): Observable<Recipe>{
     const headers = this.getHeaders();
-
     return this.http.get<Recipe>(`${this.apiServerUrl}/recipe/findRecipe/${recipeId}`, { headers });
   }
 
   //adding new recipes through recipe-form
-  public addUserNewRecipe(recipe: Recipe, username: string): Observable<Recipe> {
-    const headers = this.getHeaders();
-    const requestedBody = { ...recipe };
-  
-    return this.http.post<Recipe>(`${this.apiServerUrl}/recipe/addUserNewRecipe?username=${username}`, requestedBody, { headers });
+  public createNewRecipeInRepository(recipe: Recipe, repositoryId: number): Observable<Recipe> {
+    const headers = this.getHeaders();  
+    return this.http.post<Recipe>(`${this.apiServerUrl}/recipe/createNewRecipeInRepository/${repositoryId}`, recipe, { headers });
   }
 
-  //connecting recipes to users
   public addUserRecipe(username: string, recipeId: number): Observable<Recipe> {
     const headers = this.getHeaders();
-    
     return this.http.post<Recipe>(`${this.apiServerUrl}/recipe/addUserRecipe/${username}/${recipeId}`, null, { headers });
   }
 
-  //getting all the recipes that a user has added
-  public getUserRecipes(userId: number): Observable<Recipe[]> {
+  public getRecipesRepository(repositoryId: number): Observable<Recipe[]> {
     const headers = this.getHeaders();
-  
-    return this.http.get<Recipe[]>(`${this.apiServerUrl}/recipe/getUserTotalRecipes/${userId}`, { headers });
+    return this.http.get<Recipe[]>(`${this.apiServerUrl}/recipe/getRecipesFromRepository/${repositoryId}`, { headers });
   }
 
-  public addRecipe(recipe: Recipe): Observable<Recipe> {
+  public updateRecipe(recipe: Recipe, recipeId: number): Observable<Recipe> {
     const headers = this.getHeaders();
-    
-    return this.http.post<Recipe>(`${this.apiServerUrl}/recipe/add`, recipe, { headers });
+    return this.http.put<Recipe>(`${this.apiServerUrl}/recipe/updateRecipe/${recipeId}`, recipe, { headers });
   }
 
-  public updateRecipe(recipeId: number, name?: string, ingredients?: string, stepsOfPreparation?: string): Observable<Recipe> {
+  public deleteRecipeFromRepository(recipeId: number, repositoryId: number): Observable<void> {
     const headers = this.getHeaders();
-  
-    const requestBody: any = {};
-    if (name !== undefined) {
-      requestBody.name = name;
-    }
-    if (ingredients !== undefined) {
-      requestBody.ingredients = ingredients;
-    }
-    if (stepsOfPreparation !== undefined) {
-      requestBody.stepsOfPreparation = stepsOfPreparation;
-    }
-  
-    return this.http.put<Recipe>(`${this.apiServerUrl}/recipe/update/${recipeId}`, requestBody, { headers });
-  }
-
-  public deleteRecipe(recipeId: number): Observable<void> {
-    const headers = this.getHeaders();
-    return this.http.delete<void>(`${this.apiServerUrl}/recipe/delete/${recipeId}`, { headers });
+    return this.http.delete<void>(`${this.apiServerUrl}/recipe/deleteRecipeFromRepository/${recipeId}/${repositoryId}`, { headers });
   }
 
   public uploadImage(recipeId: number, formData: FormData) {
