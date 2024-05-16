@@ -23,16 +23,22 @@ public class RepositoryController {
     }
 
     @PostMapping("addRepository/{userId}")
-    public ResponseEntity<Repository> addRepository(@RequestBody RepositoryDto repositoryDto,
+    public ResponseEntity<Repository> addRepository(@RequestBody Repository repository,
                                                     @PathVariable("userId") long userId){
-        Repository repository = repositoryService.addRepository(repositoryDto, userId);
-        return new ResponseEntity<>(repository, HttpStatus.CREATED);
+        Repository newRepository = repositoryService.addRepository(repository, userId);
+        return new ResponseEntity<>(newRepository, HttpStatus.CREATED);
     }
 
-    @GetMapping("getRepositories")
+    @GetMapping("getRepositories/{userId}")
     public ResponseEntity<List<Repository>> getRepositories(@PathVariable("userId") long userId){
         List<Repository> repositories = repositoryService.getRepositories(userId);
         return new ResponseEntity<>(repositories, HttpStatus.OK);
+    }
+
+    @GetMapping("getRepository/{repositoryId}")
+    public ResponseEntity<Repository> getRepository(@PathVariable("repositoryId") long repositoryId){
+        Repository repository = repositoryService.getRepository(repositoryId);
+        return new ResponseEntity<>(repository, HttpStatus.OK);
     }
 
     @DeleteMapping("deleteRepository/{repositoryId}")

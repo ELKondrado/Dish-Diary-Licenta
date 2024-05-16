@@ -26,7 +26,7 @@ public class RepositoryService {
     }
 
     @Transactional
-    public Repository addRepository(RepositoryDto repositoryDto, long userId){
+    public Repository addRepository(Repository repositoryDto, long userId){
         Optional<User> optionalUser = userRepository.findUserByUserId(userId);
         if(optionalUser.isPresent()){
             User user = optionalUser.get();
@@ -45,11 +45,26 @@ public class RepositoryService {
         return repositoryRepository.findByUserOwner_UserId(userId);
     }
 
+    public Repository getRepository(long repositoryId){
+        Optional<Repository> optionalRepository =  repositoryRepository.findRepositoryById(repositoryId);
+        if(optionalRepository.isPresent()){
+            return optionalRepository.get();
+        }
+        else {
+            throw new NotFound("Repository with id "+ repositoryId + " not found");
+        }
+    }
+
     public void deleteRepository(long repositoryId){
-        boolean exists = repositoryRepository.existsById(repositoryId);
-        if(!exists){
+        Optional<Repository> optionalRepository = repositoryRepository.findRepositoryById(repositoryId);
+        if(optionalRepository.isPresent()){
+            Repository repository = optionalRepository.get();
+
+            User userOwner = repository.getUserOwner();
+            userOwner.getRepositories().remove(repository);
+            repositoryRepository.deleteById(repositoryId);
+        } else {
             throw new NotFound("Repository with id: " + repositoryId + " does not exist");
         }
-        repositoryRepository.deleteById(repositoryId);
     }
 }

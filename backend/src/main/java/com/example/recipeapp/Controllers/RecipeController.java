@@ -52,10 +52,10 @@ public class RecipeController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/updateRecipe/{userId}")
-    public ResponseEntity<Recipe> updateRecipe(@PathVariable("userId") long userId,
-                                               @RequestBody RecipeUpdateDto recipeUpdateDto) {
-        Recipe recipe = recipeService.updateRecipe(recipeUpdateDto, userId);
+    @PutMapping("/updateRecipe/{recipeId}")
+    public ResponseEntity<Recipe> updateRecipe(@RequestBody Recipe updatedRecipe,
+                                               @PathVariable("recipeId") long recipeId) {
+        Recipe recipe = recipeService.updateRecipe(updatedRecipe, recipeId);
         return new ResponseEntity<>(recipe, HttpStatus.OK);
     }
 

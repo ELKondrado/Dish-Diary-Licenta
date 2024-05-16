@@ -66,30 +66,18 @@ public class RecipeService {
         recipeRepository.deleteById(recipeId);
     }
 
-    public Recipe updateRecipe(RecipeUpdateDto recipeUpdateDto, long userId){
-        Optional<Recipe> optionalRecipe = recipeRepository.findRecipeById(recipeUpdateDto.getId());
+    public Recipe updateRecipe(Recipe updatedRecipe, long recipeId){
+        Optional<Recipe> optionalRecipe = recipeRepository.findRecipeById(recipeId);
         if(optionalRecipe.isPresent()) {
             Recipe recipe = optionalRecipe.get();
 
-            Optional<User> optionalUser = userRepository.findUserByUserId(userId);
-            if(optionalUser.isPresent()) {
-                User user = optionalUser.get();
-
-                if (user.getUserId() == recipe.getUserOwner().getUserId())
-                {
-                    recipe.setName(recipeUpdateDto.getName());
-                    recipe.setIngredients(recipeUpdateDto.getIngredients());
-                    recipe.setStepsOfPreparation(recipeUpdateDto.getStepsOfPreparation());
-                    return recipeRepository.save(recipe);
-                }
-                else {
-                    throw new NotFound("User with id " + userId + " is not the user owner of the recipe");
-                }
-            } else{
-                throw new NotFound("User with id " + userId + " not found in updating recipe");
-            }
+            recipe.setName(updatedRecipe.getName());
+            recipe.setIngredients(updatedRecipe.getIngredients());
+            recipe.setStepsOfPreparation(updatedRecipe.getStepsOfPreparation());
+            recipe.setTags(updatedRecipe.getTags());
+            return recipeRepository.save(recipe);
         } else{
-            throw new NotFound("Recipe with id " + recipeUpdateDto.getId() + " not found in updating recipe");
+            throw new NotFound("Recipe with id " + recipeId + " not found in updating recipe");
         }
     }
 
