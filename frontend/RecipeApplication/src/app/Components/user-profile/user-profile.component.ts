@@ -1,14 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { AuthService } from '../../Security/auth.service';
 import { UserService } from '../../Models/User/user.service';
 import { Recipe } from '../../Models/Recipe/recipe';
 import { HttpErrorResponse } from '@angular/common/http';
 import { User } from '../../Models/User/user';
 import { RecipeService } from '../../Models/Recipe/recipe.service';
-import { NotificationService } from '../../Models/Notification/notification.service';
 import { NgForm } from '@angular/forms';
-import { MessageService } from '../../Models/Message/message.service';
 
 @Component({
   selector: 'app-user-profile',
@@ -20,13 +17,9 @@ export class UserProfileComponent implements OnInit{
     private authService: AuthService,
     private userService: UserService,
     private recipeService: RecipeService,
-    private notificationService: NotificationService,
-    private messageService: MessageService,
-    private router: Router
   ) {}
 
   public user: User | null = null;
-  public username: string | undefined;
   public notificationsCount: number = 0;
   public unseenConversations: number = 0;
   public avatarUrl: String | undefined;
@@ -38,36 +31,13 @@ export class UserProfileComponent implements OnInit{
   public nicknameAlreadyUsed: boolean = false;
 
   ngOnInit(): void {
-    this.fetchData();
-    this.fetchUser();
-  }
-
-  private fetchData(): void{
     this.authService.initializeApp().subscribe(
       () => {
       this.user = this.authService.getUser();
-      this.username = this.userService.getUsername();
-      this.getUserTotalRecipes();
-      this.getCreatedRecipes()
       this.getProfileImage();
-      this.getNotificationsCount();
-      this.getUnseenConversations();
+      this.getUserTotalRecipes();
+      this.getCreatedRecipes();
     });
-  }
-
-  private fetchUser(): void {
-    const dropdown = document.querySelector(".dropdown");
-    const avatar = dropdown?.querySelector(".lil-avatar");
-    const menu = dropdown?.querySelector(".menu");
-  
-    avatar?.addEventListener('click', () => {
-      menu?.classList.toggle('menu-open');
-    });
-  }
-
-  public toggleMenu(): void {
-    let subMenu = document.getElementById("subMenu");
-    subMenu?.classList.toggle("open-menu");
   }
 
   public toggleProfileEdit(): void {
@@ -97,37 +67,10 @@ export class UserProfileComponent implements OnInit{
     }
   }
 
-  public getNotificationsCount(): void {
-    if(this.user)
-    {
-      this.notificationService.getNotificationsCount(this.user.userId).subscribe(
-        (notifications: number) => {
-          this.notificationsCount = notifications;
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
-    }
-  }
-
-  public getUnseenConversations(): void {
-    if(this.user){
-      this.messageService.getUnseenConversations(this.user.userId).subscribe(
-        (unseenConversations: number) => {
-          this.unseenConversations = unseenConversations;
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
-    }
-  }
-
   public getUserTotalRecipes(): void {
     if(this.user)
     {
-      this.recipeService.getUserRecipes(this.user?.userId).subscribe(
+      this.recipeService.getUserTotalRecipes(this.user?.userId).subscribe(
         (response: Recipe[]) => {
           this.repositoryRecipes = response;
           this.getAddedRecipes();
@@ -241,29 +184,5 @@ export class UserProfileComponent implements OnInit{
     });
 
     return 'data:image/jpeg;base64,' + btoa(bytes.join(''));
-  }
-
-  public mainPage(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/starter-page`]);
-  }
-
-  public discoverRecipes(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/recipes`]);
-  }
-
-  public userFriends(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/friends`]);
-  }
-
-  public userChat(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/chat`]);
-  }
- 
-  public userNotifications(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/notifications`]);
-  }
-
-  public logout(): void{   
-    this.authService.logout();
   }
 }
