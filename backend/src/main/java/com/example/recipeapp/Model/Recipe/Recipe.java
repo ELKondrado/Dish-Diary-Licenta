@@ -53,7 +53,7 @@ public class Recipe {
     private Date dateCreated;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "recipes", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "recipes", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Repository> repositories = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)

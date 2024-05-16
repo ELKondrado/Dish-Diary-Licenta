@@ -31,7 +31,6 @@ public class Repository {
     @ManyToOne
     private User userOwner;
 
-    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
             name = "repositories_recipes",
