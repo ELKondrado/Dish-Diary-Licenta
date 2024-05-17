@@ -16,11 +16,12 @@
             <div class="form-group mt-3 friend-text-labels">
 
                <label class="enter-nickname-label">Enter your friend's nickname</label>
+               <label *ngIf="friendAdded" style="color: greenyellow;">Friend Added!</label>
                <label *ngIf="friendRequestSent" style="color: greenyellow;">Friend Request was sent!</label>
-               <label *ngIf="nicknameAddedNotFound" style="color: red;">Nickname not found!</label>
-               <label *ngIf="friendRequestAlreadySent" style="color: red;">Friend Request was already sent!</label>
-               <label *ngIf="friendRequestAlreadyFriend" style="color: red;">User is already your friend!</label>
-               <label *ngIf="friendRequestCannotAddYourself" style="color: red;">You cannot add yourself as a friend!</label>
+               <label *ngIf="nicknameAddedNotFound" style="color: red; font-weight: 700;">Nickname not found!</label>
+               <label *ngIf="friendRequestAlreadySent" style="color: red; font-weight: 700;">Friend Request was already sent!</label>
+               <label *ngIf="friendRequestAlreadyFriend" style="color: red; font-weight: 700;">User is already your friend!</label>
+               <label *ngIf="friendRequestCannotAddYourself" style="color: red; font-weight: 700;">You cannot add yourself as a friend!</label>
 
                <input id="friend-to-add-nickname" class="form-control" rows="4" [(ngModel)]="friendToAdd" maxlength="255">
                <div class="send-friend-request-container">
@@ -47,7 +48,7 @@
    </div>
 
    <!-- Remove Friend Modal -->
-   <div class="modal fade" id="removeFriendModal" tabindex="-1" role="dialog" aria-labelledby="remveFriendLabel" aria-hidden="true">
+   <div class="modal fade" id="removeFriendModal" tabindex="-1" role="dialog" aria-labelledby="removeFriendLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
          <div class="modal-content">
             <div class="modal-header">
@@ -59,8 +60,8 @@
             <div class="modal-body">
                <p>Are you sure you want to remove friend {{removedFriend?.userNickname}}?</p>
                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                  <button *ngIf="removedFriend" (click)="removeFriend()" class="btn btn-danger" data-dismiss="modal">Yes</button>
+                  <button type="button" class="btn btn-secondary cancel-button" data-dismiss="modal">No</button>
+                  <button *ngIf="removedFriend" (click)="removeFriend()" class="btn btn-danger yes-button" data-dismiss="modal">Yes</button>
                </div>
             </div>
          </div>

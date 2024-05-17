@@ -271,6 +271,7 @@ body {
 }
 
 .repo-item a {
+    cursor: pointer;
     text-decoration: none;
     color: #0366d6;
     font-weight: bold;

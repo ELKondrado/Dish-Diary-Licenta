@@ -83,8 +83,8 @@
                 <div class="modal-body">
                     <p>Are you sure you want to accept the friend request from {{friendRequestNotification?.sender?.userNickname}}?</p>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                        <button *ngIf="friendRequestNotification" (click)="acceptFriendRequest(friendRequestNotification)" class="btn btn-danger" data-dismiss="modal">Yes</button>
+                        <button type="button" class="btn btn-secondary cancel-button" data-dismiss="modal">No</button>
+                        <button *ngIf="friendRequestNotification" (click)="acceptFriendRequest(friendRequestNotification)" class="btn btn-danger yes-button" data-dismiss="modal">Yes</button>
                     </div>
                 </div>
             </div>
@@ -104,8 +104,8 @@
                 <div class="modal-body">
                     <p>Are you sure you want to reject the friend request from {{friendRequestNotification?.sender?.userNickname}}?</p>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                        <button *ngIf="friendRequestNotification" (click)="rejectFriendRequest(friendRequestNotification)" class="btn btn-danger" data-dismiss="modal">Yes</button>
+                        <button type="button" class="btn btn-secondary cancel-button" data-dismiss="modal">No</button>
+                        <button *ngIf="friendRequestNotification" (click)="rejectFriendRequest(friendRequestNotification)" class="btn btn-danger yes-button" data-dismiss="modal">Yes</button>
                     </div>
                 </div>
             </div>

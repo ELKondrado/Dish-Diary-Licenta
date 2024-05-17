@@ -113,6 +113,7 @@ body {
     padding: 1.5em;
     margin-left: 3rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    height: fit-content;
 }
 
 .repo-item {

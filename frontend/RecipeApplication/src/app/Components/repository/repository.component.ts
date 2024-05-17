@@ -214,10 +214,34 @@ export class RepositoryComponent implements OnInit{
     button.click();
   }
 
-  public deleteRepository(repositoryId: number): void{
+  public onEditRepositoryModal(): void{
+    const container = document.getElementById("main-container");
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.style.display = 'none';
+    button.setAttribute('data-toggle', 'modal');
+    button.setAttribute('data-target', '#editRepositoryModal');
+    container?.appendChild(button);
+    button.click();
+  }
+
+  public deleteRepository(): void{
     if(this.repository){
-      this.repositoryService.deleteRepository(repositoryId).subscribe();
+      this.repositoryService.deleteRepository(this.repository.id).subscribe();
       this.mainPage();
+    }
+  }
+
+  public editRepository(updatedRecipe: NgForm): void{
+    if(this.repository){
+      this.repositoryService.editRepository(updatedRecipe.value, this.repository.id).subscribe(
+        (response: any) => {
+          this.fetchRepository();
+        },
+        (error: HttpErrorResponse) => {
+          console.error(error);
+        }
+      );
     }
   }
 

@@ -10,6 +10,24 @@ body {
     margin-bottom: 3rem;
 }
 
+.repositories-title {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    margin-top: 1rem;
+    margin-left: 3rem;
+    margin-right: 3rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid white;
+}
+
+.repositories-title h2{
+    width: 100%;
+    color: white;
+    font-size: 55px;
+    text-align: center;
+}
+
 #searchRecipeRepo {
     position: relative;
     background: transparent;
@@ -124,7 +142,7 @@ body {
     cursor: pointer;
     border: none;
     box-shadow: 1px 1px 3px rgba(0,0,0,0.15);
-    background: #007FFF;
+    background: royalblue;
     position: absolute; 
     z-index: 1;
     top: 50%; 
@@ -147,7 +165,7 @@ body {
 }
 
 .edit-area .edit-button:hover {
-    background: royalblue;
+    background: rgb(52, 94, 221);
 }
 
 .delete-area {
@@ -302,6 +320,11 @@ a {
     border: 1px solid #2a62d4;
 }
 
+.modal-body .edit-repository-name-input {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
 .recipe-tags {
     display: flex;
     flex-direction: row;
@@ -336,6 +359,11 @@ a {
     display: inline-block; 
 }
 
+.delete-edit-repository-button-container {
+    display: flex;
+    justify-content: space-between;
+}
+
 .delete-repository-button {
     color: white;
     width: 12rem;
@@ -345,26 +373,46 @@ a {
     margin-top: 2rem;
     margin-bottom: 2rem;
     background-color: red;
-    margin-left: -9.75rem;
 }
 
 .delete-repository-button:hover {
     border: 2px solid white;
 }
 
-.modal-body .cancel-button {
+.edit-repository-button {
+    color: white;
+    width: 12rem;
+    height: 2.25rem;
+    border: 2px solid grey;
+    border-radius: 6px;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    background-color: #2a62d4;
+}
+
+.edit-repository-button:hover {
+    border: 2px solid white;
+}
+
+.modal-body .cancel-button, .modal-body .edit-button{
     background-color: rgb(44, 43, 43);
     border: 1px solid grey;
     color: white;
 }
 
-.modal-body .create-button {
+.modal-body .create-button{
     background-color: #2a62d4;
     border: 1px solid white;
     color: white;
 }
 
-.modal-body .cancel-button:hover{
+.modal-body .edit-button{
+    background-color: royalblue;
+    border: 1px solid grey;
+    color: white;
+}
+
+.modal-body .cancel-button:hover, .modal-body .edit-button:hover{
     border-color: white;
 }
 

@@ -10,8 +10,6 @@ import com.example.recipeapp.Repositories.FriendshipRepository;
 import com.example.recipeapp.Repositories.NotificationRepository;
 import com.example.recipeapp.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -23,54 +21,52 @@ public class FriendsService extends AbstractWSService{
     private final FriendshipRepository friendshipRepository;
     private final UserRepository userRepository;
     private final NotificationRepository notificationRepository;
+    private final UserService userService;
 
     @Autowired
-    public FriendsService(FriendshipRepository friendshipRepository, UserRepository userRepository, NotificationRepository notificationRepository) {
+    public FriendsService(FriendshipRepository friendshipRepository, UserRepository userRepository, NotificationRepository notificationRepository, UserService userService) {
         this.friendshipRepository = friendshipRepository;
         this.userRepository = userRepository;
         this.notificationRepository = notificationRepository;
+        this.userService = userService;
     }
 
-    public Short sendFriendRequest(long userSenderId, String receiverUserNickname){
-        Optional<User> optionalUserSender = userRepository.findUserByUserId(userSenderId);
-        if (optionalUserSender.isPresent()) {
-            User userSender = optionalUserSender.get();
+    public Short sendFriendRequest(long userSenderId, String receiverUserNickname) {
+        User userSender = userService.findUserByUserId(userSenderId);
+        User userReceiver = userService.findUserByNickname(receiverUserNickname);
 
-            Optional<User> optionalUserReceiver = userRepository.findUserByUserNickname(receiverUserNickname);
-            if (optionalUserReceiver.isPresent()) {
-                User userReceiver = optionalUserReceiver.get();
+        if (userReceiver == null) {
+            return -1;
+        }
 
-                Optional<Notification> optionalNotification = notificationRepository.findNotificationBySenderIdReceiverId(userSender.getUserId(), userReceiver.getUserId());
-                if (optionalNotification.isPresent()) {
-                    Notification notification = optionalNotification.get();
-                    if (notification.getStatus() == NotificationStatus.PENDING) {
-                        return -1;
-                    }
-                }
-                if (!userSender.equals(userReceiver)) {
-                    if (userSender.getFriendships().stream().anyMatch(friendship -> friendship.getFriend().equals(userReceiver))) {
-                        return -2;
-                    }
-                } else {
-                    return -3;
-                }
-
-                Notification notification = new Notification();
-                notification.setSender(userSender);
-                notification.setReceiver(userReceiver);
-                notification.setType(NotificationType.FRIEND_REQUEST);
-                notification.setStatus(NotificationStatus.PENDING);
-                notification.setDateCreated(new Date());
-                notificationRepository.save(notification);
-                notifyFrontend();
-                return 0;
-
-            } else {
-                throw new NotFound("User sender with id " + userSenderId + " not found in sending friend request");
+        if (!userSender.equals(userReceiver)) {
+            if (userSender.getFriendships().stream().anyMatch(friendship -> friendship.getFriend().equals(userReceiver))) {
+                return -2;
             }
         } else {
-            throw new NotFound("User receiver with nickname " + receiverUserNickname + " not found in sending friend request");
+            return -3;
         }
+
+        Optional<Notification> optionalNotification1 = notificationRepository.findPendingFriendRequestBySenderIdReceiverId(userSender.getUserId(), userReceiver.getUserId());
+        if (optionalNotification1.isPresent()) {
+            return -4;
+        }
+
+        Optional<Notification> optionalNotification2 = notificationRepository.findPendingFriendRequestBySenderIdReceiverId(userReceiver.getUserId(), userSender.getUserId());
+        if (optionalNotification2.isPresent()) {
+            Notification notification = optionalNotification2.get();
+            acceptFriendRequest(notification.getId());
+            return 1;
+        }
+
+        Notification notification = new Notification();
+        notification.setSender(userSender);
+        notification.setReceiver(userReceiver);
+        notification.setType(NotificationType.FRIEND_REQUEST);
+        notification.setStatus(NotificationStatus.PENDING);
+        notification.setDateCreated(new Date());
+        notificationRepository.save(notification);
+        return 0;
     }
 
     public Notification acceptFriendRequest(long notificationId){
@@ -79,7 +75,7 @@ public class FriendsService extends AbstractWSService{
         if(optionalNotification.isPresent()) {
             Notification notification = optionalNotification.get();
 
-            Optional<Notification> optionalNotificationUsers = notificationRepository.findNotificationBySenderIdReceiverId(
+            Optional<Notification> optionalNotificationUsers = notificationRepository.findFriendRequestBySenderIdReceiverId(
                     notification.getReceiver().getUserId(),
                     notification.getSender().getUserId());
             if(optionalNotificationUsers.isPresent()) {
@@ -88,7 +84,7 @@ public class FriendsService extends AbstractWSService{
             }
             notification.setStatus(NotificationStatus.ACCEPTED);
             notificationRepository.save(notification);
-            notifyFrontend();
+            addFriend(notification.getReceiver().getUserId(), notification.getSender().getUserId());
             return notification;
         } else {
             throw new NotFound("Notification with id " + notificationId + " not found in accepting friend request");
@@ -102,7 +98,6 @@ public class FriendsService extends AbstractWSService{
 
             notification.setStatus(NotificationStatus.REJECTED);
             notificationRepository.save(notification);
-            notifyFrontend();
             return notification;
         } else {
             throw new NotFound("Notification with id " + notificationId + " not found in rejecting friend request");
@@ -111,61 +106,34 @@ public class FriendsService extends AbstractWSService{
 
     @Transactional
     public Friendship addFriend(long userId, long friendId) {
-        Optional<User> optionalUser = userRepository.findUserByUserId(userId);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
+        User user = userService.findUserByUserId(userId);
+        User friend = userService.findUserByUserId(friendId);
 
-            Optional<User> optionalFriend = userRepository.findUserByUserId(friendId);
-            if (optionalFriend.isPresent()) {
-                User friend = optionalFriend.get();
+        if (!user.equals(friend)) {
+            if (user.getFriendships().stream().noneMatch(friendship -> friendship.getFriend().equals(friend))) {
+                Friendship userFriendship = new Friendship(user, friend);
+                Friendship friendFriendship = new Friendship(friend, user);
 
-                if (!user.equals(friend)) {
-                    if (user.getFriendships().stream().noneMatch(friendship -> friendship.getFriend().equals(friend))) {
-                        Friendship userFriendship = new Friendship(user, friend);
-                        Friendship friendFriendship = new Friendship(friend, user);
+                user.getFriendships().add(userFriendship);
+                friend.getFriendships().add(friendFriendship);
 
-                        user.getFriendships().add(userFriendship);
-                        friend.getFriendships().add(friendFriendship);
-
-                        userRepository.save(user);
-                        userRepository.save(friend);
-                        notifyFrontend();
-                        return userFriendship;
-                    } else {
-                        throw new IllegalStateException("Users are already friends.");
-                    }
-                } else {
-                    throw new IllegalStateException("Cannot add yourself as a friend.");
-                }
-
+                userRepository.save(user);
+                userRepository.save(friend);
+                return userFriendship;
             } else {
-                throw new NotFound("User with id " + userId + " not found in adding the friend");
+                throw new IllegalStateException("Users are already friends.");
             }
         } else {
-            throw new NotFound("Friend with id " + friendId + " not found in adding the friend");
+            throw new IllegalStateException("Cannot add yourself as a friend.");
         }
     }
 
     @Transactional
     public void removeFriend(long userId, long removedFriendId) {
-        Optional<User> optionalUser = userRepository.findUserByUserId(userId);
-        if(optionalUser.isPresent()) {
-            User user = optionalUser.get();
+        User user = userService.findUserByUserId(userId);
+        User removedFriend = userService.findUserByUserId(removedFriendId);
 
-            Optional<User> optionalRemovedFriendUser = userRepository.findUserByUserId(removedFriendId);
-            if(optionalRemovedFriendUser.isPresent()) {
-                User removedFriend = optionalRemovedFriendUser.get();
-
-                friendshipRepository.deleteFriendship(user.getUserId(), removedFriend.getUserId());
-                notifyFrontend();
-            }
-            else {
-                throw new NotFound("User with id " + userId + " not found in removing friend");
-            }
-        }
-        else {
-            throw new NotFound("Friend to be removed with id " + removedFriendId + " not found in removing friend");
-        }
+        friendshipRepository.deleteFriendship(user.getUserId(), removedFriend.getUserId());
     }
 
     @Override

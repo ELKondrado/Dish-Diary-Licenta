@@ -10,6 +10,8 @@ import { Review } from '../../Models/Review/review';
 import { ReviewService } from '../../Models/Review/review.service';
 import { Notif } from '../../Models/Notification/notification';
 import { DatePipe } from '@angular/common';
+import { Repository } from '../../Models/Repository/repository';
+import { RepositoryService } from '../../Models/Repository/repository.service';
 
 @Component({
   selector: 'app-recipe-info',
@@ -24,13 +26,12 @@ export class RecipeInfoComponent implements OnInit {
     private userService: UserService,
     private recipeService: RecipeService,
     private reviewService: ReviewService,
+    private repositoryService: RepositoryService
   ) {}
 
   public user: User | null = null;
   public friends: User[] = [];
-  public userRecipes: Recipe[] | undefined;
   public recipe: Recipe | undefined;
-  public isRecipeInUserRecipes: boolean = false;
   public avatarUrl: String | undefined;
   public recipeUrl: String | undefined;
   public selectedFile: File | undefined;
@@ -40,6 +41,7 @@ export class RecipeInfoComponent implements OnInit {
   public averageRating: number = 0;
   public deletedReview: Review | undefined;
   public addedRecipe: Recipe | undefined;
+  public repositories: Repository[] = [];
   public reviewModel: Review = { 
     id: 1,
     userOwner: null,
@@ -56,6 +58,7 @@ export class RecipeInfoComponent implements OnInit {
       this.getProfileImage();
       this.getFriends();
       this.getLikedReviewsByUser();
+      this.getRepositories();
     });
   }
 
@@ -149,6 +152,19 @@ export class RecipeInfoComponent implements OnInit {
     }
   }
 
+  public getRepositories(): void {
+    if(this.user){
+      this.repositoryService.getRepositoriesDto(this.user.userId).subscribe(
+        (response: Repository[]) => {
+          this.repositories = response;
+        },
+        (error: HttpErrorResponse) => {
+          console.error(error);
+        }
+      )
+    }
+  }
+
   public onOpenModal(recipe: Recipe | undefined, mode: string): void {
     const container = document.getElementById("main-container");
     const button = document.createElement('button');
@@ -158,13 +174,25 @@ export class RecipeInfoComponent implements OnInit {
     button.style.display = 'none';
     button.setAttribute('data-toggle', 'modal');
     if(mode == 'add'){
-      button.setAttribute('data-target', '#addRecipeToUserModal');
+      this.getRepositories();
+      button.setAttribute('data-target', '#addRecipeToRepositoryModal');
     }
     else if(mode == 'share') {
       button.setAttribute('data-target', '#shareRecipeToFriendModal');
     }
     container?.appendChild(button);
     button.click();
+  }
+
+  public addRecipeToRepository(recipeId: number, repository: Repository): void {
+    this.recipeService.addRecipeToRepository(recipeId, repository.id).subscribe(
+      (response: any) => {
+        repository.addedRecipe = true;
+      },
+      (error: HttpErrorResponse) => {
+        console.error(error);
+      }
+    );
   }
 
   public shareRecipe(friend: User): void {
@@ -266,18 +294,18 @@ export class RecipeInfoComponent implements OnInit {
     button.setAttribute('data-toggle', 'modal');
     container?.appendChild(button);
 
-    this.recipeService.addUserRecipe(username, recipeId).subscribe(
-      (response: any) => {
-        if (response) {
-          this.ngOnInit();
-          button.setAttribute('data-target', '#recipeSuccesModal');
-          button.click();
-        }
-      },
-      (error: HttpErrorResponse) => {
-        console.error(error);
-      }
-    );
+    // this.recipeService.addUserRecipe(username, recipeId).subscribe(
+    //   (response: any) => {
+    //     if (response) {
+    //       this.ngOnInit();
+    //       button.setAttribute('data-target', '#recipeSuccesModal');
+    //       button.click();
+    //     }
+    //   },
+    //   (error: HttpErrorResponse) => {
+    //     console.error(error);
+    //   }
+    // );
   }
 
   public onSelectFile(event: any) {

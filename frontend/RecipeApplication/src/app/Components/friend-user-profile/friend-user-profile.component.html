@@ -34,13 +34,11 @@
 
       <div class="repositories">
          <h2>Repositories</h2>
-         <div class="repo-item">
-         <a href="#">Repository 1</a>
-         <span>Updated 2 days ago</span>
-         </div>
-         <div class="repo-item">
-         <a href="#">Repository 2</a>
-         <span>Updated 5 days ago</span>
+         <div *ngFor="let repository of repositories">
+            <div class="repo-item">
+            <a>{{repository.name}}</a>
+            <span>{{repository.recipes.length}} recipes</span>
+            </div>
          </div>
       </div>
 

@@ -142,16 +142,6 @@ body {
     cursor: pointer;
 }
 
-.modal-content {
-    background-color: rgb(30, 28, 28);
-    color: white;
-    font-weight: 600;
-}
-
-.modal-content .close {
-    color: white;
-}
-
 .modal-body input {
     font-size: 1rem;
     font-weight: 400;
@@ -160,6 +150,38 @@ body {
 .modal-body label {
     font-size: large;
     font-weight: 600;
+}
+
+.modal-content {
+    background-color: rgb(30, 28, 28);
+    color: white;
+    font-weight: 600;
+}
+
+.modal-body .cancel-button {
+    background-color: rgb(44, 43, 43);
+    border: 1px solid grey;
+    color: white;
+}
+
+.modal-body .yes-button {
+    background-color: #2a62d4;
+    border: 1px solid grey;
+    color: white;
+}
+
+.modal-body .yes-button:hover, .modal-body .cancel-button:hover{
+    border-color: white;
+}
+
+.modal-content .close {
+    color: white;
+}
+
+.modal-title {
+    width: 100%;
+    text-align: center;
+    margin: 0;
 }
 
 @media (max-width: 768px) {

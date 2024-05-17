@@ -99,24 +99,6 @@ body {
     height: 125px;
 }
 
-.modal-body select {
-    font-size: 1rem;
-    font-weight: 400;
-    width: 90%;
-}
-
-.modal-body .select-tag-container {
-    display: flex;
-    flex-direction: row;
-}
-
-.modal-body .select-tag-container button {
-    background-color: #2a62d4;
-    color: white;
-    margin-left: 0.25rem;
-    border: 1px solid white;
-}
-
 .no-repositories-modal {
     width: 100%;
     position: absolute;
@@ -166,7 +148,6 @@ body {
     outline: none;
     border: 1px solid #2a62d4;
 }
-
 
 .modal-body .cancel-button {
     background-color: rgb(44, 43, 43);

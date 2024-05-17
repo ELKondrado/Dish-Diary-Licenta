@@ -6,6 +6,8 @@ import { UserService } from '../../Models/User/user.service';
 import { AuthService } from '../../Security/auth.service';
 import { Recipe } from '../../Models/Recipe/recipe';
 import { RecipeService } from '../../Models/Recipe/recipe.service';
+import { RepositoryService } from '../../Models/Repository/repository.service';
+import { Repository } from '../../Models/Repository/repository';
 
 @Component({
   selector: 'app-friend-user-profile',
@@ -18,6 +20,7 @@ export class FriendUserProfileComponent {
     private authService: AuthService,
     private userService: UserService,
     private recipeService: RecipeService,
+    private repositoryService: RepositoryService,
     private router: Router
   ) {}
 
@@ -29,6 +32,7 @@ export class FriendUserProfileComponent {
   public repositoryRecipes: Recipe[] | undefined;
   public createdRecipes: Recipe[] | undefined;
   public addedRecipes: Recipe[] | undefined;
+  public repositories: Repository[] = [];
 
   ngOnInit(): void {
     this.authService.initializeApp().subscribe(
@@ -47,7 +51,8 @@ export class FriendUserProfileComponent {
           this.friend = friend;
           this.friend.profileImage = 'data:image/jpeg;base64,' + this.friend.profileImage;
           this.getRepositoryRecipes();
-          this.getCreatedRecipes()
+          this.getCreatedRecipes();
+          this.getRepositories();
         },
         (error: HttpErrorResponse) => {
           console.error(error);
@@ -98,6 +103,20 @@ export class FriendUserProfileComponent {
     }
   }  
   
+  public getRepositories(): void {
+    if(this.friend){
+      this.repositoryService.getRepositories(this.friend.userId).subscribe(
+        ( response: Repository[]) => {
+          console.log(response);
+          this.repositories = response;
+        },
+        ( error: HttpErrorResponse) => {
+          console.error(error);
+        } 
+      )
+    }
+  }
+
   public onOpenRecipesHistory(mode: string) {
     const container = document.getElementById("main-container");
     const button = document.createElement('button');

@@ -2,7 +2,6 @@ package com.example.recipeapp.Services;
 
 import com.example.recipeapp.Dtos.RepositoryDto;
 import com.example.recipeapp.Exceptions.NotFound;
-import com.example.recipeapp.Model.Recipe.Recipe;
 import com.example.recipeapp.Model.Repository;
 import com.example.recipeapp.Model.User;
 import com.example.recipeapp.Repositories.RepositoryRepository;
@@ -13,16 +12,19 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class RepositoryService {
     private final RepositoryRepository repositoryRepository;
     private final UserRepository userRepository;
+    private final UserService userService;
 
     @Autowired
-    public RepositoryService(RepositoryRepository repositoryRepository, UserRepository userRepository) {
+    public RepositoryService(RepositoryRepository repositoryRepository, UserRepository userRepository, UserService userService) {
         this.repositoryRepository = repositoryRepository;
         this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @Transactional
@@ -42,7 +44,16 @@ public class RepositoryService {
     }
 
     public List<Repository> getRepositories(long userId){
-        return repositoryRepository.findByUserOwner_UserId(userId);
+        User user = userService.findUserByUserId(userId);
+        return repositoryRepository.findByUserOwner_UserId(user.getUserId());
+    }
+
+    public List<RepositoryDto> getRepositoriesDto(long userId){
+        User user = userService.findUserByUserId(userId);
+        List<Repository> repositories = repositoryRepository.findByUserOwner_UserId(user.getUserId());
+        return repositories.stream()
+                           .map(repository -> new RepositoryDto(repository.getId(), repository.getName()))
+                           .collect(Collectors.toList());
     }
 
     public Repository getRepository(long repositoryId){
@@ -55,16 +66,16 @@ public class RepositoryService {
         }
     }
 
-    public void deleteRepository(long repositoryId){
-        Optional<Repository> optionalRepository = repositoryRepository.findRepositoryById(repositoryId);
-        if(optionalRepository.isPresent()){
-            Repository repository = optionalRepository.get();
+    public Repository updateRepository(Repository updatedRepository, long repositoryId){
+        Repository repository = getRepository(repositoryId);
+        repository.setName(updatedRepository.getName());
+        return repositoryRepository.save(repository);
+    }
 
-            User userOwner = repository.getUserOwner();
-            userOwner.getRepositories().remove(repository);
-            repositoryRepository.deleteById(repositoryId);
-        } else {
-            throw new NotFound("Repository with id: " + repositoryId + " does not exist");
-        }
+    public void deleteRepository(long repositoryId){
+        Repository repository = getRepository(repositoryId);
+        User userOwner = repository.getUserOwner();
+        userOwner.getRepositories().remove(repository);
+        repositoryRepository.deleteById(repositoryId);
     }
 }

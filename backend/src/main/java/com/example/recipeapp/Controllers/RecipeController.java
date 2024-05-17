@@ -1,6 +1,5 @@
 package com.example.recipeapp.Controllers;
 
-import com.example.recipeapp.Dtos.RecipeUpdateDto;
 import com.example.recipeapp.Model.Notification.Notification;
 import com.example.recipeapp.Model.Recipe.Recipe;
 import com.example.recipeapp.Services.NotificationService;
@@ -29,7 +28,7 @@ public class RecipeController {
     }
 
     @GetMapping("/getAllRecipes")
-    public ResponseEntity<List<Recipe>> getAllRecipes(){
+    public ResponseEntity<List<Recipe>> getAllRecipe(){
         List<Recipe> recipes = recipeService.getAllRecipes();
         return new ResponseEntity<>(recipes, HttpStatus.OK);
     }
@@ -66,9 +65,9 @@ public class RecipeController {
         return new ResponseEntity<>(recipe, HttpStatus.CREATED);
     }
 
-    @PostMapping("/addUserRecipe/{recipeId}/{repositoryId}")
-    public ResponseEntity<Recipe> addUserRecipe(@PathVariable("recipeId") long recipeId,
-                                                @PathVariable("repositoryId") long repositoryId) {
+    @PostMapping("/addRecipeToRepository/{recipeId}/{repositoryId}")
+    public ResponseEntity<Recipe> addRecipeToRepository(@PathVariable("recipeId") long recipeId,
+                                                        @PathVariable("repositoryId") long repositoryId) {
         Recipe recipe = recipeService.addRecipeToRepository(recipeId, repositoryId);
         if(recipe == null){
             return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);

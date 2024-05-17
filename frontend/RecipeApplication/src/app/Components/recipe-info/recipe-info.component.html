@@ -45,7 +45,7 @@
                   <label for="fileInput" class="upload-button"><input type="file" id="fileInput" (change)="onSelectFile($event)">Upload Profile Image</label>
                </div>
                
-               <div *ngIf="recipe && userRecipes && isRecipeInUserRecipes == false" class="recipe-add-button">
+               <div *ngIf="recipe" class="recipe-add-button">
                   <label (click)="onOpenModal(recipe, 'add')" class="add-button">Add Recipe</label>
                </div>            
                <label (click)="onOpenModal(recipe, 'share')" class="add-button">Share Recipe</label>
@@ -118,22 +118,27 @@
    
    </div>
 
-   <!-- Add Recipe To User Modal -->
-   <div class="modal fade" id="addRecipeToUserModal" tabindex="-1" role="dialog" aria-labelledby="addModelLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
+   <!-- Add Recipe To Repositories Modal -->
+   <div class="modal fade" id="addRecipeToRepositoryModal" tabindex="-1" role="dialog" aria-labelledby="addModelLabel" aria-hidden="true">
+      <div class="modal-dialog add-recipe-repository-container" role="document">
          <div class="modal-content">
             <div class="modal-header">
-               <h5 class="modal-title" id="AddModelLabel">Add Recipe</h5>
-               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-               <span aria-hidden="true">&times;</span>
-               </button>
+                  <h5 class="modal-title" id="AddModelLabel">Add To Repository</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                     <span aria-hidden="true">&times;</span>
+                  </button>
             </div>
             <div class="modal-body">
-               <p>Are you sure you want to add the recipe: {{addedRecipe?.name}}?</p>
-               <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                  <button *ngIf="addedRecipe" (click)="addRecipeToUser(addedRecipe.id)" class="btn btn-danger" data-dismiss="modal">Yes</button>
+               <div class="list-group">
+                  <div *ngFor="let repository of repositories" class="repository-item d-flex justify-content-between align-items-center">
+                     {{repository.name}}
+                     <button *ngIf="!repository.addedRecipe && addedRecipe" (click)="addRecipeToRepository(addedRecipe.id, repository)" class="add-recipe-button">Add</button>
+                     <button *ngIf="repository.addedRecipe" class="added-recipe-button">Added</button>
+                  </div>
                </div>
+            </div>
+            <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary cancel-button" data-dismiss="modal">Cancel</button>
             </div>
          </div>
       </div>
@@ -164,26 +169,6 @@
             </div>
             <div class="modal-footer">
                   <button type="button" class="btn btn-secondary cancel-button" data-dismiss="modal">Cancel</button>
-            </div>
-         </div>
-      </div>
-   </div>
-
-   <!-- Recipe Added Successfully Modal -->
-   <div class="modal fade recipe-success" id="recipeSuccesModal" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-         <div class="modal-content">
-            <div class="modal-header">
-               <h5 class="modal-title" id="AddModelLabel">Add Recipe</h5>
-               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-               <span aria-hidden="true">&times;</span>
-               </button>
-            </div>
-            <div class="modal-body">
-               <p>Recipe Added Successfully!</p>
-               <div class="modal-footer">
-                  <button class="btn btn-danger" data-dismiss="modal" style="background-color: royalblue;">Ok</button>
-               </div>
             </div>
          </div>
       </div>

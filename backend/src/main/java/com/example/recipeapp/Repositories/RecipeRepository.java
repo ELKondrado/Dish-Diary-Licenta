@@ -25,7 +25,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
     List<Recipe> findByRepositories_id(long repositoryId);
 
-    @Query("SELECT DISTINCT  rec " +
+    @Query("SELECT DISTINCT rec " +
             "FROM Recipe rec " +
             "JOIN rec.repositories repo " +
             "JOIN repo.recipes repoRec " +

@@ -34,7 +34,6 @@ export class RecipeService {
     return this.http.get<Recipe[]>(`${this.apiServerUrl}/recipe/getUserTotalRecipes/${userId}`, { headers });
   }
 
-  // getting created recipes
   public getCreatedRecipes(userId: number): Observable<Recipe[]> {
     const headers = this.getHeaders();
     return this.http.get<Recipe[]>(`${this.apiServerUrl}/recipe/createdRecipes/${userId}`, { headers });
@@ -51,9 +50,9 @@ export class RecipeService {
     return this.http.post<Recipe>(`${this.apiServerUrl}/recipe/createNewRecipeInRepository/${repositoryId}`, recipe, { headers });
   }
 
-  public addUserRecipe(username: string, recipeId: number): Observable<Recipe> {
+  public addRecipeToRepository(recipeId: number, repositoryId: number): Observable<Recipe> {
     const headers = this.getHeaders();
-    return this.http.post<Recipe>(`${this.apiServerUrl}/recipe/addUserRecipe/${username}/${recipeId}`, null, { headers });
+    return this.http.post<Recipe>(`${this.apiServerUrl}/recipe/addRecipeToRepository/${recipeId}/${repositoryId}`, null, { headers });
   }
 
   public getRecipesRepository(repositoryId: number): Observable<Recipe[]> {

@@ -8,8 +8,6 @@ import com.example.recipeapp.Model.Recipe.Recipe;
 import com.example.recipeapp.Model.User;
 import com.example.recipeapp.Repositories.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -19,12 +17,12 @@ import java.util.Optional;
 @Service
 public class NotificationService extends AbstractWSService{
     private final NotificationRepository notificationRepository;
-    private final UserService userRepository;
+    private final UserService userService;
 
     @Autowired
-    public NotificationService(NotificationRepository notificationRepository, UserService userRepository) {
+    public NotificationService(NotificationRepository notificationRepository, UserService userService) {
         this.notificationRepository = notificationRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -33,25 +31,13 @@ public class NotificationService extends AbstractWSService{
     }
 
     public List<Notification> getNotifications(long userId) {
-        Optional<User> optionalUser = userRepository.findUserByUserId(userId);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-
-            return notificationRepository.findNotificationsByUserId(user.getUserId());
-        } else {
-            throw new NotFound("User with id " + userId + " not found in getting his notifications");
-        }
+        User user = userService.findUserByUserId(userId);
+        return notificationRepository.findNotificationsByUserId(user.getUserId());
     }
 
     public Long getNotificationsCount(long userId) {
-        Optional<User> optionalUser = userRepository.findUserByUserId(userId);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-
-            return notificationRepository.getNotificationsCount(user.getUserId());
-        } else {
-            throw new NotFound("User with id " + userId + " not found in getting his notifications count");
-        }
+        User user = userService.findUserByUserId(userId);
+        return notificationRepository.getNotificationsCount(user.getUserId());
     }
 
     public Notification rejectRecipeShare(long notificationId) {
@@ -81,28 +67,16 @@ public class NotificationService extends AbstractWSService{
     }
 
     public Notification shareRecipeToFriend(long userId, Recipe recipe, long friendId) {
-        Optional<User> optionalUser = userRepository.findUserByUserId(userId);
-        if(optionalUser.isPresent()) {
-            User user = optionalUser.get();
+        User user = userService.findUserByUserId(userId);
+        User friend = userService.findUserByUserId(friendId);
 
-            Optional<User> optionalFriend = userRepository.findUserByUserId(friendId);
-            if (optionalFriend.isPresent()) {
-                User friend = optionalFriend.get();
-
-                Notification notification = new Notification();
-                notification.setSender(user);
-                notification.setReceiver(friend);
-                notification.setType(NotificationType.RECIPE_SHARE);
-                notification.setStatus(NotificationStatus.SHARED);
-                notification.setDateCreated(new Date());
-                notification.setSharedRecipe(recipe);
-                return notificationRepository.save(notification);
-            } else {
-                throw new NotFound("Friend with id " + friendId + " not found in recipe share");
-            }
-        }
-        else {
-            throw new NotFound("User with id " + userId + " not found in recipe share");
-        }
+        Notification notification = new Notification();
+        notification.setSender(user);
+        notification.setReceiver(friend);
+        notification.setType(NotificationType.RECIPE_SHARE);
+        notification.setStatus(NotificationStatus.SHARED);
+        notification.setDateCreated(new Date());
+        notification.setSharedRecipe(recipe);
+        return notificationRepository.save(notification);
     }
 }
