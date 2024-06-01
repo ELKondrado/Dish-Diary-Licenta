@@ -3,6 +3,10 @@
    
    <div class="container" id="main-container">
          
+      <div class="search-bar">
+         <input (ngModelChange)="searchRecipe(searchedRecipe.value)" #searchedRecipe="ngModel" ngModel type="search" name="searchedRecipe" id="searchRecipeRepo" class="form-control mr-sm-2 search-recipe-box" placeholder="Search recipes..." required>
+      </div>
+
       <div class="recipe-cards-container">
 
          <div *ngFor="let recipe of recipes">

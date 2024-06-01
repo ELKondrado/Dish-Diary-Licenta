@@ -419,10 +419,6 @@ body {
         min-height: 100%;
     }
 
-    .navbar {
-        padding-left: 0.5rem;
-    }
-
     .chat-interface {
         height: 93vh;
         margin: 0px;

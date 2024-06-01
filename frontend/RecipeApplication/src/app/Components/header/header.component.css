@@ -41,11 +41,11 @@
   border: 1px solid white;
 }
 
-.search-bar { 
+.search-bar {
   position: relative;
 }
 
-.input-container { 
+.input-container {
   position: relative;
 }
 
@@ -207,6 +207,13 @@
   cursor: pointer;
 }
 
+.icon-button-menu {
+  width: 50px;
+  height: 50px;
+  position: relative;
+  border-radius: 50%;
+}
+
 .lil-avatar {
   width: 50px;
   height: 50px;
@@ -220,4 +227,19 @@
   height: 100%;
   object-fit: cover;
   object-position: center center;
+}
+
+@media (max-width: 1000px) {
+  .icon-button-menu {
+    left: 90%;
+  }
+
+  .sub-menu-wrap {
+    top: 95%;
+  }
+
+  .search-bar {
+    position: absolute;
+    bottom: 8%;
+  }
 }

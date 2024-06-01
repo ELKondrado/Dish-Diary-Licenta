@@ -10,6 +10,28 @@ body {
     margin-bottom: 3rem;
 }
 
+.search-bar {
+    display: grid;
+    place-items: center;
+}
+
+#searchRecipeRepo {
+    background: transparent;
+    border: none;
+    width: 30rem;
+    flex-grow: 1;
+    border: 1px solid grey;
+    border-radius: 0.3em;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+#searchRecipeRepo:focus {
+    outline: none;
+    border: 1px solid white;
+}
+
 .recipe-cards-container {
     display: flex;
     flex-direction: row;
