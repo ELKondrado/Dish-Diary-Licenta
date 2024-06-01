@@ -68,6 +68,14 @@ body {
     margin: 0;
 }
 
+.recipe-owner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    padding: 1rem;
+}
+
 .recipe-buttons{
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
@@ -373,11 +381,11 @@ body {
     scrollbar-color: grey transparent;
 }
 
-.friend-item {
+.friend-item, .repository-item {
     margin-bottom: 0.25rem;
- }
+}
 
-.share-button {
+.share-button, .add-recipe-button {
     margin: 0 0.5rem;
     color: white;
     background: #2a62d4;
@@ -387,11 +395,11 @@ body {
     border-radius: 6px;
 }
 
-.share-button:hover {
+.share-button:hover, .add-recipe-button:hover {
     border-color: white;
 }
 
-.sent-share-button {
+.sent-share-button, .added-recipe-button {
     margin: 0 0.5rem;
     color: white;
     background: rgb(44, 43, 43);

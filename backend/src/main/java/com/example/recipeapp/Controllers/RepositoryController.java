@@ -35,9 +35,22 @@ public class RepositoryController {
         return new ResponseEntity<>(repositories, HttpStatus.OK);
     }
 
+    @GetMapping("getRepositoriesDto/{userId}")
+    public ResponseEntity<List<RepositoryDto>> getRepositoriesDto(@PathVariable("userId") long userId){
+        List<RepositoryDto> repositories = repositoryService.getRepositoriesDto(userId);
+        return new ResponseEntity<>(repositories, HttpStatus.OK);
+    }
+
     @GetMapping("getRepository/{repositoryId}")
     public ResponseEntity<Repository> getRepository(@PathVariable("repositoryId") long repositoryId){
         Repository repository = repositoryService.getRepository(repositoryId);
+        return new ResponseEntity<>(repository, HttpStatus.OK);
+    }
+
+    @PutMapping("updateRepository/{repositoryId}")
+    public ResponseEntity<Repository> updateRepository(@RequestBody Repository updatedRepository,
+                                                       @PathVariable("repositoryId") long repositoryId){
+        Repository repository = repositoryService.updateRepository(updatedRepository, repositoryId);
         return new ResponseEntity<>(repository, HttpStatus.OK);
     }
 

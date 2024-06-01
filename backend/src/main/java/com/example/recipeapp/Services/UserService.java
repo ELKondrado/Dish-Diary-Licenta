@@ -31,8 +31,22 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public Optional<User> findUserByUserId(long userId) {
-        return userRepository.findUserByUserId(userId);
+    public User findUserByUserId(long userId) {
+        Optional<User> optionalUser = userRepository.findUserByUserId(userId);
+        if(optionalUser.isPresent()){
+            return optionalUser.get();
+        }
+        else{
+            throw new NotFound("User with id " + userId + " not found");
+        }
+    }
+
+    public User findUserByNickname(String nickname) {
+        Optional<User> optionalUser = userRepository.findByUserNickname(nickname);
+        if(optionalUser.isPresent()){
+            return optionalUser.get();
+        }
+        return null;
     }
 
     public User getUserDetails(String username) {
@@ -41,6 +55,15 @@ public class UserService {
             return optionalUser.get();
         } else {
             throw new NotFound("User with username " + username + " not found in getting user details");
+        }
+    }
+
+    public User getUserDetailsByNickname(String nickname) {
+        Optional<User> optionalUser = userRepository.findByUserNickname(nickname);
+        if (optionalUser.isPresent()) {
+            return optionalUser.get();
+        } else {
+            throw new NotFound("User with nickname " + nickname + " not found in getting user details");
         }
     }
 

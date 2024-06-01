@@ -6,6 +6,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { User } from '../../Models/User/user';
 import { RecipeService } from '../../Models/Recipe/recipe.service';
 import { NgForm } from '@angular/forms';
+import { Repository } from '../../Models/Repository/repository';
+import { RepositoryService } from '../../Models/Repository/repository.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-profile',
@@ -17,6 +20,8 @@ export class UserProfileComponent implements OnInit{
     private authService: AuthService,
     private userService: UserService,
     private recipeService: RecipeService,
+    private repositoryService: RepositoryService,
+    private router: Router
   ) {}
 
   public user: User | null = null;
@@ -27,6 +32,7 @@ export class UserProfileComponent implements OnInit{
   public repositoryRecipes: Recipe[] | undefined;
   public createdRecipes: Recipe[] | undefined;
   public addedRecipes: Recipe[] | undefined;
+  public repositories: Repository[] = [];
   public showEditProfile: boolean = false;
   public nicknameAlreadyUsed: boolean = false;
 
@@ -37,6 +43,7 @@ export class UserProfileComponent implements OnInit{
       this.getProfileImage();
       this.getUserTotalRecipes();
       this.getCreatedRecipes();
+      this.getRepositories();
     });
   }
 
@@ -106,8 +113,21 @@ export class UserProfileComponent implements OnInit{
     }
   }  
   
+  public getRepositories(): void {
+    if(this.user){
+      this.repositoryService.getRepositories(this.user.userId).subscribe(
+        ( response: Repository[]) => {
+          console.log(response);
+          this.repositories = response;
+        },
+        ( error: HttpErrorResponse) => {
+          console.error(error);
+        } 
+      )
+    }
+  }
+
   public onOpenRecipesHistory(mode: string) {
-    
     const container = document.getElementById("main-container");
     const button = document.createElement('button');
 
@@ -184,5 +204,9 @@ export class UserProfileComponent implements OnInit{
     });
 
     return 'data:image/jpeg;base64,' + btoa(bytes.join(''));
+  }
+
+  public onOpenRepository(repository: Repository): void {
+    this.router.navigate([`/${this.userService.getUsername()}/repository/${repository.id}`]);
   }
 }

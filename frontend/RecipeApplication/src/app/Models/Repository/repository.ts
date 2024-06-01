@@ -6,4 +6,5 @@ export interface Repository{
     name: string;
     userOwner: User;
     recipes: Recipe[]; 
+    addedRecipe: boolean;
 }

@@ -146,8 +146,8 @@ export class UserNotificationsComponent {
     return this.datePipe.transform(date, 'M/d/yyyy HH:mm');
   }
 
-  public onOpenFriendProfile(friendUsername: String): void {
-    this.router.navigate([`/${this.userService.getUsername()}/friend-profile/${friendUsername}`]);
+  public onOpenFriendProfile(friendNickname: String): void {
+    this.router.navigate([`/${this.userService.getUsername()}/friend-profile/${friendNickname}`]);
   }
 
   public onOpenRecipe(recipe: Recipe): void {

@@ -20,6 +20,52 @@
   cursor: pointer;
 }
 
+#searchUser {
+  position: relative;
+  background: transparent;
+  border: none;
+  width: 22.5rem;
+  flex-grow: 1;
+  border: 1px solid grey;
+  border-radius: 0.3em;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  padding-right: 2rem;
+  margin-right: auto;
+  margin-left: 3rem;
+}
+
+#searchUser:focus {
+  outline: none;
+  border: 1px solid white;
+}
+
+.search-bar { 
+  position: relative;
+}
+
+.input-container { 
+  position: relative;
+}
+
+.search-user-box {
+  width: 100%;
+  padding-right: 20px;
+}
+
+.search-icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.search-user-box:focus + .search-icon {
+  color: white;
+}
+
 /* START DROP DOWN */
 
 .sub-menu-wrap {

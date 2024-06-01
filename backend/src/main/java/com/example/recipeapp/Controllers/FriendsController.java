@@ -30,10 +30,12 @@ public class FriendsController {
         Map<String, String> response = new HashMap<>();
         Short status = friendsService.sendFriendRequest(userSenderId, receiverUserNickname);
         switch (status) {
+            case  1 -> response.put("status", "FRIEND ADDED");
             case  0 -> response.put("status", "SUCCESS");
-            case -1 -> response.put("status", "FRIEND REQUEST ALREADY SENT");
+            case -1 -> response.put("status", "USER RECEIVER NOT FOUND");
             case -2 -> response.put("status", "RECEIVER ALREADY FRIEND");
             case -3 -> response.put("status", "CANNOT ADD YOURSELF");
+            case -4 -> response.put("status", "FRIEND REQUEST ALREADY SENT");
         }
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

@@ -66,9 +66,10 @@ body {
     color: #666;
 }
 
-.chat-button-container {
-    display: grid;
-    place-items: center;
+.chat-button-container, .add-friend-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .chat-button {
@@ -78,9 +79,19 @@ body {
     height: 2.25rem;
     border: 2px solid grey;
     border-radius: 6px;
+    margin-bottom: 0.5rem;
 }
 
-.chat-button:hover {
+.add-friend-button {
+    color: white;
+    background: #4CAF50;
+    width: 12rem;
+    height: 2.25rem;
+    border: 2px solid grey;
+    border-radius: 6px;
+}
+
+.chat-button:hover, .add-friend-button:hover {
     border: 2px solid white;
 }
 
@@ -113,6 +124,7 @@ body {
     padding: 1.5em;
     margin-left: 3rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    height: fit-content;
 }
 
 .repo-item {

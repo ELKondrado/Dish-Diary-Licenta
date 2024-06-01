@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../Security/auth.service';
 import { Repository } from './repository';
-import { AddRepositoryDto } from './addRepositoryDto';
 
 @Injectable({
   providedIn: 'root'
@@ -34,9 +33,19 @@ export class RepositoryService {
     return this.http.get<Repository[]>(`${this.apiServerUrl}/repository/getRepositories/${userId}`, { headers });
   }
 
+  public getRepositoriesDto(userId: number) : Observable<Repository[]> {
+    const headers = this.getHeaders();
+    return this.http.get<Repository[]>(`${this.apiServerUrl}/repository/getRepositoriesDto/${userId}`, { headers });
+  }
+
   public getRepository(repositoryId: number) : Observable<Repository> {
     const headers = this.getHeaders();
     return this.http.get<Repository>(`${this.apiServerUrl}/repository/getRepository/${repositoryId}`, { headers });
+  }
+
+  public editRepository(updatedRepository: Repository, repositoryId: number) : Observable<Repository> {
+    const headers = this.getHeaders();
+    return this.http.put<Repository>(`${this.apiServerUrl}/repository/updateRepository/${repositoryId}`, updatedRepository, { headers });
   }
 
   public deleteRepository(repositoryId: number) : Observable<Repository> {

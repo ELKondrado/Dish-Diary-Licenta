@@ -107,6 +107,10 @@ export class HeaderComponent implements OnInit {
     return 'data:image/jpeg;base64,' + btoa(bytes.join(''));
   }
 
+  public onOpenFriendProfile(friendNickname: String): void {
+    this.router.navigate([`/${this.userService.getUsername()}/friend-profile/${friendNickname}`]);
+  }
+
   public mainPage(): void {
     this.router.navigate([`/${this.userService.getUsername()}/starter-page`]);
   }

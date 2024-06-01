@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { Recipe } from '../../Models/Recipe/recipe';
 import { HttpErrorResponse } from '@angular/common/http';
 import { User } from '../../Models/User/user';
+import { RepositoryService } from '../../Models/Repository/repository.service';
+import { Repository } from '../../Models/Repository/repository';
 
 @Component({
   selector: 'app-discover-recipes',
@@ -15,6 +17,7 @@ import { User } from '../../Models/User/user';
 export class DiscoverRecipesComponent implements OnInit{
   constructor(
     private recipeService: RecipeService,
+    private repositoryService: RepositoryService,
     private authService: AuthService, 
     private userService: UserService,
     private router: Router
@@ -23,6 +26,7 @@ export class DiscoverRecipesComponent implements OnInit{
   public user: User | null = null;
   public recipes: Recipe[] = [];
   public repositoryRecipes: Recipe[] = [];
+  public repositories: Repository[] = [];
   public addedRecipe: Recipe | undefined;
   public avatarUrl: String | undefined;
 
@@ -30,19 +34,17 @@ export class DiscoverRecipesComponent implements OnInit{
     this.authService.initializeApp().subscribe(() => {
       this.user = this.authService.getUser();
       this.getRecipes();
-      this.getRepositoryRecipes();
+      this.getRepositories();
     });
   }
 
   public getRecipes(): void {
     this.recipeService.getRecipes().subscribe(
       (response: Recipe[]) => {
-        console.log(response);
         this.recipes = response;
         this.recipes.forEach(recipe => {
           recipe.image = 'data:image/jpeg;base64,' + recipe.image;
         });
-        this.filterDiscoverRecipes();
       },
       (error: HttpErrorResponse) => {
         console.error(error.message);
@@ -50,29 +52,21 @@ export class DiscoverRecipesComponent implements OnInit{
     );
   }
 
-  public getRepositoryRecipes(): void {
-    if(this.user)
-    {
-      this.recipeService.getUserTotalRecipes(this.user?.userId).subscribe(
-        (response: Recipe[]) => {
-          this.repositoryRecipes = response;
-          this.filterDiscoverRecipes();
+  public getRepositories(): void {
+    if(this.user){
+      this.repositoryService.getRepositoriesDto(this.user.userId).subscribe(
+        (response: Repository[]) => {
+          this.repositories = response;
         },
         (error: HttpErrorResponse) => {
-          console.error(error.message);
+          console.error(error);
         }
-      );
+      )
     }
   }
 
-  public filterDiscoverRecipes() {
-    const filteredRecipes = this.recipes.filter(recipe1 =>
-      !this.repositoryRecipes.some(recipe2 => recipe1.id === recipe2.id)
-    );
-    this.recipes = filteredRecipes;
-  }
-
   public onAddRecipeModal(recipe: Recipe | undefined): void {
+    this.getRepositories();
     const container = document.getElementById("main-container");
     const button = document.createElement('button');
     this.addedRecipe = recipe;
@@ -80,29 +74,17 @@ export class DiscoverRecipesComponent implements OnInit{
     button.type = 'button';
     button.style.display = 'none';
     button.setAttribute('data-toggle', 'modal');
-    button.setAttribute('data-target', '#addRecipeToUserModal');
+    button.setAttribute('data-target', '#addRecipeToRepositoryModal');
 
     container?.appendChild(button);
     button.click();
   }
 
-  public addRecipeToUser(recipeId: number): void {
-    const username = this.authService.getUsernameFromToken();
-
-    const container = document.getElementById("main-container");
-    const button = document.createElement('button');
-    
-    button.type = 'button';
-    button.style.display = 'none';
-    button.setAttribute('data-toggle', 'modal');
-    container?.appendChild(button);
-
-    this.recipeService.addUserRecipe(username, recipeId).subscribe(
+  public addRecipeToRepository(recipeId: number, repository: Repository): void {
+    this.recipeService.addRecipeToRepository(recipeId, repository.id).subscribe(
       (response: any) => {
         if (response) {
-          this.getRepositoryRecipes();
-          button.setAttribute('data-target', '#recipeSuccesModal');
-          button.click();
+          repository.addedRecipe = true;
         }
       },
       (error: HttpErrorResponse) => {

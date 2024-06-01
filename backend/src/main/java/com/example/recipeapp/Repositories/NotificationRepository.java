@@ -18,8 +18,14 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
     @Query(value = "SELECT * " +
                    "FROM notifications n " +
-                   "WHERE n.sender_id = :senderId AND n.receiver_id = :receiverId", nativeQuery = true)
-    Optional<Notification> findNotificationBySenderIdReceiverId(Long senderId, Long receiverId);
+                   "WHERE n.sender_id = :senderId AND n.receiver_id = :receiverId AND n.type = 'FRIEND_REQUEST'", nativeQuery = true)
+    Optional<Notification> findFriendRequestBySenderIdReceiverId(Long senderId, Long receiverId);
+
+    @Query(value = "SELECT * " +
+            "FROM notifications n " +
+            "WHERE ( n.sender_id = :senderId AND n.receiver_id = :receiverId ) AND ( n.type = 'FRIEND_REQUEST' AND n.status = 'PENDING' )", nativeQuery = true)
+    Optional<Notification> findPendingFriendRequestBySenderIdReceiverId(Long senderId, Long receiverId);
+
 
     @Query(value = "SELECT count(*) " +
                    "FROM notifications n " +

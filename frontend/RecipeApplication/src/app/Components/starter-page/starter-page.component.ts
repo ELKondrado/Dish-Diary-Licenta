@@ -3,12 +3,10 @@ import { Router } from '@angular/router';
 import { UserService } from '../../Models/User/user.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../Security/auth.service';
-import { Recipe } from '../../Models/Recipe/recipe';
 import { User } from '../../Models/User/user';
 import { RepositoryService } from '../../Models/Repository/repository.service';
 import { Repository } from '../../Models/Repository/repository';
 import { NgForm } from '@angular/forms';
-import { AddRepositoryDto } from '../../Models/Repository/addRepositoryDto';
 
 @Component({
   selector: 'app-starter-page',
@@ -64,6 +62,7 @@ export class StarterPageComponent implements OnInit{
       this.repositoryService.addRepository(this.user.userId, repository.value).subscribe(
         ( response: Repository) => {
           console.log(response);
+          this.getRepositories();
         },
         ( error: HttpErrorResponse) => {
           console.error(error);
@@ -74,7 +73,7 @@ export class StarterPageComponent implements OnInit{
 
   public getRepositories(): void {
     if(this.user){
-      this.repositoryService.getRepositories(this.user.userId).subscribe(
+      this.repositoryService.getRepositoriesDto(this.user.userId).subscribe(
         ( response: Repository[]) => {
           console.log(response);
           this.repositories = response;

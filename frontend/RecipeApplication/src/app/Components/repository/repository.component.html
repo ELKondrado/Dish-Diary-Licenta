@@ -1,44 +1,49 @@
 <body class="main-body">
    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 
-      <div class="add-recipe-button-container">
-         <button type="button" class="add-recipe-button" (click)="onOpenModal(undefined, 'add')">Add New Recipe</button>
-      </div>
+   <div class="repositories-title">
+      <h2>{{repository?.name}}</h2>
+   </div>
 
-      <div class="search-bar">
-         <input (ngModelChange)="searchRecipe(searchedRecipe.value)" #searchedRecipe="ngModel" ngModel type="search" name="searchedRecipe" id="searchRecipeRepo" class="form-control mr-sm-2 search-recipe-box" placeholder="Search recipes..." required>
-      </div>
+   <div class="add-recipe-button-container">
+      <button type="button" class="add-recipe-button" (click)="onOpenModal(undefined, 'add')">Add New Recipe</button>
+   </div>
 
-      <div class="container" id="main-container">
-         <div class="recipe-cards-container">
-            <div *ngFor="let recipe of recipes" class="recipe-card">
-               <div class="recipe-card-title">
-                  <h6 (click)="onOpenRecipe(recipe)" style="cursor: pointer;">{{recipe?.name}}</h6>
+   <div class="search-bar">
+      <input (ngModelChange)="searchRecipe(searchedRecipe.value)" #searchedRecipe="ngModel" ngModel type="search" name="searchedRecipe" id="searchRecipeRepo" class="form-control mr-sm-2 search-recipe-box" placeholder="Search recipes..." required>
+   </div>
+
+   <div class="container" id="main-container">
+      <div class="recipe-cards-container">
+         <div *ngFor="let recipe of recipes" class="recipe-card">
+            <div class="recipe-card-title">
+               <h6 (click)="onOpenRecipe(recipe)" style="cursor: pointer;">{{recipe?.name}}</h6>
+            </div>
+   
+            <ul (click)="onOpenRecipe(recipe)" class="list-group recipe-card-image-container" style="cursor: pointer;">
+               <img *ngIf="recipe.image" [src]="recipe.image">
+            </ul>
+   
+            <div class="recipe-card-buttons">
+               <div *ngIf="recipe.userOwner.userId == user?.userId" class="edit-area">
+                  <button (click)="onOpenModal(recipe, 'edit')" class="edit-button">
+                     <span class="text">Edit</span>
+                  </button>
                </div>
-      
-               <ul (click)="onOpenRecipe(recipe)" class="list-group recipe-card-image-container" style="cursor: pointer;">
-                  <img *ngIf="recipe.image" [src]="recipe.image">
-               </ul>
-      
-               <div class="recipe-card-buttons">
-                  <div *ngIf="recipe.userOwner.userId == user?.userId" class="edit-area">
-                     <button (click)="onOpenModal(recipe, 'edit')" class="edit-button">
-                        <span class="text">Edit</span>
-                     </button>
-                  </div>
-      
-                  <div class="delete-area">
-                     <button (click)="onOpenModal(recipe, 'delete')" class="delete-button">
-                        <span class="text">Delete</span>
-                     </button>
-                  </div>
+   
+               <div class="delete-area">
+                  <button (click)="onOpenModal(recipe, 'delete')" class="delete-button">
+                     <span class="text">Delete</span>
+                  </button>
                </div>
             </div>
          </div>
-         <div class="delete-repository-button-container">
-            <button type="button" class="delete-repository-button" (click)="onDeleteRepositoryModal()">Delete Repository</button>
-         </div>
       </div>
+      <div class="delete-edit-repository-button-container">
+         <button type="button" class="edit-repository-button" (click)="onEditRepositoryModal()">Edit Repository</button>
+         <button type="button" class="delete-repository-button" (click)="onDeleteRepositoryModal()">Delete Repository</button>
+      </div>
+   </div>
       
 
    <!-- Create Recipe Modal -->
@@ -104,7 +109,7 @@
                </button>
             </div>
             <div class="modal-body">
-               <form #editForm="ngForm">
+               <form #editRecipeForm="ngForm">
                   <div class="form-group">
                      <label for="name">Name</label>
                      <input type="text" ngModel="{{editRecipe?.name}}" name="name" class="form-control" id="name" aria-describedby="emailHelp" placeholder="Name">
@@ -137,7 +142,7 @@
 
                   <div class="modal-footer">
                      <button type="button" data-dismiss="modal" class="btn btn-secondary">Close</button>
-                     <button *ngIf="editRecipe" (click)="onUpdateRecipe(editForm, editRecipe.id)" data-dismiss="modal" class="btn btn-primary" style="background-color: royalblue;">Save changes</button>
+                     <button *ngIf="editRecipe" (click)="onUpdateRecipe(editRecipeForm, editRecipe.id)" data-dismiss="modal" class="btn btn-primary" style="background-color: royalblue;">Save changes</button>
                   </div>
                </form>
             </div>
@@ -166,7 +171,7 @@
       </div>
    </div>
 
-   <!-- Delete Recipe Modal -->
+   <!-- Delete Repository Modal -->
    <div class="modal fade" id="deleteRepositoryModal" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
          <div class="modal-content">
@@ -180,12 +185,37 @@
                <p>Are you sure you want to delete the repository: {{repository?.name}}?</p>
                <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                  <button *ngIf="repository" (click)="deleteRepository(repository.id)" class="btn btn-danger" data-dismiss="modal">Yes</button>
+                  <button *ngIf="repository" (click)="deleteRepository()" class="btn btn-danger" data-dismiss="modal">Yes</button>
                </div>
             </div>
          </div>
       </div>
    </div>
+
+   <!-- Edit Repository Modal -->
+   <div class="modal fade" id="editRepositoryModal" tabindex="-1" role="dialog" aria-labelledby="editModelLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title" id="editModelLabel">Edit Repository</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+               </button>
+            </div>
+            <div class="modal-body">
+               <form #editRepositoryForm="ngForm">
+                  <label for="name">Change Name</label>
+                  <input class="edit-repository-name-input" type="text" ngModel="{{repository?.name}}" name="name" class="form-control" id="name" placeholder="Name">
+               </form>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary cancel-button" data-dismiss="modal">Cancel</button>
+                  <button *ngIf="repository" (click)="editRepository(editRepositoryForm)" class="btn btn-danger edit-button" data-dismiss="modal">Yes</button>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
 
    <!-- Notification for no recipes -->
    <div *ngIf="recipes?.length == 0" class="col-lg-12 col-md-12 col-xl-12 no-recipes-modal">

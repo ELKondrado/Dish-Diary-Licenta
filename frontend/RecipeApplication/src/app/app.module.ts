@@ -40,7 +40,7 @@ const routes: Routes = [
   { path: ':username/profile', component: UserProfileComponent, canActivate: [AuthGuard] },
   { path: ':username/friends', component: UserFriendsComponent, canActivate: [AuthGuard] },
   { path: ':username/notifications', component: UserNotificationsComponent, canActivate: [AuthGuard] },
-  { path: ':username/friend-profile/:friendUserName', component: FriendUserProfileComponent, canActivate: [AuthGuard] },
+  { path: ':username/friend-profile/:friendUserNickname', component: FriendUserProfileComponent, canActivate: [AuthGuard] },
   { path: ':username/chat', component: UserChatComponent, canActivate: [AuthGuard] },
   { path: ':username/chat/:friendUserName', component: UserChatComponent, canActivate: [AuthGuard] },
 ];

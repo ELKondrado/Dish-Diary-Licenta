@@ -22,6 +22,7 @@ export class UserFriendsComponent implements OnInit{
   public user: User | null = null;
   public friendToAdd: String = "";
   public removedFriend: User | undefined;
+  public friendAdded: boolean = false;
   public friendRequestSent: boolean = false;
   public nicknameAddedNotFound: boolean = false;
   public friendRequestAlreadySent: boolean = false;
@@ -78,8 +79,17 @@ export class UserFriendsComponent implements OnInit{
     if(this.user){
       this.friendsService.sendFriendRequest(this.user.userId, this.friendToAdd.toString()).subscribe(
         (response: any) => {
-
-          if(response.status == "SUCCESS"){
+          console.log(response)
+          if(response.status == "FRIEND ADDED"){
+            this.friendAdded = true;
+            this.friendRequestSent = false;
+            this.nicknameAddedNotFound = false;
+            this.friendRequestAlreadySent = false;
+            this.friendRequestAlreadyFriend = false;
+            this.friendRequestCannotAddYourself = false;
+          }
+          else if(response.status == "SUCCESS"){
+            this.friendAdded = false;
             this.friendRequestSent = true;
             this.nicknameAddedNotFound = false;
             this.friendRequestAlreadySent = false;
@@ -87,6 +97,7 @@ export class UserFriendsComponent implements OnInit{
             this.friendRequestCannotAddYourself = false;
           }
           else if(response.status == "USER RECEIVER NOT FOUND"){
+            this.friendAdded = false;
             this.friendRequestSent = false;
             this.nicknameAddedNotFound = true;
             this.friendRequestAlreadySent = false;
@@ -94,6 +105,7 @@ export class UserFriendsComponent implements OnInit{
             this.friendRequestCannotAddYourself = false;
           }
           else if(response.status == "FRIEND REQUEST ALREADY SENT"){
+            this.friendAdded = false;
             this.friendRequestSent = false;
             this.nicknameAddedNotFound = false;
             this.friendRequestAlreadySent = true;
@@ -101,6 +113,7 @@ export class UserFriendsComponent implements OnInit{
             this.friendRequestCannotAddYourself = false;
           }
           else if(response.status == "RECEIVER ALREADY FRIEND"){
+            this.friendAdded = false;
             this.friendRequestSent = false;
             this.nicknameAddedNotFound = false;
             this.friendRequestAlreadySent = false;
@@ -108,6 +121,7 @@ export class UserFriendsComponent implements OnInit{
             this.friendRequestCannotAddYourself = false;
           }
           else if(response.status == "CANNOT ADD YOURSELF"){
+            this.friendAdded = false;
             this.friendRequestSent = false;
             this.nicknameAddedNotFound = false;
             this.friendRequestAlreadySent = false;
@@ -149,7 +163,7 @@ export class UserFriendsComponent implements OnInit{
     }
   }
 
-  public onOpenFriendProfile(friendUsername: String): void {
-    this.router.navigate([`/${this.userService.getUsername()}/friend-profile/${friendUsername}`]);
+  public onOpenFriendProfile(friendNickname: String): void {
+    this.router.navigate([`/${this.userService.getUsername()}/friend-profile/${friendNickname}`]);
   }
 }
