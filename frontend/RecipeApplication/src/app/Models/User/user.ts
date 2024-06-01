@@ -1,3 +1,5 @@
+import { Friendship } from "../Friendship/friendship";
+
 export interface User{
     userId: number;
     userName: string;

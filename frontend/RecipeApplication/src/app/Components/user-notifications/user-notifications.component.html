@@ -13,9 +13,9 @@
                <div *ngFor="let friendRequest of friendRequests">
                   <div class="friend-request" *ngIf="friendRequest.status == 'PENDING'">
                      <div class="user-avatar">
-                        <img (click)="onOpenFriendProfile(friendRequest.sender.userName)" src="{{friendRequest.sender.profileImage}}" alt="User Avatar">
+                        <img (click)="onOpenFriendProfile(friendRequest.sender.userNickname)" src="{{friendRequest.sender.profileImage}}" alt="User Avatar">
                      </div>
-                     <h4 (click)="onOpenFriendProfile(friendRequest.sender.userName)" class="sender-nickname">{{friendRequest.sender.userNickname}}</h4>
+                     <h4 (click)="onOpenFriendProfile(friendRequest.sender.userNickname)" class="sender-nickname">{{friendRequest.sender.userNickname}}</h4>
                      <div (click)="onResponseFriendRequestModal(friendRequest, 'accept')" class="accept-icon-container">
                         <div class="accept icon"></div>
                      </div>
@@ -33,10 +33,10 @@
                <div *ngFor="let recipeShared of recipesShared">
                   <div class="recipe-share" *ngIf="recipeShared.status == 'SHARED'">
                      <div class="user-avatar">
-                        <img (click)="onOpenFriendProfile(recipeShared.sender.userName)" src="{{recipeShared.sender.profileImage}}" alt="User Avatar">
+                        <img (click)="onOpenFriendProfile(recipeShared.sender.userNickname)" src="{{recipeShared.sender.profileImage}}" alt="User Avatar">
                      </div>
                      <div class="sender-nickname-container">
-                        <h4 (click)="onOpenFriendProfile(recipeShared.sender.userName)" class="sender-nickname">{{recipeShared.sender.userNickname}}</h4>
+                        <h4 (click)="onOpenFriendProfile(recipeShared.sender.userNickname)" class="sender-nickname">{{recipeShared.sender.userNickname}}</h4>
                         <h4 class="shared-label">shared</h4>
                      </div>
 

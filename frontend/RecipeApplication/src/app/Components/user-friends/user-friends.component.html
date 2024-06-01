@@ -36,11 +36,11 @@
 
          <div class="friend"  *ngFor="let friend of friends">
             <div class="friend-avatar-container">
-                  <img (click)="onOpenFriendProfile(friend.userName)" class="friend-profile-avatar" *ngIf="friend.profileImage" src="{{friend.profileImage}}" alt="Friend Profile Image">
-                  <img (click)="onOpenFriendProfile(friend.userName)" class="friend-profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Friend Profile Image">
+                  <img (click)="onOpenFriendProfile(friend.userNickname)" class="friend-profile-avatar" *ngIf="friend.profileImage" src="{{friend.profileImage}}" alt="Friend Profile Image">
+                  <img (click)="onOpenFriendProfile(friend.userNickname)" class="friend-profile-avatar" *ngIf="!avatarUrl" src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg" alt="Friend Profile Image">
             </div>
             <div class="friend-nickname">
-               <h2 (click)="onOpenFriendProfile(friend.userName)">{{friend?.userNickname}}</h2>
+               <h2 (click)="onOpenFriendProfile(friend.userNickname)">{{friend?.userNickname}}</h2>
                <a (click)="onRemoveFriendModal(friend)" class="remove-friend">Remove friend</a>
             </div>
          </div>

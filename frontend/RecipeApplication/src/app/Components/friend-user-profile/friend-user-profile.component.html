@@ -14,6 +14,12 @@
             <div class="chat-button-container">
                <button *ngIf="friend" (click)="userChatFriend(friend.userName)" type="button" class="chat-button">Chat</button>
             </div>
+
+            <label *ngIf="friendRequestSent" style="color: greenyellow;">Friend Request was sent!</label>
+            <label *ngIf="friendRequestAlreadySent" style="color: red; font-weight: 600;">Friend Request was already sent!</label>
+            <div class="add-friend-button-container">
+               <button *ngIf="friend && !isFriendWithUser" (click)="sendFriendRequest()" type="button" class="add-friend-button">Add Friend</button>
+            </div>
          </div>
 
          <div class="details">

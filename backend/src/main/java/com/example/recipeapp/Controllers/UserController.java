@@ -31,6 +31,12 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
+    @GetMapping("/detailsByNickname/{nickname}")
+    public ResponseEntity<User> getUserDetailsByNickname(@PathVariable("nickname") String nickname){
+        User user = userService.getUserDetailsByNickname(nickname);
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
+    }
+
     @PutMapping("/editProfileAttributes/{userId}")
     public ResponseEntity<User> editProfileAttributes(@PathVariable("userId") long userId,
                                                       @RequestBody UserEditProfileDto userEditProfileDto){

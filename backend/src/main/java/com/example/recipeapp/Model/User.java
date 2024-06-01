@@ -74,7 +74,6 @@ public class User {
     )
     private List<Repository> repositories = new ArrayList<>();
 
-    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Friendship> friendships = new ArrayList<>();
 

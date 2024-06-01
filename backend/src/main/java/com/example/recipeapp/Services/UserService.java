@@ -58,6 +58,15 @@ public class UserService {
         }
     }
 
+    public User getUserDetailsByNickname(String nickname) {
+        Optional<User> optionalUser = userRepository.findByUserNickname(nickname);
+        if (optionalUser.isPresent()) {
+            return optionalUser.get();
+        } else {
+            throw new NotFound("User with nickname " + nickname + " not found in getting user details");
+        }
+    }
+
     public User editProfileAttributes(long userId, UserEditProfileDto userEditProfileDto) {
         Optional<User> optionalUser = userRepository.findUserByUserId(userId);
         if(optionalUser.isPresent()) {

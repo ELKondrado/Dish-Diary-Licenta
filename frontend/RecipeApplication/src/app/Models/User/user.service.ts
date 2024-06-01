@@ -48,9 +48,14 @@ export class UserService {
     return this.http.put<User>(`${this.apiServerUrl}/user/editProfileAttributes/${userId}`, requestBody, { headers });
   }
 
-  public getUserDetails(username: number): Observable<User>{ 
+  public getUserDetails(username: string): Observable<User>{ 
     const headers = this.getHeaders();
     return this.http.get<User>(`${this.apiServerUrl}/user/details/${username}`, { headers });
+  }
+
+  public getUserDetailsByNickname(nickname: number): Observable<User>{ 
+    const headers = this.getHeaders();
+    return this.http.get<User>(`${this.apiServerUrl}/user/detailsByNickname/${nickname}`, { headers });
   }
 
   public getFriends(userId: number): Observable<User[]> {

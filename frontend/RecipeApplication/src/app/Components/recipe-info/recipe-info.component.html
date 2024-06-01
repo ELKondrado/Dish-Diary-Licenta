@@ -40,6 +40,17 @@
                </div>
             </div>
 
+            <div class="recipe-owner-container" *ngIf="recipe" (click)="onOpenFriendProfile(recipe.userOwner.userNickname)">
+               <div>
+               </div>
+               <div class="user-avatar">
+                  <img src="{{recipe.userOwner.profileImage}}" alt="User Avatar">
+               </div>
+               <div class="recipe-owner-nickname">
+                  <h5>{{recipe.userOwner.userNickname}}'s recipe</h5>
+               </div>
+            </div>
+
             <div class="recipe-buttons">
                <div *ngIf="recipe?.userOwner?.userId == user?.userId" class="recipe-upload-button">
                   <label for="fileInput" class="upload-button"><input type="file" id="fileInput" (change)="onSelectFile($event)">Upload Profile Image</label>
