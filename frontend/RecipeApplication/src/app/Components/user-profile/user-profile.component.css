@@ -15,7 +15,7 @@ body {
     display: flex;
     justify-content: space-around;
     margin: 2rem;
-    margin-top: 3rem;
+    margin-top: 1.5rem;
     margin-left: 7rem;
     margin-bottom: 10rem;
 }
@@ -36,15 +36,11 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding-bottom: 1rem;
-}
-
-.profile-nickname{
-    margin-bottom: 0.5rem;
+    padding-bottom: 0.2rem;
 }
 
 .profile-upload-button{
-    margin-top: 1rem;
+    margin-top: 0.5rem;
     display: grid;
     place-items: center;
 }
@@ -231,14 +227,27 @@ body {
 
 .details {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     color: white;
     background-color: #191c22;
     padding: 2rem;
-    padding-top: 1rem;
-    padding-bottom: 0.5rem;
-    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    margin-top: 0.2rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-top: 0.5px solid grey;
+}
+
+.details h2 {
+    text-align: center;
+}
+
+.details-item-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .detail-item {
@@ -246,7 +255,6 @@ body {
 }
 
 .detail-item p {
-    inline-size: 230px;
     word-break: break-all;
     overflow-wrap: break-word;
 }

@@ -59,7 +59,7 @@ body {
 
 .profile h2 {
     margin-top: 0.2rem;
-    margin-bottom: 0.2em;
+    margin-bottom: 0.2rem;
 }
 
 .profile p {
@@ -74,12 +74,13 @@ body {
 
 .chat-button {
     color: white;
+    font-weight: 500;
     background: #2a62d4;
     width: 12rem;
     height: 2.25rem;
     border: 2px solid grey;
     border-radius: 6px;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.2rem;
 }
 
 .add-friend-button {
@@ -97,13 +98,26 @@ body {
 
 .details {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     color: white;
     background-color: #191c22;
     padding: 2rem;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
-    margin-top: 0.5rem;
+    margin-top: 0.2rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-top: 0.5px solid grey;
+}
+
+.details h2 {
+    text-align: center;
+}
+
+.details-item-list {
+    display: grid;
+    place-items: center;
 }
 
 .detail-item {
@@ -111,7 +125,6 @@ body {
 }
 
 .detail-item p {
-    inline-size: 230px;
     word-break: break-all;
     overflow-wrap: break-word;
 }

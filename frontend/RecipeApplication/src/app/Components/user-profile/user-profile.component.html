@@ -11,8 +11,7 @@
             </div>
 
             <div class="profile-nickname">
-               <h2 *ngIf="!this.user?.userNickname">{{this.user?.userName}}</h2>
-               <h2 *ngIf="this.user?.userNickname">{{this.user?.userNickname}}</h2>
+               <h2>{{this.user?.userNickname}}</h2>
             </div>
 
             <p>{{this.user?.userBio}}</p>
@@ -42,16 +41,20 @@
          </div>
 
          <div class="details">
-            <h2>Details</h2>
-            <div class="detail-item">
-               <p (click)="onOpenRecipesHistory('total')" style="cursor: pointer;">Current recipes: {{user?.totalRecipes}}</p>
+            <div>
+               <h2>Details</h2>
             </div>
-            <div class="detail-item">
-               <p (click)="onOpenRecipesHistory('created')" style="cursor: pointer;">Recipes created: {{user?.totalRecipesCreated}}</p>
-            </div>
-            <div class="detail-item">
-               <p>Total recipes added: {{user?.totalRecipesAdded}}</p>
-               <p (click)="onOpenRecipesHistory('added')" style="cursor: pointer;">Current recipes added: {{addedRecipes?.length}}</p>
+            <div class="details-item-list">
+               <div class="detail-item">
+                  <p (click)="onOpenRecipesHistory('total')" style="cursor: pointer;">Current recipes: {{user?.totalRecipes}}</p>
+               </div>
+               <div class="detail-item">
+                  <p (click)="onOpenRecipesHistory('created')" style="cursor: pointer;">Recipes created: {{user?.totalRecipesCreated}}</p>
+               </div>
+               <div class="detail-item">
+                  <p>Total recipes added: {{user?.totalRecipesAdded}}</p>
+                  <p (click)="onOpenRecipesHistory('added')" style="cursor: pointer;">Current recipes added: {{addedRecipes?.length}}</p>
+               </div>
             </div>
          </div>
 

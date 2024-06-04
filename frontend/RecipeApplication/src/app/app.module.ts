@@ -6,7 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { LoginFormComponent } from './Components/login-form/login-form.component';
 import { RegisterFormComponent } from './Components/register-form/register-form.component';
 import { FormsModule } from '@angular/forms';
-import { RouterModule, Routes, RouterOutlet } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { RepositoryComponent } from './Components/repository/repository.component';
 import { UserService } from './Models/User/user.service';
 import { AuthGuard } from './Security/auth.guard';
@@ -28,6 +28,8 @@ import { NotificationService } from './Models/Notification/notification.service'
 import { ReviewService } from './Models/Review/review.service';
 import { StarterPageComponent } from './Components/starter-page/starter-page.component';
 import { HeaderComponent } from './Components/header/header.component';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { MatDividerModule } from '@angular/material/divider';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -63,6 +65,7 @@ const routes: Routes = [
   ],
   imports: [
     BrowserModule,
+    MatDividerModule,
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot(routes),
@@ -79,6 +82,7 @@ const routes: Routes = [
     ReviewService,
     WebSocketService,
     DatePipe,
+    provideAnimationsAsync(),
   ],
   bootstrap: [AppComponent],
 })
