@@ -107,35 +107,31 @@ export class HeaderComponent implements OnInit {
     return 'data:image/jpeg;base64,' + btoa(bytes.join(''));
   }
 
-  public onOpenFriendProfile(friendNickname: String): void {
-    this.router.navigate([`/${this.userService.getUsername()}/friend-profile/${friendNickname}`]);
-  }
-
   public mainPage(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/starter-page`]);
+    this.router.navigate([`/starter-page`]);
   }
 
   public discoverRecipes(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/recipes`]);
+    this.router.navigate([`/recipes`]);
   }
 
-  public userProfile(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/profile`]);
+  public userProfile(userNickname: String): void {
+    this.router.navigate([`/profile/${userNickname}`]);
     this.toggleMenu();
   }
 
   public userFriends(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/friends`]);
+    this.router.navigate([`/friends`]);
     this.toggleMenu();
   }
 
   public userChat(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/chat`]);
+    this.router.navigate([`/chat`]);
     this.toggleMenu();
   }
 
   public userNotifications(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/notifications`]);
+    this.router.navigate([`/notifications`]);
     this.toggleMenu();
   }
 

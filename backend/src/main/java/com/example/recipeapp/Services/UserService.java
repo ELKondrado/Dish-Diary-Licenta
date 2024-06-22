@@ -43,10 +43,7 @@ public class UserService {
 
     public User findUserByNickname(String nickname) {
         Optional<User> optionalUser = userRepository.findByUserNickname(nickname);
-        if(optionalUser.isPresent()){
-            return optionalUser.get();
-        }
-        return null;
+        return optionalUser.orElse(null);
     }
 
     public User getUserDetails(String username) {
@@ -72,7 +69,10 @@ public class UserService {
         if(optionalUser.isPresent()) {
             User user = optionalUser.get();
 
-            user.setUserNickname(userEditProfileDto.getUserNicknameToChange());
+            User optionalNicknameUser = findUserByNickname(userEditProfileDto.getUserNicknameToChange());
+            if(optionalNicknameUser == null) {
+                user.setUserNickname(userEditProfileDto.getUserNicknameToChange());
+            }
             user.setUserBio(userEditProfileDto.getUserBioToChange());
             return userRepository.save(user);
         } else {

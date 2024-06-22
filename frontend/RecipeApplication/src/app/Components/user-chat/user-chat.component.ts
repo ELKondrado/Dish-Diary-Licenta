@@ -350,6 +350,6 @@ export class UserChatComponent implements OnInit, OnDestroy{
   }
 
   public onOpenFriendProfile(friendNickname: String): void {
-    this.router.navigate([`/${this.userService.getUsername()}/friend-profile/${friendNickname}`]);
+    this.router.navigate([`/profile/${friendNickname}`]);
   }
 }

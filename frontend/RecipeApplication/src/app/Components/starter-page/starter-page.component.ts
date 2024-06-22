@@ -32,20 +32,6 @@ export class StarterPageComponent implements OnInit{
     });
   }
 
-  // change in searchUser
-  // public searchRecipe(key: string): void {
-  //   const resultRecipes: Recipe[] = [];
-  //   for (const recipe of this.recipes) {
-  //     if (recipe.name.toLowerCase().indexOf(key.toLowerCase()) !== -1) {
-  //       resultRecipes.push(recipe);
-  //     }
-  //   }
-  //   this.recipes = resultRecipes;
-  //   if (resultRecipes.length === 0 || !key){
-  //     //this.getUserRecipes();
-  //   }
-  // }
-
   public onCreateRepositoryModal(): void {
     const container = document.getElementById("main-container");
     const button = document.createElement('button');
@@ -61,7 +47,7 @@ export class StarterPageComponent implements OnInit{
     if(this.user){
       this.repositoryService.addRepository(this.user.userId, repository.value).subscribe(
         ( response: Repository) => {
-          console.log(response);
+          repository.resetForm();
           this.getRepositories();
         },
         ( error: HttpErrorResponse) => {
@@ -86,6 +72,6 @@ export class StarterPageComponent implements OnInit{
   }
 
   public onOpenRepository(repository: Repository): void {
-    this.router.navigate([`/${this.userService.getUsername()}/repository/${repository.id}`]);
+    this.router.navigate([`/repository/${repository.id}`]);
   }
 }

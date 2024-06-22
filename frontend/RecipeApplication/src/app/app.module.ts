@@ -14,10 +14,8 @@ import { AuthService } from './Security/auth.service';
 import { DiscoverRecipesComponent } from './Components/discover-recipes/discover-recipes.component';
 import { RecipeInfoComponent } from './Components/recipe-info/recipe-info.component';
 import { UserProfileComponent } from './Components/user-profile/user-profile.component';
-import { IonicModule } from '@ionic/angular';
 import { UserFriendsComponent } from './Components/user-friends/user-friends.component';
 import { UserNotificationsComponent } from './Components/user-notifications/user-notifications.component';
-import { FriendUserProfileComponent } from './Components/friend-user-profile/friend-user-profile.component';
 import { UserChatComponent } from './Components/user-chat/user-chat.component';
 import { DatePipe } from '@angular/common';
 import { WebSocketService } from './web-socket.service';
@@ -29,22 +27,20 @@ import { ReviewService } from './Models/Review/review.service';
 import { StarterPageComponent } from './Components/starter-page/starter-page.component';
 import { HeaderComponent } from './Components/header/header.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { MatDividerModule } from '@angular/material/divider';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginFormComponent },
   { path: 'register', component: RegisterFormComponent },
-  { path: ':username/starter-page', component: StarterPageComponent, canActivate: [AuthGuard] },
-  { path: ':username/repository/:repositoryId', component: RepositoryComponent, canActivate: [AuthGuard] },
-  { path: ':username/recipes', component: DiscoverRecipesComponent, canActivate: [AuthGuard] },
-  { path: ':username/recipe/:recipeId', component: RecipeInfoComponent, canActivate: [AuthGuard] },
-  { path: ':username/profile', component: UserProfileComponent, canActivate: [AuthGuard] },
-  { path: ':username/friends', component: UserFriendsComponent, canActivate: [AuthGuard] },
-  { path: ':username/notifications', component: UserNotificationsComponent, canActivate: [AuthGuard] },
-  { path: ':username/friend-profile/:friendUserNickname', component: FriendUserProfileComponent, canActivate: [AuthGuard] },
-  { path: ':username/chat', component: UserChatComponent, canActivate: [AuthGuard] },
-  { path: ':username/chat/:friendUserName', component: UserChatComponent, canActivate: [AuthGuard] },
+  { path: 'starter-page', component: StarterPageComponent, canActivate: [AuthGuard] },
+  { path: 'repository/:repositoryId', component: RepositoryComponent, canActivate: [AuthGuard] },
+  { path: 'recipes', component: DiscoverRecipesComponent, canActivate: [AuthGuard] },
+  { path: 'recipe/:recipeId', component: RecipeInfoComponent, canActivate: [AuthGuard] },
+  { path: 'profile/:userNickname', component: UserProfileComponent, canActivate: [AuthGuard] },
+  { path: 'friends', component: UserFriendsComponent, canActivate: [AuthGuard] },
+  { path: 'notifications', component: UserNotificationsComponent, canActivate: [AuthGuard] },
+  { path: 'chat', component: UserChatComponent, canActivate: [AuthGuard] },
+  { path: 'chat/:friendUserName', component: UserChatComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -59,17 +55,14 @@ const routes: Routes = [
     UserProfileComponent,
     UserFriendsComponent,
     UserNotificationsComponent,
-    FriendUserProfileComponent,
     UserChatComponent,
     HeaderComponent
   ],
   imports: [
     BrowserModule,
-    MatDividerModule,
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot(routes),
-    IonicModule.forRoot(),
   ],
   providers: [
     AuthService,

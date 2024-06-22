@@ -377,10 +377,10 @@ export class RecipeInfoComponent implements OnInit {
   }
 
   public formattedDate(date: string): string | null {
-    return this.datePipe.transform(date, 'M/d/yyyy HH:mm');
+    return this.datePipe.transform(date, 'dd/MM/yyyy HH:mm');
   }
 
   public onOpenFriendProfile(friendNickname: String): void {
-    this.router.navigate([`/${this.userService.getUsername()}/friend-profile/${friendNickname}`]);
+    this.router.navigate([`/profile/${friendNickname}`]);
   }
 }

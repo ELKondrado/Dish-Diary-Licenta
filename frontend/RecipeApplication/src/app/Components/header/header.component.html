@@ -31,7 +31,7 @@
       </li>
     </ul>
     <form
-      (ngSubmit)="onOpenFriendProfile(searchedUser.value)"
+      (ngSubmit)="userProfile(searchedUser.value)"
       class="form-inline my-2 my-lg-0"
     >
       <div class="search-bar">
@@ -49,7 +49,7 @@
           <span
             class="material-icons search-icon"
             style="cursor: pointer"
-            (click)="onOpenFriendProfile(searchedUser.value)"
+            (click)="userProfile(searchedUser.value)"
             >search</span
           >
         </div>
@@ -98,7 +98,7 @@
           </div>
           <h6>{{ user?.userNickname }}</h6>
         </div>
-        <a (click)="userProfile()" class="sub-menu-link">
+        <a *ngIf="user" (click)="userProfile(user.userNickname)" class="sub-menu-link">
           <div class="icon-container">
             <div class="icon-button">
               <span class="material-icons">person</span>

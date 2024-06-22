@@ -11,33 +11,45 @@
             </div>
 
             <div class="profile-nickname">
-               <h2>{{this.user?.userNickname}}</h2>
+               <h2>{{this.profileUser?.userNickname}}</h2>
             </div>
 
-            <p>{{this.user?.userBio}}</p>
+            <p>{{this.profileUser?.userBio}}</p>
 
-            <button (click)="toggleProfileEdit()" type="button" class="edit-profile-button" >Edit Profile</button>
-
-            <div class="profile-edit-settings" *ngIf="showEditProfile">
-               <div class="profile-upload-button">
-                  <label for="fileInput" class="upload-button"><input type="file" id="fileInput" (change)="onSelectFile($event)">Upload Profile Image</label>
-               </div>
-               <form #editForm="ngForm">
-                  <label>Name</label>
-                  <label *ngIf="nicknameAlreadyUsed" id="nickname-aleady-used">Nickname already used!</label>
-                  <input ngModel="{{user?.userNickname}}" name="userNicknameToChange" maxlength="30">
-
-                  <label>Bio</label>
-                  <textarea ngModel="{{user?.userBio}}" name="userBioToChange" maxlength="255"></textarea>
-
-                  <div class="edit-changes-buttons">
-                     <button (click)="toggleProfileEdit()" type="button" class="edit-close-changes-button">Close</button>
-                     <button (click)="onEditProfile(editForm.value)" type="button" class="edit-save-changes-button">Save Changes</button>
+            <div *ngIf="user?.userId === profileUser?.userId">
+               <button (click)="toggleProfileEdit()" type="button" class="edit-profile-button" >Edit Profile</button>
+               <div class="profile-edit-settings" *ngIf="showEditProfile">
+                  <div class="profile-upload-button">
+                     <label for="fileInput" class="upload-button"><input type="file" id="fileInput" (change)="onSelectFile($event)">Upload Profile Image</label>
                   </div>
-                 
-               </form>
+                  <form #editForm="ngForm">
+                     <label>Name</label>
+                     <label *ngIf="nicknameAlreadyUsed" id="nickname-aleady-used">Nickname already used!</label>
+                     <input ngModel="{{profileUser?.userNickname}}" name="userNicknameToChange" maxlength="30">
+
+                     <label>Bio</label>
+                     <textarea ngModel="{{profileUser?.userBio}}" name="userBioToChange" maxlength="255"></textarea>
+
+                     <div class="edit-changes-buttons">
+                        <button (click)="toggleProfileEdit()" type="button" class="edit-close-changes-button">Close</button>
+                        <button (click)="onEditProfile(editForm.value)" type="button" class="edit-save-changes-button">Save Changes</button>
+                     </div>
+                  </form>
+               </div>
             </div>
           
+            <div *ngIf="user?.userId !== profileUser?.userId">
+               <div class="chat-button-container">
+                  <button *ngIf="profileUser" (click)="userChatFriend(profileUser.userName)" type="button" class="chat-button">Chat</button>
+               </div>
+   
+               <label *ngIf="friendRequestSent" style="color: greenyellow;">Friend Request was sent!</label>
+               <label *ngIf="friendRequestAlreadySent" style="color: red; font-weight: 600;">Friend Request was already sent!</label>
+               <div class="add-friend-button-container">
+                  <button *ngIf="profileUser && !isFriendWithUser" (click)="sendFriendRequest()" type="button" class="add-friend-button">Add Friend</button>
+               </div>
+            </div>
+
          </div>
 
          <div class="details">
@@ -46,13 +58,13 @@
             </div>
             <div class="details-item-list">
                <div class="detail-item">
-                  <p (click)="onOpenRecipesHistory('total')" style="cursor: pointer;">Current recipes: {{user?.totalRecipes}}</p>
+                  <p (click)="onOpenRecipesHistory('total')" style="cursor: pointer;">Current recipes: {{profileUser?.totalRecipes}}</p>
                </div>
                <div class="detail-item">
-                  <p (click)="onOpenRecipesHistory('created')" style="cursor: pointer;">Recipes created: {{user?.totalRecipesCreated}}</p>
+                  <p (click)="onOpenRecipesHistory('created')" style="cursor: pointer;">Recipes created: {{profileUser?.totalRecipesCreated}}</p>
                </div>
                <div class="detail-item">
-                  <p>Total recipes added: {{user?.totalRecipesAdded}}</p>
+                  <p>Total recipes added: {{profileUser?.totalRecipesAdded}}</p>
                   <p (click)="onOpenRecipesHistory('added')" style="cursor: pointer;">Current recipes added: {{addedRecipes?.length}}</p>
                </div>
             </div>
@@ -78,18 +90,18 @@
          <div class="modal-content">
             <div class="modal-header">
                <h2 class="modal-title" id="totalRecipesLabel">Total Recipes</h2>
-               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <button type="button" class="close cancel-button" data-dismiss="modal" aria-label="Close">
                <span aria-hidden="true">&times;</span>
                </button>
             </div>
 
             <div class="modal-body">
                <div *ngFor="let recipe of repositoryRecipes; let i = index">
-                  <h5>{{i+1}}: {{recipe.name}}</h5>
+                  <h5>{{i+1}}. {{recipe.name}}</h5>
                 </div>
 
                <div class="modal-footer">
-                  <button class="btn btn-danger" data-dismiss="modal">Close</button>
+                  <button class="btn btn-danger cancel-button" data-dismiss="modal">Close</button>
                </div>
             </div>
          </div>
@@ -102,7 +114,7 @@
          <div class="modal-content">
             <div class="modal-header">
                <h2 class="modal-title" id="createdRecipesLabel">Created Recipes</h2>
-               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <button type="button" class="close cancel-button" data-dismiss="modal" aria-label="Close">
                <span aria-hidden="true">&times;</span>
                </button>
             </div>
@@ -126,7 +138,7 @@
          <div class="modal-content">
             <div class="modal-header">
                <h2 class="modal-title" id="addedRecipesLabel">Added Recipes</h2>
-               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <button type="button" class="close cancel-button" data-dismiss="modal" aria-label="Close">
                <span aria-hidden="true">&times;</span>
                </button>
             </div>

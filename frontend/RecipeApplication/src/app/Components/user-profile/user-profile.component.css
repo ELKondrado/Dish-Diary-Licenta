@@ -225,6 +225,36 @@ body {
     background-color: #45a049;
 }
 
+.chat-button-container, .add-friend-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.chat-button {
+    color: white;
+    font-weight: 500;
+    background: #2a62d4;
+    width: 12rem;
+    height: 2.25rem;
+    border: 2px solid grey;
+    border-radius: 6px;
+    margin-bottom: 0.2rem;
+}
+
+.add-friend-button {
+    color: white;
+    background: #4CAF50;
+    width: 12rem;
+    height: 2.25rem;
+    border: 2px solid grey;
+    border-radius: 6px;
+}
+
+.chat-button:hover, .add-friend-button:hover {
+    border: 2px solid white;
+}
+
 .details {
     flex: 1;
     display: flex;
@@ -289,18 +319,29 @@ body {
     color: #586069;
 }
 
-.modal-title {
-    font-weight: 700;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.modal-content {
+    background-color: rgb(30, 28, 28);
+    color: white;
+    font-weight: 600;
 }
 
-.modal-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+.modal-content .close {
+    color: white;
+}
+
+.modal-title {
+    width: 100%;
+    text-align: center;
+    margin: 0;
+}
+
+.modal-body .cancel-button{
+    border: 1px solid grey;
+    color: white;
+}
+
+.modal-body .cancel-button:hover{
+    border-color: white;
 }
 
 @media (max-width: 768px) {

@@ -14,14 +14,14 @@ import { Repository } from '../../Models/Repository/repository';
   templateUrl: './discover-recipes.component.html',
   styleUrl: './discover-recipes.component.css'
 })
-export class DiscoverRecipesComponent implements OnInit{
+export class DiscoverRecipesComponent implements OnInit {
   constructor(
     private recipeService: RecipeService,
     private repositoryService: RepositoryService,
-    private authService: AuthService, 
+    private authService: AuthService,
     private userService: UserService,
     private router: Router
-  ) {}
+  ) { }
 
   public user: User | null = null;
   public recipes: Recipe[] = [];
@@ -53,7 +53,7 @@ export class DiscoverRecipesComponent implements OnInit{
   }
 
   public getRepositories(): void {
-    if(this.user){
+    if (this.user) {
       this.repositoryService.getRepositoriesDto(this.user.userId).subscribe(
         (response: Repository[]) => {
           this.repositories = response;
@@ -95,18 +95,29 @@ export class DiscoverRecipesComponent implements OnInit{
 
   public searchRecipe(key: string): void {
     const resultRecipes: Recipe[] = [];
+    const lowerKey = key.toLowerCase();
+
     for (const recipe of this.recipes) {
-      if (recipe.name.toLowerCase().indexOf(key.toLowerCase()) !== -1) {
+      const lowerName = recipe.name.toLowerCase();
+      const nameMatch = lowerName.includes(lowerKey);
+
+      const tagMatch = recipe.tags.some(tag => tag.toLowerCase().includes(lowerKey));
+
+      const lowerIngredients = recipe.ingredients.toLowerCase();
+      const ingredientsMatch = lowerIngredients.includes(lowerKey);
+
+      if (nameMatch || tagMatch || ingredientsMatch) {
         resultRecipes.push(recipe);
       }
     }
     this.recipes = resultRecipes;
-    if (resultRecipes.length === 0 || !key){
+
+    if (resultRecipes.length === 0 || !key) {
       this.ngOnInit();
     }
   }
 
   public onOpenRecipe(recipe: Recipe): void {
-    this.router.navigate([`/${this.userService.getUsername()}/recipe/${recipe.id}`]);
+    this.router.navigate([`/recipe/${recipe.id}`]);
   }
 }

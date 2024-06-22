@@ -164,6 +164,6 @@ export class UserFriendsComponent implements OnInit{
   }
 
   public onOpenFriendProfile(friendNickname: String): void {
-    this.router.navigate([`/${this.userService.getUsername()}/friend-profile/${friendNickname}`]);
+    this.router.navigate([`/profile/${friendNickname}`]);
   }
 }
