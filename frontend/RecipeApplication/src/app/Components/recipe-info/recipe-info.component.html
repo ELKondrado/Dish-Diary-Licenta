@@ -105,25 +105,27 @@
          <h2 *ngIf="reviews?.length == 0">No Reviews Yet!</h2>
 
          <button *ngIf="!showReviewForm" type="button" class="create-review-button" (click)="toggleReviewForm()">Create New Review</button>
-         <div *ngFor="let review of reviews" class="review">
-            <div class="user-avatar">
-               <img src="{{review.userOwner?.profileImage}}" alt="User Avatar">
-            </div>
-            <div class="review-details">
-               <div class="user-info">
-                  <span class="username">{{review.userOwner?.userNickname}}</span>
-                  <span class="star-rating">{{review.userStarRating}}</span>
-                  <span class="date">{{formattedDate(review.date.toString())}}</span>
-                  <span class="material-icons like-button-liked" *ngIf="isReviewLiked(review)" (click)="dislikeReview(review.id)">thumb_up</span>
-                  <span class="material-icons like-button" *ngIf="!isReviewLiked(review)" (click)="likeReview(review.id)">thumb_up</span>
-                  <span class="like-score">{{review.likes}}</span>
-                  <div class="deleteReview">
-                     <button (click)="onDeleteReviewModal(review)" *ngIf="user?.userId == review.userOwner?.userId" class="deleteReviewButton">-</button>
-                  </div>
-               </div>                     
+         <div *ngFor="let review of reviews">
+            <div *ngIf="review.userOwner" class="review">
+               <div class="user-avatar" (click)="onOpenFriendProfile(review.userOwner.userNickname)" style="cursor: pointer;">
+                  <img src="{{review.userOwner.profileImage}}" alt="User Avatar">
+               </div>
+               <div class="review-details">
+                  <div class="user-info">
+                     <span class="username">{{review.userOwner.userNickname}}</span>
+                     <span class="star-rating">{{review.userStarRating}}</span>
+                     <span class="date">{{formattedDate(review.date.toString())}}</span>
+                     <span class="material-icons like-button-liked" *ngIf="isReviewLiked(review)" (click)="dislikeReview(review.id)">thumb_up</span>
+                     <span class="material-icons like-button" *ngIf="!isReviewLiked(review)" (click)="likeReview(review.id)">thumb_up</span>
+                     <span class="like-score">{{review.likes}}</span>
+                     <div class="deleteReview">
+                        <button (click)="onDeleteReviewModal(review)" *ngIf="user?.userId == review.userOwner?.userId" class="deleteReviewButton">-</button>
+                     </div>
+                  </div>                     
 
-               <p class="review-text">{{review.userReviewText}}</p>
-            </div>
+                  <p class="review-text">{{review.userReviewText}}</p>
+               </div>
+          </div>
          </div>
       </div>
    

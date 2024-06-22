@@ -38,7 +38,7 @@ export class RegisterFormComponent implements OnInit {
               this.userService.setUsername(registerForm.value.username)
               this.authService.setAccessToken(response.token);
               localStorage.setItem('access_token', response.token);
-              this.router.navigate([`/${this.userService.getUsername()}/main`]);
+              this.router.navigate([`/main`]);
             }
           )
         }

@@ -22,7 +22,7 @@ export class UserNotificationsComponent {
     private userService: UserService,
     private notificationService: NotificationService,
     private friendsService: FriendsService,
-    private router: Router
+    private router: Router,
   ) {}
 
   public user: User | null = null;
@@ -107,7 +107,7 @@ export class UserNotificationsComponent {
     if(notification){
       this.friendsService.rejectFriendRequest(notification.id).subscribe(
         (response: any) => {
-          this.getNotifications();
+          
         },
         (error: HttpErrorResponse) => {
           console.error(error);
@@ -147,10 +147,10 @@ export class UserNotificationsComponent {
   }
 
   public onOpenFriendProfile(friendNickname: String): void {
-    this.router.navigate([`/${this.userService.getUsername()}/friend-profile/${friendNickname}`]);
+    this.router.navigate([`/profile/${friendNickname}`]);
   }
 
   public onOpenRecipe(recipe: Recipe): void {
-    this.router.navigate([`/${this.userService.getUsername()}/recipe/${recipe.id}`]);
+    this.router.navigate([`/recipe/${recipe.id}`]);
   }
 }

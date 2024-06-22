@@ -210,6 +210,14 @@ body {
     background: #CF1020;
 }
    
+#deleteRecipeModal .delete-button {
+    border: 1px solid grey;
+}
+
+#deleteRecipeModal .delete-button:hover {
+    border: 1px solid white;
+}
+
 .list-group-item {
     border-color: white;
     color: white;

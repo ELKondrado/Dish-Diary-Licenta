@@ -37,7 +37,6 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/auth/**").permitAll()
-                .antMatchers("/dd-ws/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic()

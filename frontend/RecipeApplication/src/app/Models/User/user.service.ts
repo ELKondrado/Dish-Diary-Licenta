@@ -53,7 +53,7 @@ export class UserService {
     return this.http.get<User>(`${this.apiServerUrl}/user/details/${username}`, { headers });
   }
 
-  public getUserDetailsByNickname(nickname: number): Observable<User>{ 
+  public getUserDetailsByNickname(nickname: string): Observable<User>{ 
     const headers = this.getHeaders();
     return this.http.get<User>(`${this.apiServerUrl}/user/detailsByNickname/${nickname}`, { headers });
   }

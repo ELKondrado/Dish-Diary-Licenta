@@ -87,14 +87,25 @@ export class RepositoryComponent implements OnInit{
 
   public searchRecipe(key: string): void {
     const resultRecipes: Recipe[] = [];
+    const lowerKey = key.toLowerCase();
+
     for (const recipe of this.recipes) {
-      if (recipe.name.toLowerCase().indexOf(key.toLowerCase()) !== -1) {
+      const lowerName = recipe.name.toLowerCase();
+      const nameMatch = lowerName.includes(lowerKey);
+
+      const tagMatch = recipe.tags.some(tag => tag.toLowerCase().includes(lowerKey));
+
+      const lowerIngredients = recipe.ingredients.toLowerCase();
+      const ingredientsMatch = lowerIngredients.includes(lowerKey);
+
+      if (nameMatch || tagMatch || ingredientsMatch) {
         resultRecipes.push(recipe);
       }
     }
     this.recipes = resultRecipes;
-    if (resultRecipes.length === 0 || !key){
-      this.getRecipesRepository();
+
+    if (resultRecipes.length === 0 || !key) {
+      this.ngOnInit();
     }
   }
 
@@ -246,10 +257,10 @@ export class RepositoryComponent implements OnInit{
   }
 
   public onOpenRecipe(recipe: Recipe): void {
-    this.router.navigate([`/${this.userService.getUsername()}/recipe/${recipe.id}`]);
+    this.router.navigate([`/recipe/${recipe.id}`]);
   }
 
   public mainPage(): void {
-    this.router.navigate([`/${this.userService.getUsername()}/starter-page`]);
+    this.router.navigate([`/starter-page`]);
   }
 }

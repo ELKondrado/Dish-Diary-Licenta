@@ -31,7 +31,7 @@ export class LoginFormComponent implements OnInit {
         this.userService.setUsername(loginForm.value.username)
         this.authService.setAccessToken(response.token);
         localStorage.setItem('access_token', response.token);
-        this.router.navigate([`/${this.userService.getUsername()}/starter-page`]);
+        this.router.navigate([`/starter-page`]);
       },
       (error: HttpErrorResponse) => {
         this.badCredentials = true;
