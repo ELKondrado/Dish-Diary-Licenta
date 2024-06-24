@@ -69,11 +69,16 @@ public class UserService {
         if(optionalUser.isPresent()) {
             User user = optionalUser.get();
 
+            user.setUserBio(userEditProfileDto.getUserBioToChange());
+
             User optionalNicknameUser = findUserByNickname(userEditProfileDto.getUserNicknameToChange());
             if(optionalNicknameUser == null) {
                 user.setUserNickname(userEditProfileDto.getUserNicknameToChange());
             }
-            user.setUserBio(userEditProfileDto.getUserBioToChange());
+            else {
+                if(optionalNicknameUser != user)
+                    return null;
+            }
             return userRepository.save(user);
         } else {
             throw new NotFound("User with id " + userId + " not found in editing profile");

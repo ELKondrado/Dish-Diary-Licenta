@@ -74,7 +74,8 @@ public class RepositoryService {
 
     public void deleteRepository(long repositoryId){
         Repository repository = getRepository(repositoryId);
-        User userOwner = repository.getUserOwner();
+        repository.getRecipes().clear();
+        User userOwner = userService.findUserByUserId(repository.getUserOwner().getUserId());
         userOwner.getRepositories().remove(repository);
         repositoryRepository.deleteById(repositoryId);
     }
