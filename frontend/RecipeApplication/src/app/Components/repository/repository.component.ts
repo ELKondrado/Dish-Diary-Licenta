@@ -145,6 +145,7 @@ export class RepositoryComponent implements OnInit{
         (response: Recipe) => {
           console.log(response);
           addForm.reset();
+          this.addedRecipeTags = [];
           this.ngOnInit(); 
         },
         (error: HttpErrorResponse) => {

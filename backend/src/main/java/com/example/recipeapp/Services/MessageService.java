@@ -83,6 +83,7 @@ public class MessageService extends AbstractWSService{
             User user = optionalUser.get();
 
             Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("timestamp").descending());
+            notifyFrontend();
             return messageRepository.findUserMessagesPaginated(user.getUserId(), pageable);
         } else {
             throw new NotFound("User with id " + userId + " not found in getting messages");
@@ -96,7 +97,6 @@ public class MessageService extends AbstractWSService{
             Optional<User> optionalUser2 = userRepository.findUserByUserId(user2Id);
             if (optionalUser2.isPresent()) {
                 User user2 = optionalUser2.get();
-
                 return messageRepository.findUserMessagesFromFriend(user1.getUserId(), user2.getUserId());
             }
             else {

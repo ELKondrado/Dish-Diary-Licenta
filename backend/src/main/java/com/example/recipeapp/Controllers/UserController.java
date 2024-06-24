@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -38,10 +40,15 @@ public class UserController {
     }
 
     @PutMapping("/editProfileAttributes/{userId}")
-    public ResponseEntity<User> editProfileAttributes(@PathVariable("userId") long userId,
+    public ResponseEntity<Map<String, String>> editProfileAttributes(@PathVariable("userId") long userId,
                                                       @RequestBody UserEditProfileDto userEditProfileDto){
+        Map<String, String> response = new HashMap<>();
         User user = userService.editProfileAttributes(userId, userEditProfileDto);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        if(user == null)
+            response.put("status", "NICKNAME ALREADY USED");
+        else
+            response.put("status", user.getUserNickname());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/deleteUserRecipe/{userId}/{recipeId}")

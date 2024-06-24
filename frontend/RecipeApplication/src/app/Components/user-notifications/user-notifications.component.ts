@@ -107,7 +107,7 @@ export class UserNotificationsComponent {
     if(notification){
       this.friendsService.rejectFriendRequest(notification.id).subscribe(
         (response: any) => {
-          
+          this.getNotifications();
         },
         (error: HttpErrorResponse) => {
           console.error(error);

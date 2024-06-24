@@ -31,7 +31,7 @@
       </li>
     </ul>
     <form
-      (ngSubmit)="userProfile(searchedUser.value)"
+      (ngSubmit)="searchUserProfile(searchedUser.value)"
       class="form-inline my-2 my-lg-0"
     >
       <div class="search-bar">
@@ -49,7 +49,7 @@
           <span
             class="material-icons search-icon"
             style="cursor: pointer"
-            (click)="userProfile(searchedUser.value)"
+            (click)="searchUserProfile(searchedUser.value)"
             >search</span
           >
         </div>
@@ -66,7 +66,6 @@
           alt="Profile Image"
         />
         <img
-          (click)="toggleMenu()"
           class="avatar profile-avatar"
           *ngIf="!avatarUrl"
           src="https://i.pinimg.com/564x/26/c7/35/26c7355fe46f62d84579857c6f8c4ea5.jpg"

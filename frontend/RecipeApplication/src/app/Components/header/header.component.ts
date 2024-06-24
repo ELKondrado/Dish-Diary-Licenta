@@ -19,7 +19,7 @@ export class HeaderComponent implements OnInit {
     private authService: AuthService,
     private notificationService: NotificationService,
     private messageService: MessageService
-  ) {}
+  ) { }
 
   public user: User | null = null;
   public avatarUrl: String | undefined;
@@ -118,6 +118,10 @@ export class HeaderComponent implements OnInit {
   public userProfile(userNickname: String): void {
     this.router.navigate([`/profile/${userNickname}`]);
     this.toggleMenu();
+  }
+
+  public searchUserProfile(userNickname: String): void {
+    this.router.navigate([`/profile/${userNickname}`]);
   }
 
   public userFriends(): void {

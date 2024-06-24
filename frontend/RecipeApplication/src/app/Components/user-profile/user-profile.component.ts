@@ -48,9 +48,6 @@ export class UserProfileComponent implements OnInit {
       () => {
         this.user = this.authService.getUser();
         this.fetchProfileUser();
-        this.getUserTotalRecipes();
-        this.getCreatedRecipes();
-        this.getRepositories();
       });
   }
 
@@ -62,6 +59,9 @@ export class UserProfileComponent implements OnInit {
           this.profileUser = response;
           this.getProfileImage();
           this.getIsFriendWithUser();
+          this.getUserTotalRecipes();
+          this.getCreatedRecipes();
+          this.getRepositories();
         },
         (error: HttpErrorResponse) => {
           console.log(error);
@@ -81,11 +81,16 @@ export class UserProfileComponent implements OnInit {
           if (response.status == "NICKNAME ALREADY USED") {
             this.nicknameAlreadyUsed = true;
           }
-          else if (response.status == "SUCCESS") {
+          else {
             this.nicknameAlreadyUsed = false;
+            if (this.user) {
+              this.user.userNickname = response.status;
+            }
+            this.toggleProfileEdit();
+            if (this.user) {
+              this.fetchProfileUser();
+            }
           }
-          this.ngOnInit();
-          this.toggleProfileEdit();
         },
         (error: HttpErrorResponse) => {
           console.error("ERROR editing profile attributes: " + error);
@@ -95,8 +100,8 @@ export class UserProfileComponent implements OnInit {
   }
 
   public getUserTotalRecipes(): void {
-    if (this.user) {
-      this.recipeService.getUserTotalRecipes(this.user?.userId).subscribe(
+    if (this.profileUser) {
+      this.recipeService.getUserTotalRecipes(this.profileUser?.userId).subscribe(
         (response: Recipe[]) => {
           this.repositoryRecipes = response;
           this.getAddedRecipes();
@@ -109,8 +114,8 @@ export class UserProfileComponent implements OnInit {
   }
 
   public getCreatedRecipes(): void {
-    if (this.user) {
-      this.recipeService.getCreatedRecipes(this.user?.userId).subscribe(
+    if (this.profileUser) {
+      this.recipeService.getCreatedRecipes(this.profileUser?.userId).subscribe(
         (createdRecipes: Recipe[]) => {
           this.createdRecipes = createdRecipes;
           this.getAddedRecipes();
@@ -132,9 +137,10 @@ export class UserProfileComponent implements OnInit {
   }
 
   public getRepositories(): void {
-    if (this.user) {
-      this.repositoryService.getRepositories(this.user.userId).subscribe(
+    if (this.profileUser) {
+      this.repositoryService.getRepositories(this.profileUser.userId).subscribe(
         (response: Repository[]) => {
+          console.log(response)
           this.repositories = response;
         },
         (error: HttpErrorResponse) => {
@@ -257,10 +263,15 @@ export class UserProfileComponent implements OnInit {
   }
 
   public onOpenRepository(repository: Repository): void {
-    this.router.navigate([`/repository/${repository.id}`]);
+    if (this.user && this.user.userId === this.profileUser?.userId)
+      this.router.navigate([`/repository/${repository.id}`]);
   }
 
   public userChatFriend(friendUserName: string): void {
     this.router.navigate([`/chat/${friendUserName}`]);
+  }
+
+  public userProfile(userNickname: String): void {
+    this.router.navigate([`/profile/${userNickname}`]);
   }
 }
